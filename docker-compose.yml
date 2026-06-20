@@ -1,0 +1,58 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: wastemarket-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-wastemarket}
+      POSTGRES_USER: ${POSTGRES_USER:-wastemarket}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-wastemarket}
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: wastemarket-server
+    restart: unless-stopped
+    env_file:
+      - ./server/.env
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+    ports:
+      - '5000:5000'
+    depends_on:
+      - postgres
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: wastemarket-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@wastemarket.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - '5050:80'
+    depends_on:
+      - postgres
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: wastemarket-client
+    restart: unless-stopped
+    env_file:
+      - ./client/.env
+    ports:
+      - '5173:5173'
+    depends_on:
+      - server
+
+volumes:
+  postgres_data:
