@@ -8,9 +8,13 @@ import { updateRecipientCapacity, updateRecipientPricing } from '../../services/
 
 const links = [
   { to: '/recipient', label: 'Dashboard' },
-  { to: '/recipient/notifications', label: 'Notifications' },
-  { to: '/recipient/capacity', label: 'Capacity' },
-  { to: '/recipient/incoming', label: 'Incoming' },
+  { to: '/recipient/opportunities', label: 'Ordini compatibili' },
+  { to: '/recipient/calendar', label: 'Calendario conferimenti' },
+  { to: '/recipient/incoming', label: 'Arrivi e conferimenti' },
+  { to: '/recipient/capacity', label: 'Disponibilita e capacita' },
+  { to: '/recipient/facilities', label: 'Impianti e autorizzazioni' },
+  { to: '/recipient/earnings', label: 'Corrispettivi' },
+  { to: '/profile', label: 'Profilo' },
 ];
 
 export default function CapacityPage() {
@@ -51,7 +55,7 @@ export default function CapacityPage() {
   };
 
   return (
-    <RoleLayout title="Capacity Calendar" links={links}>
+    <RoleLayout title="Disponibilita e capacita" links={links}>
       <Card title="CER Pricing & Slots">
         <div className="grid gap-3 sm:grid-cols-3">
           <Input label="CER Code" value={cerCode} onChange={(event) => setCerCode(event.target.value)} />

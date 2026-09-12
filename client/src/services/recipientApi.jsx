@@ -15,6 +15,11 @@ export async function acceptRecipientSelection(wasteRequestId) {
   return data;
 }
 
+export async function confirmRecipientCombination(wasteRequestId) {
+  const { data } = await api.patch(`/recipients/waste-requests/${wasteRequestId}/confirm-combination`);
+  return data;
+}
+
 export async function fetchIncomingShipments() {
   const { data } = await api.get('/recipients/incoming');
   return data;

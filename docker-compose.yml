@@ -10,6 +10,12 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-wastemarket}
     ports:
       - '5432:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-wastemarket} -d ${POSTGRES_DB:-wastemarket}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -18,7 +24,7 @@ services:
       context: ./server
       dockerfile: Dockerfile
     container_name: wastemarket-server
-    restart: unless-stopped
+    restart: on-failure
     env_file:
       - ./server/.env
     environment:
@@ -27,7 +33,8 @@ services:
     ports:
       - '5000:5000'
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
   pgadmin:
     image: dpage/pgadmin4:latest

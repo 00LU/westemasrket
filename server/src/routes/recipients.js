@@ -6,6 +6,7 @@ const {
   getNotificationsFeed,
   createRecipientOffer,
   acceptRecipientSelection,
+  confirmCombination,
   updateIncomingStatus,
   setCerPricing,
   setCapacity,
@@ -18,6 +19,7 @@ router.use(auth, roleGuard(['recipient']));
 router.get('/notifications', getNotificationsFeed);
 router.post('/offers', validate(['wasteRequestId', 'pricePerTon', 'destinationAddress']), createRecipientOffer);
 router.patch('/waste-requests/:id/accept-selection', acceptRecipientSelection);
+router.patch('/waste-requests/:id/confirm-combination', confirmCombination);
 router.patch('/waste-requests/:id/status', validate(['status']), updateIncomingStatus);
 router.post('/pricing', setCerPricing);
 router.post('/capacity', setCapacity);

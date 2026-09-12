@@ -2,7 +2,7 @@ const { Op } = require('sequelize');
 const { Bid, RecipientOffer, WasteRequest } = require('../models');
 const { notifyUser } = require('../services/notificationService');
 
-const TRANSPORTER_VISIBLE_STATUSES = ['transporter_matching', 'package_options_ready'];
+const TRANSPORTER_VISIBLE_STATUSES = ['recipient_matching', 'recipient_options_ready', 'transporter_matching', 'package_options_ready'];
 const STATUS_TRANSITIONS = {
   assigned: ['in_execution', 'cancelled'],
   in_execution: ['delivered', 'cancelled'],
@@ -16,7 +16,6 @@ async function getNotificationsFeed(req, res, next) {
         [Op.or]: [
           {
             status: { [Op.in]: TRANSPORTER_VISIBLE_STATUSES },
-            selectedRecipientOfferId: { [Op.not]: null },
           },
           {
             status: 'package_selected',
@@ -25,7 +24,7 @@ async function getNotificationsFeed(req, res, next) {
           },
         ],
       },
-      attributes: ['id', 'cerCode', 'quantityTon', 'pickupAddress', 'deadline', 'status', 'selectedRecipientOfferId', 'selectedTransporterId', 'selectedBidId'],
+      attributes: ['id', 'cerCode', 'quantityTon', 'pickupAddress', 'deadline', 'status', 'workflowStatus', 'transporterConfirmed', 'recipientConfirmed', 'selectedRecipientOfferId', 'selectedTransporterId', 'selectedBidId'],
       order: [['created_at', 'DESC']],
     });
 
@@ -63,6 +62,8 @@ async function getNotificationsFeed(req, res, next) {
             ? {
                 id: myBid.id,
                 transportPrice: myBid.transportPrice,
+                pricingMode: myBid.pricingMode,
+                distanceKm: myBid.distanceKm,
                 totalPrice: myBid.totalPrice,
                 vehicleType: myBid.vehicleType,
                 availability: myBid.availability,
@@ -74,6 +75,7 @@ async function getNotificationsFeed(req, res, next) {
             && request.selectedTransporterId === req.user.id
             && Boolean(myBid)
             && request.selectedBidId === myBid.id,
+          canConfirmCombination: ['awaiting_operator_confirmation', 'awaiting_transporter_confirmation', 'awaiting_recipient_confirmation'].includes(request.workflowStatus) && request.selectedTransporterId === req.user.id && !request.transporterConfirmed,
         };
       })
     );
@@ -119,6 +121,21 @@ async function acceptTransportSelection(req, res, next) {
       requestId: request.id,
       status: request.status,
     });
+  } catch (error) {
+    return next(error);
+  }
+}
+
+async function confirmCombination(req, res, next) {
+  try {
+    const request = await WasteRequest.findByPk(req.params.id);
+    if (!request || request.selectedTransporterId !== req.user.id) return res.status(403).json({ message: 'Combinazione non assegnata a questo trasportatore' });
+    if (!['awaiting_operator_confirmation', 'awaiting_transporter_confirmation', 'awaiting_recipient_confirmation'].includes(request.workflowStatus)) return res.status(400).json({ message: 'La combinazione non attende conferma' });
+
+    const workflowStatus = request.recipientConfirmed ? 'confirmed' : 'awaiting_recipient_confirmation';
+    await request.update({ transporterConfirmed: true, workflowStatus });
+    await notifyUser(request.producerId, 'transporter_combination_confirmed', { wasteRequestId: request.id, workflowStatus });
+    return res.json({ requestId: request.id, workflowStatus });
   } catch (error) {
     return next(error);
   }
@@ -227,6 +244,7 @@ async function getEarnings(req, res, next) {
 module.exports = {
   getNotificationsFeed,
   acceptTransportSelection,
+  confirmCombination,
   getActiveJobs,
   updateJobStatus,
   getEarnings,

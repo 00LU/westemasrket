@@ -5,9 +5,13 @@ import { fetchTransporterEarnings } from '../../services/transporterApi';
 
 const links = [
   { to: '/transporter', label: 'Dashboard' },
-  { to: '/transporter/notifications', label: 'Notifications' },
-  { to: '/transporter/jobs', label: 'Active Jobs' },
-  { to: '/transporter/earnings', label: 'Earnings' },
+  { to: '/transporter/opportunities', label: 'Opportunita e aste' },
+  { to: '/transporter/planning', label: 'Pianificazione viaggi' },
+  { to: '/transporter/jobs', label: 'Lavori assegnati' },
+  { to: '/transporter/fleet', label: 'Mezzi e conducenti' },
+  { to: '/transporter/authorizations', label: 'Autorizzazioni' },
+  { to: '/transporter/earnings', label: 'Corrispettivi' },
+  { to: '/profile', label: 'Profilo' },
 ];
 
 export default function EarningsPage() {
@@ -21,7 +25,7 @@ export default function EarningsPage() {
   const currency = data?.currency || 'EUR';
 
   return (
-    <RoleLayout title="Earnings History" links={links}>
+    <RoleLayout title="Corrispettivi e fatturazione" links={links}>
       <Card title="Revenue Summary">
         {isLoading && <p className="text-sm text-slate-600">Loading earnings...</p>}
         {isError && (

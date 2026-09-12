@@ -1,0 +1,5089 @@
+{
+  "sourceUrl": "https://www.albonazionalegestoriambientali.it/download/it/normativanazionale/013-dlgsa152_03.04.2006_alldparteiv_agg.pdf",
+  "sourceDate": "2021-06-01",
+  "count": 847,
+  "items": [
+    {
+      "code": "01 01 01",
+      "description": "rifiuti da estrazione di minerali metalliferi",
+      "hazardous": false,
+      "chapter": "01"
+    },
+    {
+      "code": "01 01 02",
+      "description": "rifiuti da estrazione di minerali non metalliferi 01 03 rifiuti prodotti da trattamenti chimici e fisici di minerali metalliferi",
+      "hazardous": false,
+      "chapter": "01"
+    },
+    {
+      "code": "01 03 04*",
+      "description": "sterili che possono generare acido prodotti dalla lavorazione di minerale solforoso",
+      "hazardous": true,
+      "chapter": "01"
+    },
+    {
+      "code": "01 03 05*",
+      "description": "altri sterili contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "01"
+    },
+    {
+      "code": "01 03 06",
+      "description": "sterili diversi da quelli di cui alle voci 01 03 04 e 01 03 05",
+      "hazardous": false,
+      "chapter": "01"
+    },
+    {
+      "code": "01 03 07*",
+      "description": "altri rifiuti contenenti sostanze pericolose prodotti da trattamenti chimici e fisici di minerali metalliferi",
+      "hazardous": true,
+      "chapter": "01"
+    },
+    {
+      "code": "01 03 08",
+      "description": "polveri e residui affini diversi da quelli di cui alla voce 01 03 07",
+      "hazardous": false,
+      "chapter": "01"
+    },
+    {
+      "code": "01 03 09",
+      "description": "fanghi rossi derivanti dalla produzione di allumina, diversi da quelli di cui alla voce 01 03 10",
+      "hazardous": false,
+      "chapter": "01"
+    },
+    {
+      "code": "01 03 10*",
+      "description": "fanghi rossi derivanti dalla produzione di allumina contenenti sostanze pericolose, diversi da quelli di cui alla voce 01 03 07",
+      "hazardous": true,
+      "chapter": "01"
+    },
+    {
+      "code": "01 03 99",
+      "description": "rifiuti non specificati altrimenti 01 04 rifiuti prodotti da trattamenti chimici e fisici di minerali non metalliferi",
+      "hazardous": false,
+      "chapter": "01"
+    },
+    {
+      "code": "01 04 07*",
+      "description": "rifiuti contenenti sostanze pericolose, prodotti da trattamenti chimici e fisici di minerali non metalliferi",
+      "hazardous": true,
+      "chapter": "01"
+    },
+    {
+      "code": "01 04 08",
+      "description": "scarti di ghiaia e pietrisco, diversi da quelli di cui alla voce 01 04 07",
+      "hazardous": false,
+      "chapter": "01"
+    },
+    {
+      "code": "01 04 09",
+      "description": "scarti di sabbia e argilla",
+      "hazardous": false,
+      "chapter": "01"
+    },
+    {
+      "code": "01 04 10",
+      "description": "polveri e residui affini, diversi da quelli di cui alla voce 01 04 07",
+      "hazardous": false,
+      "chapter": "01"
+    },
+    {
+      "code": "01 04 11",
+      "description": "rifiuti della lavorazione di potassa e salgemma, diversi da quelli di cui alla voce 01 04 07",
+      "hazardous": false,
+      "chapter": "01"
+    },
+    {
+      "code": "01 04 12",
+      "description": "sterili ed altri residui del lavaggio e della pulitura di minerali, diversi da quelli di cui alle voci 0104 07 e 01 04 11",
+      "hazardous": false,
+      "chapter": "01"
+    },
+    {
+      "code": "01 04 13",
+      "description": "rifiuti prodotti dal taglio e dalla segagione della pietra, diversi da quelli di cui alla voce 01 04",
+      "hazardous": false,
+      "chapter": "01"
+    },
+    {
+      "code": "07 01 04",
+      "description": "99 rifiuti non specificati altrimenti 01 05 fanghi di perforazione ed altri rifiuti di perforazione",
+      "hazardous": false,
+      "chapter": "07"
+    },
+    {
+      "code": "01 05 04",
+      "description": "fanghi e rifiuti di perforazione di pozzi per acque dolci",
+      "hazardous": false,
+      "chapter": "01"
+    },
+    {
+      "code": "01 05 05*",
+      "description": "fanghi e rifiuti di perforazione contenenti oli",
+      "hazardous": true,
+      "chapter": "01"
+    },
+    {
+      "code": "01 05 06*",
+      "description": "fanghi di perforazione ed altri rifiuti di perforazione contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "01"
+    },
+    {
+      "code": "01 05 07",
+      "description": "fanghi e rifiuti di perforazione contenenti barite, diversi da quelli delle voci 01 05 05 e 01 05",
+      "hazardous": false,
+      "chapter": "01"
+    },
+    {
+      "code": "06 01 05",
+      "description": "08 fanghi e rifiuti di perforazione contenenti cloruri, diversi da quelli delle voci 01 05 05 e 01 05 06",
+      "hazardous": false,
+      "chapter": "06"
+    },
+    {
+      "code": "01 05 99",
+      "description": "rifiuti non specificati altrimenti 02 rifiuti prodotti da agricoltura, orticoltura, acquacoltura, selvicoltura, caccia e pesca, preparazione e lavorazione di alimenti 02 01 rifiuti prodotti da agricoltura, orticoltura, acquacoltura, selvicoltura, caccia e pesca",
+      "hazardous": false,
+      "chapter": "01"
+    },
+    {
+      "code": "02 01 01",
+      "description": "fanghi da operazioni di lavaggio e pulizia",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 01 02",
+      "description": "scarti di tessuti animali",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 01 03",
+      "description": "scarti di tessuti vegetali",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 01 04",
+      "description": "rifiuti plastici (ad esclusione degli imballaggi)",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 01 06",
+      "description": "feci animali, urine e letame (comprese le lettiere usate), effluenti, raccolti separatamente e trattati fuori sito",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 01 07",
+      "description": "rifiuti derivanti dalla silvicoltura",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 01 08*",
+      "description": "rifiuti agrochimici contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "02"
+    },
+    {
+      "code": "02 01 09",
+      "description": "rifiuti agrochimici diversi da quelli della voce 02 01 08",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 01 10",
+      "description": "rifiuti metallici",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 01 99",
+      "description": "rifiuti non specificati altrimenti 02 02 rifiuti della preparazione e della trasformazione di carne, pesce ed altri alimenti di origine animale",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 02 01",
+      "description": "fanghi da operazioni di lavaggio e pulizia",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 02 02",
+      "description": "scarti di tessuti animali",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 02 03",
+      "description": "scarti inutilizzabili per il consumo o la trasformazione",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 02 04",
+      "description": "fanghi da trattamento in loco degli effluenti",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 02 99",
+      "description": "rifiuti non specificati altrimenti 02 03 rifiuti della preparazione e del trattamento di frutta, verdura, cereali, oli alimentari, cacao, caffè, té e tabacco; della produzione di conserve alimentari; della produzione di lievito ed estratto di lievito; della preparazione e fermentazione di melassa",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 03 01",
+      "description": "fanghi prodotti da operazioni di lavaggio, pulizia, sbucciatura, centrifugazione e separazione",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 03 02",
+      "description": "rifiuti legati all'impiego di conservanti",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 03 03",
+      "description": "rifiuti prodotti dall'estrazione tramite solvente",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 03 04",
+      "description": "scarti inutilizzabili per il consumo o la trasformazione",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 03 05",
+      "description": "fanghi da trattamento in loco degli effluenti",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 03 99",
+      "description": "rifiuti non specificati altrimenti 02 04 rifiuti prodotti dalla raffinazione dello zucchero",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 04 01",
+      "description": "terriccio residuo delle operazioni di pulizia e lavaggio delle barbabietole",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 04 02",
+      "description": "carbonato di calcio fuori specifica",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 04 03",
+      "description": "fanghi da trattamento in loco degli effluenti",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 04 99",
+      "description": "rifiuti non specificati altrimenti 02 05 rifiuti dell'industria lattiero-casearia",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 05 01",
+      "description": "scarti inutilizzabili per il consumo o la trasformazione",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 05 02",
+      "description": "fanghi da trattamento in loco degli effluenti",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 05 99",
+      "description": "rifiuti non specificati altrimenti 02 06 rifiuti dell'industria dolciaria e della panificazione",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 06 01",
+      "description": "scarti inutilizzabili per il consumo o la trasformazione",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 06 02",
+      "description": "rifiuti prodotti dall'impiego di conservanti",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 06 03",
+      "description": "fanghi da trattamento in loco degli effluenti",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 06 99",
+      "description": "rifiuti non specificati altrimenti 02 07 rifiuti della produzione di bevande alcoliche e analcoliche (tranne caffè, té e cacao)",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 07 01",
+      "description": "rifiuti prodotti dalle operazioni di lavaggio, pulizia e macinazione della materia prima",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 07 02",
+      "description": "rifiuti prodotti dalla distillazione di bevande alcoliche",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 07 03",
+      "description": "rifiuti prodotti dai trattamenti chimici",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 07 04",
+      "description": "scarti inutilizzabili per il consumo o la trasformazione",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 07 05",
+      "description": "fanghi da trattamento in loco degli effluenti",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "02 07 99",
+      "description": "rifiuti non specificati altrimenti 03 rifiuti della lavorazione del legno e della produzione di pannelli, mobili, polpa, carta e cartone 03 01 rifiuti della lavorazione del legno e della produzione di pannelli e mobili",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "03 01 01",
+      "description": "scarti di corteccia e sughero",
+      "hazardous": false,
+      "chapter": "03"
+    },
+    {
+      "code": "03 01 04*",
+      "description": "segatura, trucioli, residui di taglio, legno, pannelli di truciolare e piallacci contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "03"
+    },
+    {
+      "code": "03 01 05",
+      "description": "segatura, trucioli, residui di taglio, legno, pannelli di truciolare e piallacci diversi da quelli di cui alla voce 03 01 04",
+      "hazardous": false,
+      "chapter": "03"
+    },
+    {
+      "code": "03 01 99",
+      "description": "rifiuti non specificati altrimenti 03 02 rifiuti dei trattamenti conservativi del legno",
+      "hazardous": false,
+      "chapter": "03"
+    },
+    {
+      "code": "03 02 01*",
+      "description": "preservanti del legno contenenti composti organici non alogenati",
+      "hazardous": true,
+      "chapter": "03"
+    },
+    {
+      "code": "03 02 02*",
+      "description": "prodotti per trattamenti conservativi del legno contenenti composti organici clorurati",
+      "hazardous": true,
+      "chapter": "03"
+    },
+    {
+      "code": "03 02 03*",
+      "description": "prodotti per trattamenti conservativi del legno contenenti composti organometallici",
+      "hazardous": true,
+      "chapter": "03"
+    },
+    {
+      "code": "03 02 04*",
+      "description": "prodotti per trattamenti conservativi del legno contenenti composti inorganici",
+      "hazardous": true,
+      "chapter": "03"
+    },
+    {
+      "code": "03 02 05*",
+      "description": "altri prodotti per trattamenti conservativi del legno contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "03"
+    },
+    {
+      "code": "03 02 99",
+      "description": "prodotti per trattamenti conservativi del legno non specificati altrimenti 03 03 rifiuti della produzione e della lavorazione di polpa, carta e cartone",
+      "hazardous": false,
+      "chapter": "03"
+    },
+    {
+      "code": "03 03 01",
+      "description": "scarti di corteccia e legno",
+      "hazardous": false,
+      "chapter": "03"
+    },
+    {
+      "code": "03 03 02",
+      "description": "fanghi di recupero dei bagni di macerazione (green liquor)",
+      "hazardous": false,
+      "chapter": "03"
+    },
+    {
+      "code": "03 03 05",
+      "description": "fanghi derivanti da processi di deinchiostrazione nel riciclaggio della carta",
+      "hazardous": false,
+      "chapter": "03"
+    },
+    {
+      "code": "03 03 07",
+      "description": "scarti della separazione meccanica nella produzione di polpa da rifiuti di carta e cartone",
+      "hazardous": false,
+      "chapter": "03"
+    },
+    {
+      "code": "03 03 08",
+      "description": "scarti della selezione di carta e cartone destinati ad essere riciclati",
+      "hazardous": false,
+      "chapter": "03"
+    },
+    {
+      "code": "03 03 09",
+      "description": "fanghi di scarto contenenti carbonato di calcio",
+      "hazardous": false,
+      "chapter": "03"
+    },
+    {
+      "code": "03 03 10",
+      "description": "scarti di fibre e fanghi contenenti fibre, riempitivi e prodotti di rivestimento generati dai processi di separazione meccanica",
+      "hazardous": false,
+      "chapter": "03"
+    },
+    {
+      "code": "03 03 11",
+      "description": "fanghi prodotti dal trattamento in loco degli effluenti, diversi da quelli di cui alla voce 03 03",
+      "hazardous": false,
+      "chapter": "03"
+    },
+    {
+      "code": "10 03 03",
+      "description": "99 rifiuti non specificati altrimenti 04 rifiuti della lavorazione di pelli e pellicce, e dell'industria tessile 04 01 rifiuti della lavorazione di pelli e pellicce",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "04 01 01",
+      "description": "carniccio e frammenti di calce",
+      "hazardous": false,
+      "chapter": "04"
+    },
+    {
+      "code": "04 01 02",
+      "description": "rifiuti di calcinazione",
+      "hazardous": false,
+      "chapter": "04"
+    },
+    {
+      "code": "04 01 03*",
+      "description": "bagni di sgrassatura esauriti contenenti solventi senza fase liquida",
+      "hazardous": true,
+      "chapter": "04"
+    },
+    {
+      "code": "04 01 04",
+      "description": "liquido di concia contenente cromo",
+      "hazardous": false,
+      "chapter": "04"
+    },
+    {
+      "code": "04 01 05",
+      "description": "liquido di concia non contenente cromo",
+      "hazardous": false,
+      "chapter": "04"
+    },
+    {
+      "code": "04 01 06",
+      "description": "fanghi, prodotti in particolare dal trattamento in loco degli effluenti, contenenti cromo",
+      "hazardous": false,
+      "chapter": "04"
+    },
+    {
+      "code": "04 01 07",
+      "description": "fanghi, prodotti in particolare dal trattamento in loco degli effluenti, non contenenti cromo",
+      "hazardous": false,
+      "chapter": "04"
+    },
+    {
+      "code": "04 01 08",
+      "description": "rifiuti di cuoio conciato (scarti, cascami, ritagli, polveri di lucidatura) contenenti cromo",
+      "hazardous": false,
+      "chapter": "04"
+    },
+    {
+      "code": "04 01 09",
+      "description": "rifiuti delle operazioni di confezionamento e finitura",
+      "hazardous": false,
+      "chapter": "04"
+    },
+    {
+      "code": "04 01 99",
+      "description": "rifiuti non specificati altrimenti 04 02 rifiuti dell'industria tessile",
+      "hazardous": false,
+      "chapter": "04"
+    },
+    {
+      "code": "04 02 09",
+      "description": "rifiuti da materiali compositi (fibre impregnate, elastomeri, plastomeri)",
+      "hazardous": false,
+      "chapter": "04"
+    },
+    {
+      "code": "04 02 10",
+      "description": "materiale organico proveniente da prodotti naturali (ad es. grasso, cera)",
+      "hazardous": false,
+      "chapter": "04"
+    },
+    {
+      "code": "04 02 14*",
+      "description": "rifiuti provenienti da operazioni di finitura, contenenti solventi organici",
+      "hazardous": true,
+      "chapter": "04"
+    },
+    {
+      "code": "04 02 15",
+      "description": "rifiuti da operazioni di finitura, diversi da quelli di cui alla voce 04 02 14",
+      "hazardous": false,
+      "chapter": "04"
+    },
+    {
+      "code": "04 02 16*",
+      "description": "tinture e pigmenti contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "04"
+    },
+    {
+      "code": "04 02 17",
+      "description": "tinture e pigmenti, diversi da quelli di cui alla voce 04 02 16",
+      "hazardous": false,
+      "chapter": "04"
+    },
+    {
+      "code": "04 02 19*",
+      "description": "fanghi prodotti dal trattamento in loco degli effluenti, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "04"
+    },
+    {
+      "code": "04 02 20",
+      "description": "fanghi prodotti dal trattamento in loco degli effluenti, diversi da quelli di cui alla voce 04 02",
+      "hazardous": false,
+      "chapter": "04"
+    },
+    {
+      "code": "19 04 02",
+      "description": "21 rifiuti da fibre tessili grezze",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "04 02 22",
+      "description": "rifiuti da fibre tessili lavorate",
+      "hazardous": false,
+      "chapter": "04"
+    },
+    {
+      "code": "04 02 99",
+      "description": "rifiuti non specificati altrimenti 05 rifiuti della raffinazione del petrolio, purificazione del gas naturale e trattamento pirolitico del carbone 05 01 rifiuti della raffinazione del petrolio",
+      "hazardous": false,
+      "chapter": "04"
+    },
+    {
+      "code": "05 01 02*",
+      "description": "fanghi da processi di dissalazione",
+      "hazardous": true,
+      "chapter": "05"
+    },
+    {
+      "code": "05 01 03*",
+      "description": "morchie da fondi di serbatoi",
+      "hazardous": true,
+      "chapter": "05"
+    },
+    {
+      "code": "05 01 04*",
+      "description": "fanghi acidi prodotti da processi di alchilazione",
+      "hazardous": true,
+      "chapter": "05"
+    },
+    {
+      "code": "05 01 05*",
+      "description": "perdite di olio",
+      "hazardous": true,
+      "chapter": "05"
+    },
+    {
+      "code": "05 01 06*",
+      "description": "fanghi oleosi prodotti dalla manutenzione di impianti e apparecchiature",
+      "hazardous": true,
+      "chapter": "05"
+    },
+    {
+      "code": "05 01 07*",
+      "description": "catrami acidi",
+      "hazardous": true,
+      "chapter": "05"
+    },
+    {
+      "code": "05 01 08*",
+      "description": "altri catrami",
+      "hazardous": true,
+      "chapter": "05"
+    },
+    {
+      "code": "05 01 09*",
+      "description": "fanghi prodotti dal trattamento in loco degli effluenti, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "05"
+    },
+    {
+      "code": "05 01 10",
+      "description": "fanghi prodotti dal trattamento in loco degli effluenti, diversi da quelli di cui alla voce 05 01",
+      "hazardous": false,
+      "chapter": "05"
+    },
+    {
+      "code": "09 05 01",
+      "description": "11 * rifiuti prodotti dalla purificazione di carburanti mediante basi",
+      "hazardous": false,
+      "chapter": "09"
+    },
+    {
+      "code": "05 01 12*",
+      "description": "acidi contenenti oli",
+      "hazardous": true,
+      "chapter": "05"
+    },
+    {
+      "code": "05 01 13",
+      "description": "fanghi residui dell'acqua di alimentazione delle caldaie",
+      "hazardous": false,
+      "chapter": "05"
+    },
+    {
+      "code": "05 01 14",
+      "description": "rifiuti prodotti dalle torri di raffreddamento",
+      "hazardous": false,
+      "chapter": "05"
+    },
+    {
+      "code": "05 01 15*",
+      "description": "filtri di argilla esauriti",
+      "hazardous": true,
+      "chapter": "05"
+    },
+    {
+      "code": "05 01 16",
+      "description": "rifiuti contenenti zolfo prodotti dalla desolforizzazione del petrolio",
+      "hazardous": false,
+      "chapter": "05"
+    },
+    {
+      "code": "05 01 17",
+      "description": "bitume",
+      "hazardous": false,
+      "chapter": "05"
+    },
+    {
+      "code": "05 01 99",
+      "description": "rifiuti non specificati altrimenti 05 06 rifiuti prodotti dal trattamento pirolitico del carbone",
+      "hazardous": false,
+      "chapter": "05"
+    },
+    {
+      "code": "05 06 01*",
+      "description": "catrami acidi",
+      "hazardous": true,
+      "chapter": "05"
+    },
+    {
+      "code": "05 06 03*",
+      "description": "altri catrami",
+      "hazardous": true,
+      "chapter": "05"
+    },
+    {
+      "code": "05 06 04",
+      "description": "rifiuti prodotti dalle torri di raffreddamento",
+      "hazardous": false,
+      "chapter": "05"
+    },
+    {
+      "code": "05 06 99",
+      "description": "rifiuti non specificati altrimenti 05 07 rifiuti prodotti dalla purificazione e dal trasporto di gas naturale",
+      "hazardous": false,
+      "chapter": "05"
+    },
+    {
+      "code": "05 07 01*",
+      "description": "rifiuti contenenti mercurio",
+      "hazardous": true,
+      "chapter": "05"
+    },
+    {
+      "code": "05 07 02",
+      "description": "rifiuti contenenti zolfo",
+      "hazardous": false,
+      "chapter": "05"
+    },
+    {
+      "code": "05 07 99",
+      "description": "rifiuti non specificati altrimenti 06 rifiuti dei processi chimici inorganici 06 01 rifiuti della produzione, formulazione, fornitura e uso di acidi",
+      "hazardous": false,
+      "chapter": "05"
+    },
+    {
+      "code": "06 01 01*",
+      "description": "acido solforico ed acido solforoso",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 01 02*",
+      "description": "acido cloridrico",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 01 03*",
+      "description": "acido fluoridrico",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 01 04*",
+      "description": "acido fosforico e fosforoso",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 01 05*",
+      "description": "acido nitrico e acido nitroso",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 01 06*",
+      "description": "altri acidi",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 01 99",
+      "description": "rifiuti non specificati altrimenti 06 02 rifiuti della produzione, formulazione, fornitura e uso di basi",
+      "hazardous": false,
+      "chapter": "06"
+    },
+    {
+      "code": "06 02 01*",
+      "description": "idrossido di calcio",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 02 03*",
+      "description": "idrossido di ammonio",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 02 04*",
+      "description": "idrossido di sodio e di potassio",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 02 05*",
+      "description": "altre basi",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 02 99",
+      "description": "rifiuti non specificati altrimenti 06 03 rifiuti della produzione, formulazione, fornitura e uso di sali, loro soluzioni e ossidi metallici",
+      "hazardous": false,
+      "chapter": "06"
+    },
+    {
+      "code": "06 03 11*",
+      "description": "sali e loro soluzioni, contenenti cianuri",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 03 13*",
+      "description": "sali e loro soluzioni, contenenti metalli pesanti",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 03 14",
+      "description": "sali e loro soluzioni, diversi da quelli di cui alle voci 06 03 11 e 06 03 13",
+      "hazardous": false,
+      "chapter": "06"
+    },
+    {
+      "code": "06 03 15*",
+      "description": "ossidi metallici contenenti metalli pesanti",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 03 16",
+      "description": "ossidi metallici, diversi da quelli di cui alla voce 06 03 15",
+      "hazardous": false,
+      "chapter": "06"
+    },
+    {
+      "code": "06 03 99",
+      "description": "rifiuti non specificati altrimenti 06 04 rifiuti contenenti metalli, diversi da quelli di cui alla voce 06 03",
+      "hazardous": false,
+      "chapter": "06"
+    },
+    {
+      "code": "06 04 03*",
+      "description": "rifiuti contenenti arsenico",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 04 04*",
+      "description": "rifiuti contenenti mercurio",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 04 05*",
+      "description": "rifiuti contenenti altri metalli pesanti",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 04 99",
+      "description": "rifiuti non specificati altrimenti 06 05 fanghi da trattamento in loco degli effluenti",
+      "hazardous": false,
+      "chapter": "06"
+    },
+    {
+      "code": "06 05 02*",
+      "description": "fanghi da trattamento in loco di effluenti, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 05 03",
+      "description": "fanghi prodotti dal trattamento in loco degli effluenti, diversi da quelli di cui alla voce 06 05",
+      "hazardous": false,
+      "chapter": "06"
+    },
+    {
+      "code": "02 06 06",
+      "description": "rifiuti della produzione, formulazione, fornitura e uso di prodotti chimici contenenti zolfo, dei processi chimici dello zolfo e dei processi di desolforazione",
+      "hazardous": false,
+      "chapter": "02"
+    },
+    {
+      "code": "06 06 02*",
+      "description": "rifiuti contenenti solfuri pericolosi",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 06 03",
+      "description": "rifiuti contenenti solfuri, diversi da quelli di cui alla voce 06 06 02",
+      "hazardous": false,
+      "chapter": "06"
+    },
+    {
+      "code": "06 06 99",
+      "description": "rifiuti non specificati altrimenti 06 07 rifiuti della produzione, formulazione, fornitura e uso di prodotti alogeni e dei processi chimici degli alogeni",
+      "hazardous": false,
+      "chapter": "06"
+    },
+    {
+      "code": "06 07 01*",
+      "description": "rifiuti dei processi elettrolitici, contenenti amianto",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 07 02*",
+      "description": "carbone attivato dalla produzione di cloro",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 07 03*",
+      "description": "fanghi di solfati di bario, contenenti mercurio",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 07 04*",
+      "description": "soluzioni ed acidi, ad esempio acido di contatto",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 07 99",
+      "description": "rifiuti non specificati altrimenti 06 08 rifiuti della produzione, formulazione, fornitura e uso del silicio e dei suoi derivati",
+      "hazardous": false,
+      "chapter": "06"
+    },
+    {
+      "code": "06 08 02*",
+      "description": "rifiuti contenenti clorosilani pericolosi",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 08 99",
+      "description": "rifiuti non specificati altrimenti 06 09 rifiuti della produzione, formulazione, fornitura e uso di prodotti fosforosi e dei processi chimici del fosforo",
+      "hazardous": false,
+      "chapter": "06"
+    },
+    {
+      "code": "06 09 02",
+      "description": "scorie fosforose",
+      "hazardous": false,
+      "chapter": "06"
+    },
+    {
+      "code": "06 09 03*",
+      "description": "rifiuti prodotti da reazioni a base di calcio contenenti o contaminati da sostanze pericolose",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 09 04",
+      "description": "rifiuti prodotti da reazioni a base di calcio, diversi da quelli di cui alla voce 06 09 03",
+      "hazardous": false,
+      "chapter": "06"
+    },
+    {
+      "code": "06 09 99",
+      "description": "rifiuti non specificati altrimenti 06 10 rifiuti della produzione, formulazione, fornitura e uso di prodotti chimici contenenti azoto, dei processi chimici dell'azoto e della produzione di fertilizzanti",
+      "hazardous": false,
+      "chapter": "06"
+    },
+    {
+      "code": "06 10 02*",
+      "description": "rifiuti contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 10 99",
+      "description": "rifiuti non specificati altrimenti 06 11 rifiuti dalla produzione di pigmenti inorganici e opacificanti",
+      "hazardous": false,
+      "chapter": "06"
+    },
+    {
+      "code": "06 11 01",
+      "description": "rifiuti prodotti da reazioni a base di calcio nella produzione di diossido di titanio",
+      "hazardous": false,
+      "chapter": "06"
+    },
+    {
+      "code": "06 11 99",
+      "description": "rifiuti non specificati altrimenti 06 13 rifiuti di processi chimici inorganici non specificati altrimenti",
+      "hazardous": false,
+      "chapter": "06"
+    },
+    {
+      "code": "06 13 01*",
+      "description": "prodotti fitosanitari, agenti conservativi del legno ed altri biocidi inorganici",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 13 02*",
+      "description": "carbone attivo esaurito (tranne 06 07 02)",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 13 03",
+      "description": "nerofumo",
+      "hazardous": false,
+      "chapter": "06"
+    },
+    {
+      "code": "06 13 04*",
+      "description": "rifiuti derivanti dai processi di lavorazione dell'amianto",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 13 05*",
+      "description": "fuliggine",
+      "hazardous": true,
+      "chapter": "06"
+    },
+    {
+      "code": "06 13 99",
+      "description": "rifiuti non specificati altrimenti 07 rifiuti dei processi chimici organici 07 01 rifiuti della produzione, formulazione, fornitura e uso di prodotti chimici organici di base",
+      "hazardous": false,
+      "chapter": "06"
+    },
+    {
+      "code": "07 01 01*",
+      "description": "soluzioni acquose di lavaggio ed acque madri",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 01 03*",
+      "description": "solventi organici alogenati, soluzioni di lavaggio ed acque madri",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 01 04*",
+      "description": "altri solventi organici, soluzioni di lavaggio ed acque madri",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 01 07*",
+      "description": "fondi e residui di reazione, alogenati",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 01 08*",
+      "description": "altri fondi e residui di reazione",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 01 09*",
+      "description": "residui di filtrazione e assorbenti esauriti alogenati",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 01 10*",
+      "description": "altri residui di filtrazione e assorbenti esauriti",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 01 11*",
+      "description": "fanghi prodotti dal trattamento in loco degli effluenti, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 01 12",
+      "description": "fanghi prodotti dal trattamento in loco degli effluenti, diversi da quelli di cui alla voce 07 01",
+      "hazardous": false,
+      "chapter": "07"
+    },
+    {
+      "code": "11 07 01",
+      "description": "99 rifiuti non specificati altrimenti 07 02 rifiuti della produzione, formulazione, fornitura ed uso di plastiche, gomme sintetiche e fibre artificiali",
+      "hazardous": false,
+      "chapter": "11"
+    },
+    {
+      "code": "07 02 01*",
+      "description": "soluzioni acquose di lavaggio ed acque madri",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 02 03*",
+      "description": "solventi organici alogenati, soluzioni di lavaggio ed acque madri",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 02 04*",
+      "description": "altri solventi organici, soluzioni di lavaggio ed acque madri",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 02 07*",
+      "description": "fondi e residui di reazione, alogenati",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 02 08*",
+      "description": "altri fondi e residui di reazione",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 02 09*",
+      "description": "residui di filtrazione e assorbenti esauriti alogenati",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 02 10*",
+      "description": "altri residui di filtrazione e assorbenti esauriti",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 02 11*",
+      "description": "fanghi prodotti dal trattamento in loco degli effluenti, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 02 12",
+      "description": "fanghi prodotti dal trattamento in loco degli effluenti, diversi da quelli di cui alla voce 07 02",
+      "hazardous": false,
+      "chapter": "07"
+    },
+    {
+      "code": "11 07 02",
+      "description": "13 rifiuti plastici",
+      "hazardous": false,
+      "chapter": "11"
+    },
+    {
+      "code": "07 02 14*",
+      "description": "rifiuti prodotti da additivi, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 02 15",
+      "description": "rifiuti prodotti da additivi, diversi da quelli di cui alla voce 07 02 14",
+      "hazardous": false,
+      "chapter": "07"
+    },
+    {
+      "code": "07 02 16*",
+      "description": "rifiuti contenenti siliconi pericolosi",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 02 17",
+      "description": "rifiuti contenenti siliconi diversi da quelli di cui alla voce 07 02 16",
+      "hazardous": false,
+      "chapter": "07"
+    },
+    {
+      "code": "07 02 17*",
+      "description": "rifiuti contenenti siliconi, diversi da quelli di cui alla voce 07 02 16",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 02 99",
+      "description": "rifiuti non specificati altrimenti 07 03 rifiuti della produzione, formulazione, fornitura ed uso di coloranti e pigmenti organici (tranne 06 11)",
+      "hazardous": false,
+      "chapter": "07"
+    },
+    {
+      "code": "07 03 01*",
+      "description": "soluzioni acquose di lavaggio ed acque madri",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 03 03*",
+      "description": "solventi organici alogenati, soluzioni di lavaggio ed acque madri",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 03 04*",
+      "description": "altri solventi organici, soluzioni di lavaggio ed acque madri",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 03 07*",
+      "description": "fondi e residui di reazione, alogenati",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 03 08*",
+      "description": "altri fondi e residui di reazione",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 03 09*",
+      "description": "residui di filtrazione e assorbenti esauriti, alogenati",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 03 10*",
+      "description": "altri residui di filtrazione e assorbenti esauriti",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 03 11*",
+      "description": "fanghi prodotti dal trattamento in loco degli effluenti, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 03 12",
+      "description": "fanghi prodotti dal trattamento in loco degli effluenti, diversi da quelli di cui alla voce 07 03",
+      "hazardous": false,
+      "chapter": "07"
+    },
+    {
+      "code": "11 07 03",
+      "description": "99 rifiuti non specificati altrimenti 07 04 rifiuti della produzione, formulazione, fornitura ed uso di prodotti fitosanitari (tranne 02 01 08 e 02 01 09), agenti conservativi del legno (tranne 03 02) ed altri biocidi, organici",
+      "hazardous": false,
+      "chapter": "11"
+    },
+    {
+      "code": "07 04 01*",
+      "description": "soluzioni acquose di lavaggio ed acque madri",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 04 03*",
+      "description": "solventi organici alogenati, soluzioni di lavaggio ed acque madri",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 04 04*",
+      "description": "altri solventi organici, soluzioni di lavaggio ed acque madri",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 04 07*",
+      "description": "fondi e residui di reazione, alogenati",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 04 08*",
+      "description": "altri fondi e residui di reazione",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 04 09*",
+      "description": "residui di filtrazione e assorbenti esauriti, alogenati",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 04 10*",
+      "description": "altri residui di filtrazione e assorbenti esauriti",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 04 11*",
+      "description": "fanghi prodotti dal trattamento in loco degli effluenti, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 04 12",
+      "description": "fanghi prodotti dal trattamento in loco degli effluenti, diversi da quelli di cui alla voce 07 04",
+      "hazardous": false,
+      "chapter": "07"
+    },
+    {
+      "code": "11 07 04",
+      "description": "13 * rifiuti solidi contenenti sostanze pericolose",
+      "hazardous": false,
+      "chapter": "11"
+    },
+    {
+      "code": "07 04 99",
+      "description": "rifiuti non specificati altrimenti 07 05 rifiuti della produzione, formulazione, fornitura e uso di prodotti farmaceutici",
+      "hazardous": false,
+      "chapter": "07"
+    },
+    {
+      "code": "07 05 01*",
+      "description": "soluzioni acquose di lavaggio ed acque madri",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 05 03*",
+      "description": "solventi organici alogenati, soluzioni di lavaggio ed acque madri",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 05 04*",
+      "description": "altri solventi organici, soluzioni di lavaggio ed acque madri",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 05 07*",
+      "description": "fondi e residui di reazione, alogenati",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 05 08*",
+      "description": "altri fondi e residui di reazione",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 05 09*",
+      "description": "residui di filtrazione e assorbenti esauriti, alogenati",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 05 10*",
+      "description": "altri residui di filtrazione e assorbenti esauriti",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 05 11*",
+      "description": "fanghi prodotti dal trattamento in loco degli effluenti, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 05 12",
+      "description": "fanghi prodotti dal trattamento in loco degli effluenti, diversi da quelli di cui alla voce 07 05",
+      "hazardous": false,
+      "chapter": "07"
+    },
+    {
+      "code": "11 07 05",
+      "description": "13 * rifiuti solidi contenenti sostanze pericolose",
+      "hazardous": false,
+      "chapter": "11"
+    },
+    {
+      "code": "07 05 14",
+      "description": "rifiuti solidi diversi da quelli di cui alla voce 07 05 13",
+      "hazardous": false,
+      "chapter": "07"
+    },
+    {
+      "code": "07 05 99",
+      "description": "rifiuti non specificati altrimenti 07 06 rifiuti della produzione, formulazione, fornitura ed uso di grassi, lubrificanti, saponi, detergenti, disinfettanti e cosmetici",
+      "hazardous": false,
+      "chapter": "07"
+    },
+    {
+      "code": "07 06 01*",
+      "description": "soluzioni acquose di lavaggio ed acque madri",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 06 03*",
+      "description": "solventi organici alogenati, soluzioni di lavaggio ed acque madri",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 06 04*",
+      "description": "altri solventi organici, soluzioni di lavaggio ed acque madri",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 06 07*",
+      "description": "fondi e residui di reazione, alogenati",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 06 08*",
+      "description": "altri fondi e residui di reazione",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 06 09*",
+      "description": "residui di filtrazione e assorbenti esauriti alogenati",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 06 10*",
+      "description": "altri residui di filtrazione e assorbenti esauriti",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 06 11*",
+      "description": "fanghi prodotti dal trattamento in loco degli effluenti, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 06 12",
+      "description": "fanghi prodotti dal trattamento in loco degli effluenti, diversi da quelli di cui alla voce 07 06",
+      "hazardous": false,
+      "chapter": "07"
+    },
+    {
+      "code": "11 07 06",
+      "description": "99 rifiuti non specificati altrimenti 07 07 rifiuti della produzione, formulazione, fornitura e uso di prodotti della chimica fine e di prodotti chimici non specificati altrimenti",
+      "hazardous": false,
+      "chapter": "11"
+    },
+    {
+      "code": "07 07 01*",
+      "description": "soluzioni acquose di lavaggio ed acque madri",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 07 03*",
+      "description": "solventi organici alogenati, soluzioni di lavaggio ed acque madri",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 07 04*",
+      "description": "altri solventi organici, soluzioni di lavaggio ed acque madri",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 07 07*",
+      "description": "fondi e residui di reazione, alogenati",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 07 08*",
+      "description": "altri fondi e residui di reazione",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 07 09*",
+      "description": "residui di filtrazione e assorbenti esauriti, alogenati",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 07 10*",
+      "description": "altri residui di filtrazione e assorbenti esauriti",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 07 11*",
+      "description": "fanghi prodotti dal trattamento in loco degli effluenti, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "07"
+    },
+    {
+      "code": "07 07 12",
+      "description": "fanghi prodotti dal trattamento in loco degli effluenti, diversi da quelli di cui alla voce 07 07",
+      "hazardous": false,
+      "chapter": "07"
+    },
+    {
+      "code": "11 07 07",
+      "description": "99 rifiuti non specificati altrimenti 08 rifiuti della produzione, formulazione, fornitura ed uso di rivestimenti (pitture, vernici e smalti vetrati), adesivi, sigillanti e inchiostri per stampa 08 01 rifiuti della produzione, formulazione, fornitura ed uso nonché della rimozione di pitture e vernici",
+      "hazardous": false,
+      "chapter": "11"
+    },
+    {
+      "code": "08 01 11*",
+      "description": "pitture e vernici di scarto, contenenti solventi organici o altre sostanze pericolose",
+      "hazardous": true,
+      "chapter": "08"
+    },
+    {
+      "code": "08 01 12",
+      "description": "pitture e vernici di scarto, diverse da quelle di cui alla voce 08 01 11",
+      "hazardous": false,
+      "chapter": "08"
+    },
+    {
+      "code": "08 01 13*",
+      "description": "fanghi prodotti da pitture e vernici, contenenti solventi organici o altre sostanze pericolose",
+      "hazardous": true,
+      "chapter": "08"
+    },
+    {
+      "code": "08 01 14",
+      "description": "fanghi prodotti da pitture e vernici, diversi da quelli di cui alla voce 08 01 13",
+      "hazardous": false,
+      "chapter": "08"
+    },
+    {
+      "code": "08 01 15*",
+      "description": "fanghi acquosi contenenti pitture e vernici, contenenti solventi organici o altre sostanze pericolose",
+      "hazardous": true,
+      "chapter": "08"
+    },
+    {
+      "code": "08 01 16",
+      "description": "fanghi acquosi contenenti pitture e vernici, diversi da quelli di cui alla voce 08 01 15",
+      "hazardous": false,
+      "chapter": "08"
+    },
+    {
+      "code": "08 01 17*",
+      "description": "fanghi prodotti dalla rimozione di pitture e vernici, contenenti solventi organici o altre sostanze pericolose",
+      "hazardous": true,
+      "chapter": "08"
+    },
+    {
+      "code": "08 01 18",
+      "description": "fanghi prodotti dalla rimozione di pitture e vernici, diversi da quelli di cui alla voce 08 01 17",
+      "hazardous": false,
+      "chapter": "08"
+    },
+    {
+      "code": "08 01 19*",
+      "description": "sospensioni acquose contenenti pitture e vernici, contenenti solventi organici o altre sostanze pericolose",
+      "hazardous": true,
+      "chapter": "08"
+    },
+    {
+      "code": "08 01 20",
+      "description": "sospensioni acquose contenenti pitture e vernici, diverse da quelle di cui alla voce 08 01 19",
+      "hazardous": false,
+      "chapter": "08"
+    },
+    {
+      "code": "08 01 21*",
+      "description": "residui di pittura o di sverniciatori",
+      "hazardous": true,
+      "chapter": "08"
+    },
+    {
+      "code": "08 01 99",
+      "description": "rifiuti non specificati altrimenti 08 02 rifiuti della produzione, formulazione, fornitura e uso di altri rivestimenti (inclusi materiali ceramici)",
+      "hazardous": false,
+      "chapter": "08"
+    },
+    {
+      "code": "08 02 01",
+      "description": "polveri di scarti di rivestimenti",
+      "hazardous": false,
+      "chapter": "08"
+    },
+    {
+      "code": "08 02 02",
+      "description": "fanghi acquosi contenenti materiali ceramici",
+      "hazardous": false,
+      "chapter": "08"
+    },
+    {
+      "code": "08 02 03",
+      "description": "sospensioni acquose contenenti materiali ceramici",
+      "hazardous": false,
+      "chapter": "08"
+    },
+    {
+      "code": "08 02 99",
+      "description": "rifiuti non specificati altrimenti 08 03 rifiuti della produzione, formulazione, fornitura e uso di inchiostri per stampa",
+      "hazardous": false,
+      "chapter": "08"
+    },
+    {
+      "code": "08 03 07",
+      "description": "fanghi acquosi contenenti inchiostro",
+      "hazardous": false,
+      "chapter": "08"
+    },
+    {
+      "code": "08 03 08",
+      "description": "rifiuti liquidi acquosi contenenti inchiostro",
+      "hazardous": false,
+      "chapter": "08"
+    },
+    {
+      "code": "08 03 12*",
+      "description": "scarti di inchiostro, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "08"
+    },
+    {
+      "code": "08 03 13",
+      "description": "scarti di inchiostro, diversi da quelli di cui alla voce 08 03 12",
+      "hazardous": false,
+      "chapter": "08"
+    },
+    {
+      "code": "08 03 14*",
+      "description": "fanghi di inchiostro, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "08"
+    },
+    {
+      "code": "08 03 15",
+      "description": "fanghi di inchiostro, diversi da quelli di cui alla voce 08 03 14",
+      "hazardous": false,
+      "chapter": "08"
+    },
+    {
+      "code": "08 03 16*",
+      "description": "residui di soluzioni per incisione",
+      "hazardous": true,
+      "chapter": "08"
+    },
+    {
+      "code": "08 03 17*",
+      "description": "toner per stampa esauriti, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "08"
+    },
+    {
+      "code": "08 03 18",
+      "description": "toner per stampa esauriti, diversi da quelli di cui alla voce 08 03 17",
+      "hazardous": false,
+      "chapter": "08"
+    },
+    {
+      "code": "08 03 19*",
+      "description": "oli dispersi",
+      "hazardous": true,
+      "chapter": "08"
+    },
+    {
+      "code": "08 03 99",
+      "description": "rifiuti non specificati altrimenti 08 04 rifiuti della produzione, formulazione, fornitura e uso di adesivi e sigillanti (inclusi i prodotti impermeabilizzanti)",
+      "hazardous": false,
+      "chapter": "08"
+    },
+    {
+      "code": "08 04 09*",
+      "description": "adesivi e sigillanti di scarto, contenenti solventi organici o altre sostanze pericolose",
+      "hazardous": true,
+      "chapter": "08"
+    },
+    {
+      "code": "08 04 10",
+      "description": "adesivi e sigillanti di scarto, diversi da quelli di cui alla voce 08 04 09",
+      "hazardous": false,
+      "chapter": "08"
+    },
+    {
+      "code": "08 04 11*",
+      "description": "fanghi di adesivi e sigillanti, contenenti solventi organici o altre sostanze pericolose",
+      "hazardous": true,
+      "chapter": "08"
+    },
+    {
+      "code": "08 04 12",
+      "description": "fanghi di adesivi e sigillanti, diversi da quelli di cui alla voce 08 04 11",
+      "hazardous": false,
+      "chapter": "08"
+    },
+    {
+      "code": "08 04 13*",
+      "description": "fanghi acquosi contenenti adesivi o sigillanti, contenenti solventi organici o altre sostanze pericolose",
+      "hazardous": true,
+      "chapter": "08"
+    },
+    {
+      "code": "08 04 14",
+      "description": "fanghi acquosi contenenti adesivi o sigillanti, diversi da quelli di cui alla voce 08 04 13",
+      "hazardous": false,
+      "chapter": "08"
+    },
+    {
+      "code": "08 04 15*",
+      "description": "rifiuti liquidi acquosi contenenti adesivi o sigillanti, contenenti solventi organici o altre sostanze pericolose",
+      "hazardous": true,
+      "chapter": "08"
+    },
+    {
+      "code": "08 04 16",
+      "description": "rifiuti liquidi acquosi contenenti adesivi o sigillanti, diversi da quelli di cui alla voce 08 04 15",
+      "hazardous": false,
+      "chapter": "08"
+    },
+    {
+      "code": "08 04 17*",
+      "description": "olio di resina",
+      "hazardous": true,
+      "chapter": "08"
+    },
+    {
+      "code": "08 04 99",
+      "description": "rifiuti non specificati altrimenti 08 05 rifiuti non specificati altrimenti alla voce 08",
+      "hazardous": false,
+      "chapter": "08"
+    },
+    {
+      "code": "08 05 01*",
+      "description": "isocianati di scarto 09 rifiuti dell'industria fotografica 09 01 rifiuti dell'industria fotografica",
+      "hazardous": true,
+      "chapter": "08"
+    },
+    {
+      "code": "09 01 01*",
+      "description": "soluzioni di sviluppo e soluzioni attivanti a base acquosa",
+      "hazardous": true,
+      "chapter": "09"
+    },
+    {
+      "code": "09 01 02*",
+      "description": "soluzioni di sviluppo per lastre offset a base acquosa",
+      "hazardous": true,
+      "chapter": "09"
+    },
+    {
+      "code": "09 01 03*",
+      "description": "soluzioni di sviluppo a base di solventi",
+      "hazardous": true,
+      "chapter": "09"
+    },
+    {
+      "code": "09 01 04*",
+      "description": "soluzioni di fissaggio",
+      "hazardous": true,
+      "chapter": "09"
+    },
+    {
+      "code": "09 01 05*",
+      "description": "soluzioni di lavaggio e soluzioni di arresto-fissaggio",
+      "hazardous": true,
+      "chapter": "09"
+    },
+    {
+      "code": "09 01 06*",
+      "description": "rifiuti contenenti argento prodotti dal trattamento in loco di rifiuti fotografici",
+      "hazardous": true,
+      "chapter": "09"
+    },
+    {
+      "code": "09 01 07",
+      "description": "carta e pellicole per fotografia, contenenti argento o composti dell'argento",
+      "hazardous": false,
+      "chapter": "09"
+    },
+    {
+      "code": "09 01 08",
+      "description": "carta e pellicole per fotografia, non contenenti argento o composti dell'argento",
+      "hazardous": false,
+      "chapter": "09"
+    },
+    {
+      "code": "09 01 10",
+      "description": "macchine fotografiche monouso senza batterie",
+      "hazardous": false,
+      "chapter": "09"
+    },
+    {
+      "code": "09 01 11*",
+      "description": "macchine fotografiche monouso contenenti batterie incluse nelle voci 16 06 01, 16 06 02 o",
+      "hazardous": true,
+      "chapter": "09"
+    },
+    {
+      "code": "16 06 03",
+      "description": "09 01 12 macchine fotografiche monouso diverse da quelle di cui alla voce 09 01 11",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "09 01 13*",
+      "description": "rifiuti liquidi acquosi prodotti dal recupero in loco dell'argento, diversi da quelli di cui alla voce 09 01 06",
+      "hazardous": true,
+      "chapter": "09"
+    },
+    {
+      "code": "09 01 99",
+      "description": "rifiuti non specificati altrimenti 10 rifiuti provenienti da processi termici 10 01 rifiuti prodotti da centrali termiche ed altri impianti termici (tranne 19)",
+      "hazardous": false,
+      "chapter": "09"
+    },
+    {
+      "code": "10 01 01",
+      "description": "ceneri pesanti, scorie e polveri di caldaia (tranne le polveri di caldaia di cui alla voce 10 01 04)",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 01 02",
+      "description": "ceneri leggere di carbone",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 01 03",
+      "description": "ceneri leggere di torba e di legno non trattato",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 01 04*",
+      "description": "ceneri leggere di olio combustibile e polveri di caldaia",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 01 05",
+      "description": "rifiuti solidi prodotti da reazioni a base di calcio nei processi di desolforazione dei fumi",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 01 07",
+      "description": "rifiuti fangosi prodotti da reazioni a base di calcio nei processi di desolforazione dei fumi",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 01 09*",
+      "description": "acido solforico",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 01 13*",
+      "description": "ceneri leggere prodotte da idrocarburi emulsionati usati come combustibile",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 01 14*",
+      "description": "ceneri pesanti, scorie e polveri di caldaia prodotte dal coincenerimento, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 01 15",
+      "description": "ceneri pesanti, scorie e polveri di caldaia prodotte dal coincenerimento, diversi da quelli di cui alla voce 10 01 14",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 01 16*",
+      "description": "ceneri leggere prodotte dal coincenerimento, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 01 17",
+      "description": "ceneri leggere prodotte dal coincenerimento, diverse da quelle di cui alla voce 10 01 16",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 01 18*",
+      "description": "rifiuti prodotti dalla depurazione dei fumi, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 01 19",
+      "description": "rifiuti prodotti dalla depurazione dei fumi, diversi da quelli di cui alle voci 10 01 05, 10 01 07 e",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 01 18",
+      "description": "10 01 20 * fanghi prodotti dal trattamento in loco degli effluenti, contenenti sostanze pericolose",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 01 21",
+      "description": "fanghi prodotti dal trattamento in loco degli effluenti, diversi da quelli di cui alla voce 10 01",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "20 10 01",
+      "description": "22 * fanghi acquosi da operazioni di pulizia di caldaie, contenenti sostanze pericolose",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "10 01 23",
+      "description": "fanghi acquosi da operazioni di pulizia di caldaie, diversi da quelli di cui alla voce 10 01 22",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 01 24",
+      "description": "sabbie dei reattori a letto fluidizzato",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 01 25",
+      "description": "rifiuti dell'immagazzinamento e della preparazione del combustibile delle centrali termoelettriche a carbone",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 01 26",
+      "description": "rifiuti prodotti dal trattamento delle acque di raffreddamento",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 01 99",
+      "description": "rifiuti non specificati altrimenti 10 02 rifiuti dell'industria siderurgica",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 02 01",
+      "description": "rifiuti del trattamento delle scorie",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 02 02",
+      "description": "scorie non trattate",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 02 07*",
+      "description": "rifiuti solidi prodotti dal trattamento dei fumi, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 02 08",
+      "description": "rifiuti solidi prodotti dal trattamento dei fumi, diversi da quelli di cui alla voce 10 02 07",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 02 10",
+      "description": "scaglie di laminazione",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 02 11*",
+      "description": "rifiuti prodotti dal trattamento delle acque di raffreddamento, contenenti oli",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 02 12",
+      "description": "rifiuti prodotti dal trattamento delle acque di raffreddamento, diversi da quelli di cui alla voce",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 02 11",
+      "description": "10 02 13 * fanghi e residui di filtrazione prodotti dal trattamento dei fumi, contenenti sostanze pericolose",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 02 14",
+      "description": "fanghi e residui di filtrazione prodotti dal trattamento dei fumi, diversi da quelli di cui alla voce",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 02 13",
+      "description": "10 02 15 altri fanghi e residui di filtrazione",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 02 99",
+      "description": "rifiuti non specificati altrimenti 10 03 rifiuti della metallurgia termica dell'alluminio",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 03 02",
+      "description": "frammenti di anodi",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 03 04*",
+      "description": "scorie della produzione primaria",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 03 05",
+      "description": "rifiuti di allumina",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 03 08*",
+      "description": "scorie saline della produzione secondaria",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 03 09*",
+      "description": "scorie nere della produzione secondaria",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 03 15*",
+      "description": "schiumature infiammabili o che rilasciano, al contatto con l'acqua, gas infiammabili in quantità pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 03 16",
+      "description": "schiumature diverse da quelle di cui alla voce 10 03 15",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 03 17*",
+      "description": "rifiuti contenenti catrame derivanti dalla produzione di anodi",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 03 18",
+      "description": "rifiuti contenenti carbonio derivanti dalla produzione degli anodi, diversi da quelli di cui alla voce 10 03 17",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 03 19*",
+      "description": "polveri dei gas di combustione, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 03 20",
+      "description": "polveri dei gas di combustione, diverse da quelle di cui alla voce 10 03 19",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 03 21*",
+      "description": "altre polveri e particolati (compresi quelli prodotti da mulini a palle), contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 03 22",
+      "description": "altre polveri e particolati (compresi quelli prodotti da mulini a palle), diverse da quelle di cui alla voce 10 03 21",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 03 23*",
+      "description": "rifiuti solidi prodotti dal trattamento dei fumi, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 03 24",
+      "description": "rifiuti solidi prodotti dal trattamento dei fumi, diversi da quelli di cui alla voce 10 03 23",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 03 25*",
+      "description": "fanghi e residui di filtrazione prodotti dal trattamento dei fumi, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 03 26",
+      "description": "fanghi e residui di filtrazione prodotti dal trattamento dei fumi, diversi da quelli di cui alla voce",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 03 25",
+      "description": "10 03 27 * rifiuti prodotti dal trattamento delle acque di raffreddamento, contenenti oli",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 03 28",
+      "description": "rifiuti prodotti dal trattamento delle acque di raffreddamento, diversi da quelli di cui alla voce",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 03 27",
+      "description": "10 03 29 * rifiuti prodotti dal trattamento di scorie saline e scorie nere, contenenti sostanze pericolose",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 03 30",
+      "description": "rifiuti prodotti dal trattamento di scorie saline e scorie nere, diversi da quelli di cui alla voce",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 03 29",
+      "description": "10 03 99 rifiuti non specificati altrimenti 10 04 rifiuti della metallurgia termica del piombo",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 04 01*",
+      "description": "scorie della produzione primaria e secondaria",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 04 02*",
+      "description": "scorie e schiumature della produzione primaria e secondaria",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 04 03*",
+      "description": "arsenato di calcio",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 04 04*",
+      "description": "polveri dei gas di combustione",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 04 05*",
+      "description": "altre polveri e particolato",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 04 06*",
+      "description": "rifiuti solidi prodotti dal trattamento dei fumi",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 04 07*",
+      "description": "fanghi e residui di filtrazione prodotti dal trattamento dei fumi",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 04 09*",
+      "description": "rifiuti prodotti dal trattamento delle acque di raffreddamento, contenenti oli",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 04 10",
+      "description": "rifiuti prodotti dal trattamento delle acque di raffreddamento, diversi da quelli di cui alla voce",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 04 99",
+      "description": "rifiuti non specificati altrimenti 10 05 rifiuti della metallurgia termica dello zinco",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 05 01",
+      "description": "scorie della produzione primaria e secondaria",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 05 03*",
+      "description": "polveri dei gas di combustione",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 05 04",
+      "description": "altre polveri e particolato",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 05 05*",
+      "description": "rifiuti solidi derivanti dal trattamento dei fumi",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 05 06*",
+      "description": "fanghi e residui di filtrazione prodotti dal trattamento dei fumi",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 05 08*",
+      "description": "rifiuti prodotti dal trattamento delle acque di raffreddamento, contenenti oli",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 05 09",
+      "description": "rifiuti prodotti dal trattamento delle acque di raffreddamento, diversi da quelli di cui alla voce",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 05 08",
+      "description": "10 05 10 * scorie e schiumature infiammabili o che rilasciano, al contatto con l'acqua, gas infiammabili in quantità pericolose",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 05 11",
+      "description": "scorie e schiumature diverse da quelle di cui alla voce 10 05 10",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 05 99",
+      "description": "rifiuti non specificati altrimenti 10 06 rifiuti della metallurgia termica del rame",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 06 01",
+      "description": "scorie della produzione primaria e secondaria",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 06 02",
+      "description": "scorie e schiumature della produzione primaria e secondaria",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 06 03*",
+      "description": "polveri dei gas di combustione",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 06 04",
+      "description": "altre polveri e particolato",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 06 06*",
+      "description": "rifiuti solidi prodotti dal trattamento dei fumi",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 06 07*",
+      "description": "fanghi e residui di filtrazione prodotti dal trattamento dei fumi",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 06 09*",
+      "description": "rifiuti prodotti dal trattamento delle acque di raffreddamento, contenenti oli",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 06 10",
+      "description": "rifiuti prodotti dal trattamento delle acque di raffreddamento, diversi da quelli di cui alla voce",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 06 09",
+      "description": "10 06 99 rifiuti non specificati altrimenti 10 07 rifiuti della metallurgia termica di argento, oro e platino",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 07 01",
+      "description": "scorie della produzione primaria e secondaria",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 07 02",
+      "description": "scorie e schiumature della produzione primaria e secondaria",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 07 03",
+      "description": "rifiuti solidi prodotti dal trattamento dei fumi",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 07 04",
+      "description": "altre polveri e particolato",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 07 05",
+      "description": "fanghi e residui di filtrazione prodotti dal trattamento dei fumi",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 07 07*",
+      "description": "rifiuti prodotti dal trattamento delle acque di raffreddamento, contenenti oli",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 07 08",
+      "description": "rifiuti prodotti dal trattamento delle acque di raffreddamento, diversi da quelli di cui alla voce",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 07 07",
+      "description": "10 07 99 rifiuti non specificati altrimenti 10 08 rifiuti della metallurgia termica di altri minerali non ferrosi",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 08 04",
+      "description": "polveri e particolato",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 08 08*",
+      "description": "scorie saline della produzione primaria e secondaria",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 08 09",
+      "description": "altre scorie",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 08 10*",
+      "description": "scorie e schiumature infiammabili o che rilasciano, al contatto con l'acqua, gas infiammabili in quantità pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 08 11",
+      "description": "scorie e schiumature diverse da quelle di cui alla voce 10 08 10",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 08 12*",
+      "description": "rifiuti contenenti catrame derivante dalla produzione degli anodi",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 08 13",
+      "description": "rifiuti contenenti carbonio della produzione degli anodi, diversi da quelli di cui alla voce 10 08",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "12 10 08",
+      "description": "14 frammenti di anodi",
+      "hazardous": false,
+      "chapter": "12"
+    },
+    {
+      "code": "10 08 15*",
+      "description": "polveri dei gas di combustione, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 08 16",
+      "description": "polveri dei gas di combustione, diverse da quelle di cui alla voce 10 08 15",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 08 17*",
+      "description": "fanghi e residui di filtrazione prodotti dal trattamento dei fumi, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 08 18",
+      "description": "fanghi e residui di filtrazione prodotti dal trattamento dei fumi, diversi da quelli di cui alla voce",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 08 17",
+      "description": "10 08 19 * rifiuti prodotti dal trattamento delle acque di raffreddamento, contenenti oli",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 08 20",
+      "description": "rifiuti prodotti dal trattamento delle acque di raffreddamento, diversi da quelli di cui alla voce",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 08 19",
+      "description": "10 08 99 rifiuti non specificati altrimenti 10 09 rifiuti della fusione di materiali ferrosi",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 09 03",
+      "description": "scorie di fusione",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 09 05*",
+      "description": "forme e anime da fonderia inutilizzate, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 09 06",
+      "description": "forme e anime da fonderia inutilizzate, diverse da quelle di cui alla voce 10 09 05",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 09 07*",
+      "description": "forme e anime da fonderia utilizzate, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 09 08",
+      "description": "forme e anime da fonderia utilizzate, diverse da quelle di cui alla voce 10 09 07",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 09 09*",
+      "description": "polveri dei gas di combustione contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 09 10",
+      "description": "polveri dei gas di combustione diverse, da quelle di cui alla voce 10 09 09",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 09 11*",
+      "description": "altri particolati contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 09 12",
+      "description": "altri particolati diversi da quelli di cui alla voce 10 09 11",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 09 13*",
+      "description": "scarti di leganti contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 09 14",
+      "description": "scarti di leganti diversi da quelli di cui alla voce 10 09 13",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 09 15*",
+      "description": "scarti di rilevatori di crepe, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 09 16",
+      "description": "scarti di rilevatori di crepe, diversi da quelli di cui alla voce 10 09 15",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 09 99",
+      "description": "rifiuti non specificati altrimenti 10 10 rifiuti della fusione di materiali non ferrosi",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 10 03",
+      "description": "scorie di fusione",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 10 05*",
+      "description": "forme e anime da fonderia inutilizzate, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 10 06",
+      "description": "forme e anime da fonderia inutilizzate, diverse da quelle di cui alla voce 10 10 05",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 10 07*",
+      "description": "forme e anime da fonderia utilizzate, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 10 08",
+      "description": "forme e anime da fonderia utilizzate, diverse da quelle di cui alla voce 10 10 07",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 10 09*",
+      "description": "polveri di gas di combustione, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 10 10",
+      "description": "polveri dei gas di combustione, diverse da quelle di cui alla voce 10 10 09",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 10 11*",
+      "description": "altri particolati contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 10 12",
+      "description": "altri particolati diversi da quelli di cui alla voce 10 10 11",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 10 13*",
+      "description": "scarti di leganti contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 10 14",
+      "description": "scarti di leganti diversi da quelli di cui alla voce 10 10 13",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 10 15*",
+      "description": "scarti di rilevatori di crepe, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 10 16",
+      "description": "scarti di rilevatori di crepe, diversi da quelli di cui alla voce 10 10 15",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 10 99",
+      "description": "rifiuti non specificati altrimenti 10 11 rifiuti della fabbricazione del vetro e di prodotti di vetro",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 11 03",
+      "description": "scarti di materiali in fibra a base di vetro",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 11 05",
+      "description": "polveri e particolato",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 11 09*",
+      "description": "residui di miscela di preparazione non sottoposti a trattamento termico, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 11 10",
+      "description": "residui di miscela di preparazione non sottoposti a trattamento termico, diverse da quelle di cui alla voce 10 11 09",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 11 11*",
+      "description": "rifiuti di vetro in forma di particolato e polveri di vetro contenenti metalli pesanti (provenienti ad esempio da tubi a raggi catodici)",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 11 12",
+      "description": "rifiuti di vetro diversi da quelli di cui alla voce 10 11 11",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 11 13*",
+      "description": "fanghi provenienti dalla lucidatura e dalla macinazione del vetro, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 11 14",
+      "description": "fanghi provenienti dalla lucidatura e dalla macinazione del vetro, diversi da quelli di cui alla voce 10 11 13",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 11 15*",
+      "description": "rifiuti solidi prodotti dal trattamento di fumi, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 11 16",
+      "description": "rifiuti prodotti dal trattamento di fumi, diversi da quelli di cui alla voce 10 11 15",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 11 17*",
+      "description": "fanghi e residui di filtrazione prodotti dal trattamento di fumi, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 11 18",
+      "description": "fanghi e residui di filtrazione prodotti dal trattamento di fumi, diversi da quelli di cui alla voce",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 11 17",
+      "description": "10 11 19 * rifiuti solidi prodotti dal trattamento in loco degli effluenti, contenenti sostanze pericolose",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 11 20",
+      "description": "rifiuti solidi prodotti dal trattamento in loco degli effluenti, diversi da quelli di cui alla voce 10",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "11 19 10",
+      "description": "11 99 rifiuti non specificati altrimenti 10 12 rifiuti della fabbricazione di prodotti di ceramica, mattoni, mattonelle e materiali da costruzione",
+      "hazardous": false,
+      "chapter": "11"
+    },
+    {
+      "code": "10 12 01",
+      "description": "residui di miscela non sottoposti a trattamento termico",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 12 03",
+      "description": "polveri e particolato",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 12 05",
+      "description": "fanghi e residui di filtrazione prodotti dal trattamento dei fumi",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 12 06",
+      "description": "stampi di scarto",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 12 08",
+      "description": "scarti di ceramica, mattoni, mattonelle e materiali da costruzione (sottoposti a trattamento termico)",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 12 09*",
+      "description": "rifiuti solidi prodotti dal trattamento dei fumi, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 12 10",
+      "description": "rifiuti solidi prodotti dal trattamento dei fumi, diversi da quelli di cui alla voce 10 12 09",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 12 11*",
+      "description": "rifiuti delle operazioni di smaltatura, contenenti metalli pesanti",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 12 12",
+      "description": "rifiuti delle operazioni di smaltatura diversi da quelli di cui alla voce 10 12 11",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 12 13",
+      "description": "fanghi prodotti dal trattamento in loco degli effluenti",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 12 99",
+      "description": "rifiuti non specificati altrimenti 10 13 rifiuti della fabbricazione di cemento, calce e gesso e manufatti di tali materiali",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 13 01",
+      "description": "residui di miscela non sottoposti a trattamento termico",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 13 04",
+      "description": "rifiuti di calcinazione e di idratazione della calce",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 13 06",
+      "description": "polveri e particolato (eccetto quelli delle voci 10 13 12 e 10 13 13)",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 13 07",
+      "description": "fanghi e residui di filtrazione prodotti dal trattamento dei fumi",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 13 09*",
+      "description": "rifiuti della fabbricazione di cemento-amianto, contenenti amianto",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 13 10",
+      "description": "rifiuti della fabbricazione di cemento-amianto, diversi da quelli di cui alla voce 10 13 09",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 13 11",
+      "description": "rifiuti della produzione di materiali compositi a base di cemento, diversi da quelli di cui alle voci 10 13 09 e 10 13 10",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 13 12*",
+      "description": "rifiuti solidi prodotti dal trattamento dei fumi, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "10 13 13",
+      "description": "rifiuti solidi prodotti dal trattamento dei fumi, diversi da quelli di cui alla voce 10 13 12",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 13 14",
+      "description": "rifiuti e fanghi di cemento",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 13 99",
+      "description": "rifiuti non specificati altrimenti 10 14 rifiuti prodotti dai forni crematori",
+      "hazardous": false,
+      "chapter": "10"
+    },
+    {
+      "code": "10 14 01*",
+      "description": "rifiuti prodotti dalla depurazione dei fumi, contenenti mercurio 11 rifiuti prodotti dal trattamento chimico superficiale e dal rivestimento di metalli ed altri materiali; idrometallurgia non ferrosa 11 01 rifiuti prodotti dal trattamento chimico superficiale e rivestimento di metalli (ad esempio, processi galvanici, zincatura, decappaggio, pulitura elettrolitica, fosfatazione, sgrassaggio con alcali, anodizzazione)",
+      "hazardous": true,
+      "chapter": "10"
+    },
+    {
+      "code": "11 01 05*",
+      "description": "acidi di decappaggio",
+      "hazardous": true,
+      "chapter": "11"
+    },
+    {
+      "code": "11 01 06*",
+      "description": "acidi non specificati altrimenti",
+      "hazardous": true,
+      "chapter": "11"
+    },
+    {
+      "code": "11 01 07*",
+      "description": "basi di decappaggio",
+      "hazardous": true,
+      "chapter": "11"
+    },
+    {
+      "code": "11 01 08*",
+      "description": "fanghi di fosfatazione",
+      "hazardous": true,
+      "chapter": "11"
+    },
+    {
+      "code": "11 01 09*",
+      "description": "fanghi e residui di filtrazione, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "11"
+    },
+    {
+      "code": "11 01 10",
+      "description": "fanghi e residui di filtrazione, diversi da quelli di cui alla voce 11 01 09",
+      "hazardous": false,
+      "chapter": "11"
+    },
+    {
+      "code": "11 01 11*",
+      "description": "soluzioni acquose di lavaggio, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "11"
+    },
+    {
+      "code": "11 01 12",
+      "description": "soluzioni acquose di lavaggio, diverse da quelle di cui alla voce 11 01 11",
+      "hazardous": false,
+      "chapter": "11"
+    },
+    {
+      "code": "11 01 13*",
+      "description": "rifiuti di sgrassaggio contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "11"
+    },
+    {
+      "code": "11 01 14",
+      "description": "rifiuti di sgrassaggio diversi da quelli di cui alla voce 11 01 13",
+      "hazardous": false,
+      "chapter": "11"
+    },
+    {
+      "code": "11 01 15*",
+      "description": "eluati e fanghi di sistemi a membrana o sistemi a scambio ionico, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "11"
+    },
+    {
+      "code": "11 01 16*",
+      "description": "resine a scambio ionico saturate o esaurite",
+      "hazardous": true,
+      "chapter": "11"
+    },
+    {
+      "code": "11 01 98*",
+      "description": "altri rifiuti contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "11"
+    },
+    {
+      "code": "11 01 99",
+      "description": "rifiuti non specificati altrimenti 11 02 rifiuti prodotti dalla lavorazione idrometallurgica di metalli non ferrosi",
+      "hazardous": false,
+      "chapter": "11"
+    },
+    {
+      "code": "11 02 02*",
+      "description": "fanghi della lavorazione idrometallurgica dello zinco (compresi jarosite, goethite)",
+      "hazardous": true,
+      "chapter": "11"
+    },
+    {
+      "code": "11 02 03",
+      "description": "rifiuti della produzione di anodi per processi elettrolitici acquosi",
+      "hazardous": false,
+      "chapter": "11"
+    },
+    {
+      "code": "11 02 05*",
+      "description": "rifiuti della lavorazione idrometallurgica del rame, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "11"
+    },
+    {
+      "code": "11 02 06",
+      "description": "rifiuti della lavorazione idrometallurgica del rame, diversi da quelli della voce 11 02 05",
+      "hazardous": false,
+      "chapter": "11"
+    },
+    {
+      "code": "11 02 07*",
+      "description": "altri rifiuti contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "11"
+    },
+    {
+      "code": "11 02 99",
+      "description": "rifiuti non specificati altrimenti 11 03 rifiuti solidi e fanghi prodotti da processi di rinvenimento",
+      "hazardous": false,
+      "chapter": "11"
+    },
+    {
+      "code": "11 03 01*",
+      "description": "rifiuti contenenti cianuro",
+      "hazardous": true,
+      "chapter": "11"
+    },
+    {
+      "code": "11 03 02*",
+      "description": "altri rifiuti 11 05 rifiuti prodotti da processi di galvanizzazione a caldo",
+      "hazardous": true,
+      "chapter": "11"
+    },
+    {
+      "code": "11 05 01",
+      "description": "zinco solido",
+      "hazardous": false,
+      "chapter": "11"
+    },
+    {
+      "code": "11 05 02",
+      "description": "ceneri di zinco",
+      "hazardous": false,
+      "chapter": "11"
+    },
+    {
+      "code": "11 05 03*",
+      "description": "rifiuti solidi prodotti dal trattamento dei fumi",
+      "hazardous": true,
+      "chapter": "11"
+    },
+    {
+      "code": "11 05 04*",
+      "description": "fondente esaurito",
+      "hazardous": true,
+      "chapter": "11"
+    },
+    {
+      "code": "11 05 99",
+      "description": "rifiuti non specificati altrimenti 12 rifiuti prodotti dalla sagomatura e dal trattamento fisico e meccanico superficiale di metalli e plastica 12 01 rifiuti prodotti dalla lavorazione e dal trattamento fisico e meccanico superficiale di metalli e plastica",
+      "hazardous": false,
+      "chapter": "11"
+    },
+    {
+      "code": "12 01 01",
+      "description": "limatura e trucioli di metalli ferrosi",
+      "hazardous": false,
+      "chapter": "12"
+    },
+    {
+      "code": "12 01 02",
+      "description": "polveri e particolato di metalli ferrosi",
+      "hazardous": false,
+      "chapter": "12"
+    },
+    {
+      "code": "12 01 03",
+      "description": "limatura e trucioli di metalli non ferrosi",
+      "hazardous": false,
+      "chapter": "12"
+    },
+    {
+      "code": "12 01 04",
+      "description": "polveri e particolato di metalli non ferrosi",
+      "hazardous": false,
+      "chapter": "12"
+    },
+    {
+      "code": "12 01 05",
+      "description": "limatura e trucioli di materiali plastici",
+      "hazardous": false,
+      "chapter": "12"
+    },
+    {
+      "code": "12 01 06*",
+      "description": "oli minerali per macchinari, contenenti alogeni (eccetto emulsioni e soluzioni)",
+      "hazardous": true,
+      "chapter": "12"
+    },
+    {
+      "code": "12 01 07*",
+      "description": "oli minerali per macchinari, non contenenti alogeni (eccetto emulsioni e soluzioni)",
+      "hazardous": true,
+      "chapter": "12"
+    },
+    {
+      "code": "12 01 08*",
+      "description": "emulsioni e soluzioni per macchinari, contenenti alogeni",
+      "hazardous": true,
+      "chapter": "12"
+    },
+    {
+      "code": "12 01 09*",
+      "description": "emulsioni e soluzioni per macchinari, non contenenti alogeni",
+      "hazardous": true,
+      "chapter": "12"
+    },
+    {
+      "code": "12 01 10*",
+      "description": "oli sintetici per macchinari",
+      "hazardous": true,
+      "chapter": "12"
+    },
+    {
+      "code": "12 01 12*",
+      "description": "cere e grassi esauriti",
+      "hazardous": true,
+      "chapter": "12"
+    },
+    {
+      "code": "12 01 13",
+      "description": "rifiuti di saldatura",
+      "hazardous": false,
+      "chapter": "12"
+    },
+    {
+      "code": "12 01 14*",
+      "description": "fanghi di lavorazione, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "12"
+    },
+    {
+      "code": "12 01 15",
+      "description": "fanghi di lavorazione, diversi da quelli di cui alla voce 12 01 14",
+      "hazardous": false,
+      "chapter": "12"
+    },
+    {
+      "code": "12 01 16*",
+      "description": "residui di materiale di sabbiatura, contenente sostanze pericolose",
+      "hazardous": true,
+      "chapter": "12"
+    },
+    {
+      "code": "12 01 17",
+      "description": "residui di materiale di sabbiatura, diversi da quelli di cui alla voce 12 01 16",
+      "hazardous": false,
+      "chapter": "12"
+    },
+    {
+      "code": "12 01 18*",
+      "description": "fanghi metallici (fanghi di rettifica, affilatura e lappatura) contenenti oli",
+      "hazardous": true,
+      "chapter": "12"
+    },
+    {
+      "code": "12 01 19*",
+      "description": "oli per macchinari, facilmente biodegradabili",
+      "hazardous": true,
+      "chapter": "12"
+    },
+    {
+      "code": "12 01 20*",
+      "description": "corpi d'utensile e materiali di rettifica esauriti, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "12"
+    },
+    {
+      "code": "12 01 21",
+      "description": "corpi d'utensile e materiali di rettifica esauriti, diversi da quelli di cui alla voce 12 01 20",
+      "hazardous": false,
+      "chapter": "12"
+    },
+    {
+      "code": "12 01 99",
+      "description": "rifiuti non specificati altrimenti 12 03 rifiuti prodotti da processi di sgrassatura ad acqua e vapore (tranne 11)",
+      "hazardous": false,
+      "chapter": "12"
+    },
+    {
+      "code": "12 03 01*",
+      "description": "soluzioni acquose di lavaggio",
+      "hazardous": true,
+      "chapter": "12"
+    },
+    {
+      "code": "12 03 02*",
+      "description": "rifiuti prodotti da processi di sgrassatura a vapore 13 Oli esauriti e residui di combustibili liquidi (tranne oli commestibili ed oli di cui ai capitoli 05, 12 e 19) 13 01 scarti di oli per circuiti idraulici",
+      "hazardous": true,
+      "chapter": "12"
+    },
+    {
+      "code": "13 01 01*",
+      "description": "oli per circuiti idraulici contenenti PCB",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 01 04*",
+      "description": "emulsioni clorurate",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 01 05*",
+      "description": "emulsioni non clorurate",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 01 09*",
+      "description": "oli minerali per circuiti idraulici, clorurati",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 01 10*",
+      "description": "oli minerali per circuiti idraulici, non clorurati",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 01 11*",
+      "description": "oli sintetici per circuiti idraulici",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 01 12*",
+      "description": "oli per circuiti idraulici, facilmente biodegradabili",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 01 13*",
+      "description": "altri oli per circuiti idraulici 13 02 scarti di olio motore, olio per ingranaggi e oli lubrificanti",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 02 04*",
+      "description": "oli minerali per motori, ingranaggi e lubrificazione, clorurati",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 02 05*",
+      "description": "oli minerali per motori, ingranaggi e lubrificazione, non clorurati",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 02 06*",
+      "description": "oli sintetici per motori, ingranaggi e lubrificazione",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 02 07*",
+      "description": "oli per motori, ingranaggi e lubrificazione, facilmente biodegradabili",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 02 08*",
+      "description": "altri oli per motori, ingranaggi e lubrificazione 13 03 oli isolanti e oli termoconduttori usati",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 03 01*",
+      "description": "oli isolanti o oli termoconduttori, contenenti PCB",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 03 06*",
+      "description": "oli minerali isolanti e termoconduttori clorurati, diversi da quelli di cui alla voce 13 03 01",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 03 07*",
+      "description": "oli minerali isolanti e termoconduttori non clorurati",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 03 08*",
+      "description": "oli sintetici isolanti e oli termoconduttori",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 03 09*",
+      "description": "oli isolanti e oli termoconduttori, facilmente biodegradabili",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 03 10*",
+      "description": "altri oli isolanti e oli termoconduttori 13 04 oli di sentina",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 04 01*",
+      "description": "oli di sentina da navigazione interna",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 04 02*",
+      "description": "oli di sentina derivanti dalle fognature dei moli",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 04 03*",
+      "description": "oli di sentina da un altro tipo di navigazione 13 05 prodotti di separazione olio/acqua",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 05 01*",
+      "description": "rifiuti solidi delle camere a sabbia e di prodotti di separazione olio/acqua",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 05 02*",
+      "description": "fanghi di prodotti di separazione olio/acqua",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 05 03*",
+      "description": "fanghi da collettori",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 05 06*",
+      "description": "oli prodotti da separatori olio/acqua",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 05 07*",
+      "description": "acque oleose prodotte da separatori olio/acqua",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 05 08*",
+      "description": "miscugli di rifiuti prodotti da camere a sabbia e separatori olio/acqua 13 07 residui di combustibili liquidi",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 07 01*",
+      "description": "olio combustibile e carburante diesel",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 07 02*",
+      "description": "benzina",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 07 03*",
+      "description": "altri carburanti (comprese le miscele) 13 08 rifiuti di oli non specificati altrimenti",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 08 01*",
+      "description": "fanghi ed emulsioni da processi di dissalazione",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 08 02*",
+      "description": "altre emulsioni",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "13 08 99*",
+      "description": "rifiuti non specificati altrimenti 14 Solventi organici, refrigeranti e propellenti di scarto (tranne 07 e 08) 14 06 rifiuti di solventi organici, refrigeranti e propellenti di schiuma/aerosol",
+      "hazardous": true,
+      "chapter": "13"
+    },
+    {
+      "code": "14 06 01*",
+      "description": "clorofluorocarburi, HCFC, HFC",
+      "hazardous": true,
+      "chapter": "14"
+    },
+    {
+      "code": "14 06 02*",
+      "description": "altri solventi e miscele di solventi, alogenati",
+      "hazardous": true,
+      "chapter": "14"
+    },
+    {
+      "code": "14 06 03*",
+      "description": "altri solventi e miscele di solventi",
+      "hazardous": true,
+      "chapter": "14"
+    },
+    {
+      "code": "14 06 04*",
+      "description": "fanghi o rifiuti solidi, contenenti solventi alogenati",
+      "hazardous": true,
+      "chapter": "14"
+    },
+    {
+      "code": "14 06 05*",
+      "description": "fanghi o rifiuti solidi, contenenti altri solventi 15 rifiuti di imballaggio; assorbenti, stracci, materiali filtranti e indumenti protettivi (non specificati altrimenti) 15 01 imballaggi (compresi i rifiuti urbani di imballaggio oggetto di raccolta differenziata)",
+      "hazardous": true,
+      "chapter": "14"
+    },
+    {
+      "code": "15 01 01",
+      "description": "imballaggi di carta e cartone",
+      "hazardous": false,
+      "chapter": "15"
+    },
+    {
+      "code": "15 01 02",
+      "description": "imballaggi di plastica",
+      "hazardous": false,
+      "chapter": "15"
+    },
+    {
+      "code": "15 01 03",
+      "description": "imballaggi in legno",
+      "hazardous": false,
+      "chapter": "15"
+    },
+    {
+      "code": "15 01 04",
+      "description": "imballaggi metallici",
+      "hazardous": false,
+      "chapter": "15"
+    },
+    {
+      "code": "15 01 05",
+      "description": "imballaggi compositi",
+      "hazardous": false,
+      "chapter": "15"
+    },
+    {
+      "code": "15 01 06",
+      "description": "imballaggi in materiali misti",
+      "hazardous": false,
+      "chapter": "15"
+    },
+    {
+      "code": "15 01 07",
+      "description": "imballaggi di vetro",
+      "hazardous": false,
+      "chapter": "15"
+    },
+    {
+      "code": "15 01 09",
+      "description": "imballaggi in materia tessile",
+      "hazardous": false,
+      "chapter": "15"
+    },
+    {
+      "code": "15 01 10*",
+      "description": "imballaggi contenenti residui di sostanze pericolose o contaminati da tali sostanze",
+      "hazardous": true,
+      "chapter": "15"
+    },
+    {
+      "code": "15 01 11*",
+      "description": "imballaggi metallici contenenti matrici solide porose pericolose (ad esempio amianto), compresi i contenitori a pressione vuoti 15 02 assorbenti, materiali filtranti, stracci e indumenti protettivi",
+      "hazardous": true,
+      "chapter": "15"
+    },
+    {
+      "code": "15 02 02*",
+      "description": "assorbenti, materiali filtranti (inclusi filtri dell'olio non specificati altrimenti), stracci e indumenti protettivi, contaminati da sostanze pericolose",
+      "hazardous": true,
+      "chapter": "15"
+    },
+    {
+      "code": "15 02 03",
+      "description": "assorbenti, materiali filtranti, stracci e indumenti protettivi, diversi da quelli di cui alla voce",
+      "hazardous": false,
+      "chapter": "15"
+    },
+    {
+      "code": "15 02 02",
+      "description": "16 rifiuti non specificati altrimenti nell'elenco 16 01 veicoli fuori uso appartenenti a diversi modi di trasporto (comprese le macchine mobili non stradali) e rifiuti prodotti dallo smantellamento di veicoli fuori uso e dalla manutenzione di veicoli (tranne 13, 14, 16 06 e 16 08)",
+      "hazardous": false,
+      "chapter": "15"
+    },
+    {
+      "code": "16 01 03",
+      "description": "pneumatici fuori uso",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 01 04*",
+      "description": "veicoli fuori uso",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 01 06",
+      "description": "veicoli fuori uso, non contenenti liquidi né altre componenti pericolose",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 01 07*",
+      "description": "filtri dell'olio",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 01 08*",
+      "description": "componenti contenenti mercurio",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 01 09*",
+      "description": "componenti contenenti PCB",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 01 10*",
+      "description": "componenti esplosivi (ad esempio \"air bag\")",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 01 11*",
+      "description": "pastiglie per freni, contenenti amianto",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 01 12",
+      "description": "pastiglie per freni, diverse da quelle di cui alla voce 16 01 11",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 01 13*",
+      "description": "liquidi per freni",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 01 14*",
+      "description": "liquidi antigelo contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 01 15",
+      "description": "liquidi antigelo diversi da quelli di cui alla voce 16 01 14",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 01 16",
+      "description": "serbatoi per gas liquefatto",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 01 17",
+      "description": "metalli ferrosi",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 01 18",
+      "description": "metalli non ferrosi",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 01 19",
+      "description": "plastica",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 01 20",
+      "description": "vetro",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 01 21*",
+      "description": "componenti pericolosi diversi da quelli di cui alle voci da 16 01 07 a 16 01 11, 16 01 13 e 16 01 14",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 01 22",
+      "description": "componenti non specificati altrimenti",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 01 99",
+      "description": "rifiuti non specificati altrimenti 16 02 rifiuti provenienti da apparecchiature elettriche ed elettroniche",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 02 09*",
+      "description": "trasformatori e condensatori contenenti PCB",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 02 10*",
+      "description": "apparecchiature fuori uso contenenti PCB o da essi contaminate, diverse da quelle di cui alla voce 16 02 09",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 02 11*",
+      "description": "apparecchiature fuori uso, contenenti clorofluorocarburi, HCFC, HFC",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 02 12*",
+      "description": "apparecchiature fuori uso, contenenti amianto in fibre libere",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 02 13*",
+      "description": "apparecchiature fuori uso, contenenti componenti pericolosi 3 diversi da quelli di cui alle voci 16 02 09 e 16 02 12",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 02 14",
+      "description": "apparecchiature fuori uso, diverse da quelle di cui alle voci da 16 02 09 a 16 02 13",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 02 15*",
+      "description": "componenti pericolosi rimossi da apparecchiature fuori uso",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 02 16",
+      "description": "componenti rimossi da apparecchiature fuori uso diversi da quelli di cui alla voce 16 02 15 16 03 prodotti fuori specifica e prodotti inutilizzati",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 03 03*",
+      "description": "rifiuti inorganici contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 03 04",
+      "description": "rifiuti inorganici, diversi da quelli di cui alla voce 16 03 03",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 03 05*",
+      "description": "rifiuti organici contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 03 06",
+      "description": "rifiuti organici, diversi da quelli di cui alla voce 16 03 05",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 03 07*",
+      "description": "mercurio metallico 16 04 esplosivi di scarto",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 04 01*",
+      "description": "munizioni di scarto",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 04 02*",
+      "description": "fuochi artificiali di scarto",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 04 03*",
+      "description": "altri esplosivi di scarto 16 05 gas in contenitori a pressione e sostanze chimiche di scarto",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 05 04*",
+      "description": "gas in contenitori a pressione (compresi gli halon), contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 05 05",
+      "description": "gas in contenitori a pressione, diversi da quelli di cui alla voce 16 05 04",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 05 06*",
+      "description": "sostanze chimiche di laboratorio contenenti o costituite da sostanze pericolose, comprese le miscele di sostanze chimiche di laboratorio",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 05 07*",
+      "description": "sostanze chimiche inorganiche di scarto contenenti o costituite da sostanze pericolose",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 05 08*",
+      "description": "sostanze chimiche organiche di scarto contenenti o costituite da sostanze pericolose",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 05 09",
+      "description": "sostanze chimiche di scarto diverse da quelle di cui alle voci 16 05 06, 16 05 07 e 16 05 08 16 06 batterie ed accumulatori",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 06 01*",
+      "description": "batterie al piombo",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 06 02*",
+      "description": "batterie al nichel-caDmio",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 06 03*",
+      "description": "batterie contenenti mercurio",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 06 04",
+      "description": "batterie alcaline (tranne 16 06 03)",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 06 05",
+      "description": "altre batterie ed accumulatori",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 06 06*",
+      "description": "elettroliti di batterie ed accumulatori, oggetto di raccolta differenziata 16 07 rifiuti della pulizia di serbatoi e di fusti per trasporto e stoccaggio (tranne 05 e 13)",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 07 08*",
+      "description": "rifiuti contenenti oli",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 07 09*",
+      "description": "rifiuti contenenti altre sostanze pericolose",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 07 99",
+      "description": "rifiuti non specificati altrimenti 16 08 catalizzatori esauriti",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 08 01",
+      "description": "catalizzatori esauriti contenenti oro, argento, renio, rodio, palladio, iridio o platino (tranne 16 08 07)",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 08 02*",
+      "description": "catalizzatori esauriti contenenti metalli di transizione pericolosi o composti di metalli di transizione pericolosi",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 08 03",
+      "description": "catalizzatori esauriti contenenti metalli di transizione o composti di metalli di transizione, non specificati altrimenti",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 08 04",
+      "description": "catalizzatori liquidi esauriti per il cracking catalitico (tranne 16 08 07)",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 08 05*",
+      "description": "catalizzatori esauriti contenenti acido fosforico",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 08 06*",
+      "description": "liquidi esauriti usati come catalizzatori",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 08 07*",
+      "description": "catalizzatori esauriti contaminati da sostanze pericolose 16 09 sostanze ossidanti",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 09 01*",
+      "description": "permanganati, ad esempio permanganato di potassio",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 09 02*",
+      "description": "cromati, ad esempio cromato di potassio, dicromato di potassio o di sodio",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 09 03*",
+      "description": "perossidi, ad esempio perossido d'idrogeno",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 09 04*",
+      "description": "sostanze ossidanti non specificate altrimenti 16 10 rifiuti liquidi acquosi destinati ad essere trattati fuori sito",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 10 01*",
+      "description": "rifiuti liquidi acquosi, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 10 02",
+      "description": "rifiuti liquidi acquosi, diversi da quelle di cui alla voce 16 10 01",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 10 03*",
+      "description": "concentrati acquosi, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 10 04",
+      "description": "concentrati acquosi, diversi da quelli di cui alla voce 16 10 03 16 11 rifiuti di rivestimenti e materiali refrattari",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 11 01*",
+      "description": "rivestimenti e materiali refrattari a base di carbone provenienti da processi metallurgici, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 11 02",
+      "description": "rivestimenti e materiali refrattari a base di carbone provenienti dalle lavorazioni metallurgiche, diversi da quelli di cui alla voce 16 11 01",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 11 03*",
+      "description": "altri rivestimenti e materiali refrattari provenienti da processi metallurgici, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 11 04",
+      "description": "altri rivestimenti e materiali refrattari provenienti da processi metallurgici, diversi da quelli di cui alla voce 16 11 03",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "16 11 05*",
+      "description": "rivestimenti e materiali refrattari provenienti da lavorazioni non metallurgiche, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "16"
+    },
+    {
+      "code": "16 11 06",
+      "description": "rivestimenti e materiali refrattari provenienti da lavorazioni non metallurgiche, diversi da quelli di cui alla voce 16 11 05 17 rifiuti dalle attività di costruzione e demolizione (compreso il terreno prelevato da siti contaminati 17 01 cemento, mattoni, mattonelle e ceramiche",
+      "hazardous": false,
+      "chapter": "16"
+    },
+    {
+      "code": "17 01 01",
+      "description": "cemento",
+      "hazardous": false,
+      "chapter": "17"
+    },
+    {
+      "code": "17 01 02",
+      "description": "mattoni",
+      "hazardous": false,
+      "chapter": "17"
+    },
+    {
+      "code": "17 01 03",
+      "description": "mattonelle e ceramiche",
+      "hazardous": false,
+      "chapter": "17"
+    },
+    {
+      "code": "17 01 06*",
+      "description": "miscugli o frazioni separate di cemento, mattoni, mattonelle e ceramiche, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "17"
+    },
+    {
+      "code": "17 01 07",
+      "description": "miscugli di cemento, mattoni, mattonelle e ceramiche, diversi da quelle di cui alla voce",
+      "hazardous": false,
+      "chapter": "17"
+    },
+    {
+      "code": "17 01 06",
+      "description": "17 02 legno, vetro e plastica",
+      "hazardous": false,
+      "chapter": "17"
+    },
+    {
+      "code": "17 02 01",
+      "description": "legno",
+      "hazardous": false,
+      "chapter": "17"
+    },
+    {
+      "code": "17 02 02",
+      "description": "vetro",
+      "hazardous": false,
+      "chapter": "17"
+    },
+    {
+      "code": "17 02 03",
+      "description": "plastica",
+      "hazardous": false,
+      "chapter": "17"
+    },
+    {
+      "code": "17 02 04*",
+      "description": "vetro, plastica e legno contenenti sostanze pericolose o da esse contaminati 17 03 miscele bituminose, catrame di carbone e prodotti contenenti catrame",
+      "hazardous": true,
+      "chapter": "17"
+    },
+    {
+      "code": "17 03 01*",
+      "description": "miscele bituminose contenenti catrame di carbone",
+      "hazardous": true,
+      "chapter": "17"
+    },
+    {
+      "code": "17 03 02",
+      "description": "miscele bituminose diverse da quelle di cui alla voce 17 03 01",
+      "hazardous": false,
+      "chapter": "17"
+    },
+    {
+      "code": "17 03 03*",
+      "description": "catrame di carbone e prodotti contenenti catrame 17 04 metalli (incluse le loro leghe)",
+      "hazardous": true,
+      "chapter": "17"
+    },
+    {
+      "code": "17 04 01",
+      "description": "rame, bronzo, ottone",
+      "hazardous": false,
+      "chapter": "17"
+    },
+    {
+      "code": "17 04 02",
+      "description": "alluminio",
+      "hazardous": false,
+      "chapter": "17"
+    },
+    {
+      "code": "17 04 03",
+      "description": "piombo",
+      "hazardous": false,
+      "chapter": "17"
+    },
+    {
+      "code": "17 04 04",
+      "description": "zinco",
+      "hazardous": false,
+      "chapter": "17"
+    },
+    {
+      "code": "17 04 05",
+      "description": "ferro e acciaio",
+      "hazardous": false,
+      "chapter": "17"
+    },
+    {
+      "code": "17 04 06",
+      "description": "stagno",
+      "hazardous": false,
+      "chapter": "17"
+    },
+    {
+      "code": "17 04 07",
+      "description": "metalli misti",
+      "hazardous": false,
+      "chapter": "17"
+    },
+    {
+      "code": "17 04 09*",
+      "description": "rifiuti metallici contaminati da sostanze pericolose",
+      "hazardous": true,
+      "chapter": "17"
+    },
+    {
+      "code": "17 04 10*",
+      "description": "cavi impregnati di olio, di catrame di carbone o di altre sostanze pericolose",
+      "hazardous": true,
+      "chapter": "17"
+    },
+    {
+      "code": "17 04 11",
+      "description": "cavi, diversi da quelli di cui alla voce 17 04 10 17 05 terra (compresa quella proveniente da siti contaminati), rocce e materiale di dragaggio",
+      "hazardous": false,
+      "chapter": "17"
+    },
+    {
+      "code": "17 05 03*",
+      "description": "terra e rocce, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "17"
+    },
+    {
+      "code": "17 05 04",
+      "description": "terra e rocce, diverse da quelle di cui alla voce 17 05 03",
+      "hazardous": false,
+      "chapter": "17"
+    },
+    {
+      "code": "17 05 05*",
+      "description": "materiale di dragaggio, contenente sostanze pericolose",
+      "hazardous": true,
+      "chapter": "17"
+    },
+    {
+      "code": "17 05 06",
+      "description": "materiale di dragaggio, diverso da quello di cui alla voce 17 05 05",
+      "hazardous": false,
+      "chapter": "17"
+    },
+    {
+      "code": "17 05 07*",
+      "description": "pietrisco per massicciate ferroviarie, contenente sostanze pericolose",
+      "hazardous": true,
+      "chapter": "17"
+    },
+    {
+      "code": "17 05 08",
+      "description": "pietrisco per massicciate ferroviarie, diverso da quello di cui alla voce 17 05 07 17 06 materiali isolanti e materiali da costruzione contenenti amianto",
+      "hazardous": false,
+      "chapter": "17"
+    },
+    {
+      "code": "17 06 01*",
+      "description": "materiali isolanti, contenenti amianto",
+      "hazardous": true,
+      "chapter": "17"
+    },
+    {
+      "code": "17 06 03*",
+      "description": "altri materiali isolanti contenenti o costituiti da sostanze pericolose",
+      "hazardous": true,
+      "chapter": "17"
+    },
+    {
+      "code": "17 06 04",
+      "description": "materiali isolanti, diversi da quelli di cui alle voci 17 06 01 e 17 06 03",
+      "hazardous": false,
+      "chapter": "17"
+    },
+    {
+      "code": "17 06 05*",
+      "description": "materiali da costruzione contenenti amianto 17 08 materiali da costruzione a base di gesso",
+      "hazardous": true,
+      "chapter": "17"
+    },
+    {
+      "code": "17 08 01*",
+      "description": "materiali da costruzione a base di gesso contaminati da sostanze pericolose",
+      "hazardous": true,
+      "chapter": "17"
+    },
+    {
+      "code": "17 08 02",
+      "description": "materiali da costruzione a base di gesso, diversi da quelli di cui alla voce 17 08 01 17 09 altri rifiuti dell'attività di costruzione e demolizione",
+      "hazardous": false,
+      "chapter": "17"
+    },
+    {
+      "code": "17 09 01*",
+      "description": "rifiuti dell'attività di costruzione e demolizione, contenenti mercurio",
+      "hazardous": true,
+      "chapter": "17"
+    },
+    {
+      "code": "17 09 02*",
+      "description": "rifiuti dell'attività di costruzione e demolizione, contenenti PCB (ad esempio sigillanti contenenti PCB, pavimentazioni a base di resina contenenti PCB, elementi stagni in vetro contenenti PCB, condensatori contenenti PCB)",
+      "hazardous": true,
+      "chapter": "17"
+    },
+    {
+      "code": "17 09 03*",
+      "description": "altri rifiuti dell'attività di costruzione e demolizione (compresi rifiuti misti) contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "17"
+    },
+    {
+      "code": "17 09 04",
+      "description": "rifiuti misti dell'attività di costruzione e demolizione, diversi da quelli di cui alle voci 17 09 01,",
+      "hazardous": false,
+      "chapter": "17"
+    },
+    {
+      "code": "17 09 02",
+      "description": "e 17 09 03 18 rifiuti prodotti dal settore sanitario e veterinario o da attività di ricerca collegate (tranne i rifiuti di cucina e di ristorazione non direttamente provenienti da trattamento terapeutico) 18 01 rifiuti dei reparti di maternità e rifiuti legati a diagnosi, trattamento e prevenzione delle malattie negli esseri umani",
+      "hazardous": false,
+      "chapter": "17"
+    },
+    {
+      "code": "18 01 01",
+      "description": "oggetti da taglio (eccetto 18 01 03)",
+      "hazardous": false,
+      "chapter": "18"
+    },
+    {
+      "code": "18 01 02",
+      "description": "parti anatomiche ed organi incluse le sacche per il plasma e le riserve di sangue (tranne 18 01 03)",
+      "hazardous": false,
+      "chapter": "18"
+    },
+    {
+      "code": "18 01 03*",
+      "description": "rifiuti che devono essere raccolti e smaltiti applicando precauzioni particolari per evitare infezioni",
+      "hazardous": true,
+      "chapter": "18"
+    },
+    {
+      "code": "18 01 04",
+      "description": "rifiuti che non devono essere raccolti e smaltiti applicando precauzioni particolari per evitare infezioni (es. bende, ingessature, lenzuola, indumenti monouso, assorbenti igienici)",
+      "hazardous": false,
+      "chapter": "18"
+    },
+    {
+      "code": "18 01 06*",
+      "description": "sostanze chimiche pericolose o contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "18"
+    },
+    {
+      "code": "18 01 07",
+      "description": "sostanze chimiche diverse da quelle di cui alla voce 18 01 06",
+      "hazardous": false,
+      "chapter": "18"
+    },
+    {
+      "code": "18 01 08*",
+      "description": "medicinali citotossici e citostatici",
+      "hazardous": true,
+      "chapter": "18"
+    },
+    {
+      "code": "18 01 09",
+      "description": "medicinali diversi da quelli di cui alla voce 18 01 08",
+      "hazardous": false,
+      "chapter": "18"
+    },
+    {
+      "code": "18 01 10*",
+      "description": "rifiuti di amalgama prodotti da interventi odontoiatrici 18 02 rifiuti legati alle attività di ricerca, diagnosi, trattamento e prevenzione delle malattie negli animali",
+      "hazardous": true,
+      "chapter": "18"
+    },
+    {
+      "code": "18 02 01",
+      "description": "oggetti da taglio (eccetto 18 02 02)",
+      "hazardous": false,
+      "chapter": "18"
+    },
+    {
+      "code": "18 02 02*",
+      "description": "rifiuti che devono essere raccolti e smaltiti applicando precauzioni particolari per evitare infezioni",
+      "hazardous": true,
+      "chapter": "18"
+    },
+    {
+      "code": "18 02 03",
+      "description": "rifiuti che non devono essere raccolti e smaltiti applicando precauzioni particolari per evitare infezioni",
+      "hazardous": false,
+      "chapter": "18"
+    },
+    {
+      "code": "18 02 05*",
+      "description": "sostanze chimiche pericolose o contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "18"
+    },
+    {
+      "code": "18 02 06",
+      "description": "sostanze chimiche diverse da quelle di cui alla voce 18 02 05",
+      "hazardous": false,
+      "chapter": "18"
+    },
+    {
+      "code": "18 02 07*",
+      "description": "medicinali citotossici e citostatici",
+      "hazardous": true,
+      "chapter": "18"
+    },
+    {
+      "code": "18 02 08",
+      "description": "medicinali diversi da quelli di cui alla voce 18 02 07 19 rifiuti prodotti da impianti di trattamento dei rifiuti, impianti di trattamento delle acque reflue fuori sito, nonché dalla potabilizzazione dell'acqua e dalla sua preparazione per uso industriale 19 01 rifiuti da incenerimento o pirolisi di rifiuti",
+      "hazardous": false,
+      "chapter": "18"
+    },
+    {
+      "code": "19 01 02",
+      "description": "materiali ferrosi estratti da ceneri pesanti",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 01 05*",
+      "description": "residui di filtrazione prodotti dal trattamento dei fumi",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 01 06*",
+      "description": "rifiuti liquidi acquosi prodotti dal trattamento dei fumi e altri rifiuti liquidi acquosi",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 01 07*",
+      "description": "rifiuti solidi prodotti dal trattamento dei fumi",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 01 10*",
+      "description": "carbone attivo esaurito, prodotto dal trattamento dei fumi",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 01 11*",
+      "description": "ceneri pesanti e scorie, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 01 12",
+      "description": "ceneri pesanti e scorie, diverse da quelle di cui alla voce 19 01 11",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 01 13*",
+      "description": "ceneri leggere, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 01 14",
+      "description": "ceneri leggere, diverse da quelle di cui alla voce 19 01 13",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 01 15*",
+      "description": "polveri di caldaia, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 01 16",
+      "description": "polveri di caldaia, diverse da quelle di cui alla voce 19 01 15",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 01 17*",
+      "description": "rifiuti della pirolisi, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 01 18",
+      "description": "rifiuti della pirolisi, diversi da quelli di cui alla voce 19 01 17",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 01 19",
+      "description": "sabbie dei reattori a letto fluidizzato",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 01 99",
+      "description": "rifiuti non specificati altrimenti 19 02 rifiuti prodotti da trattamenti chimico-fisici di rifiuti (comprese decromatazione, decianizzazione, neutralizzazione)",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 02 03",
+      "description": "rifiuti premiscelati composti esclusivamente da rifiuti non pericolosi",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 02 04*",
+      "description": "rifiuti premiscelati contenenti almeno un rifiuto pericoloso",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 02 05*",
+      "description": "fanghi prodotti da trattamenti chimico-fisici, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 02 06",
+      "description": "fanghi prodotti da trattamenti chimico-fisici, diversi da quelli di cui alla voce 19 02 05",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 02 07*",
+      "description": "oli e concentrati prodotti da processi di separazione",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 02 08*",
+      "description": "rifiuti combustibili liquidi, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 02 09*",
+      "description": "rifiuti combustibili solidi, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 02 10",
+      "description": "rifiuti combustibili, diversi da quelli di cui alle voci 19 02 08 e 19 02 09",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 02 11*",
+      "description": "altri rifiuti contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 02 99",
+      "description": "rifiuti non specificati altrimenti 19 03 rifiuti stabilizzati/solidificati",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 03 04*",
+      "description": "rifiuti contrassegnati come pericolosi, parzialmente stabilizzati diversi da quelli di cui al punto 19 03 08",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 03 05",
+      "description": "rifiuti stabilizzati diversi da quelli di cui alla voce 19 03 04",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 03 06*",
+      "description": "rifiuti contrassegnati come pericolosi, solidificati",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 03 07",
+      "description": "rifiuti solidificati diversi da quelli di cui alla voce 19 03 06",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 03 08*",
+      "description": "mercurio parzialmente stabilizzato 19 04 rifiuti vetrificati e rifiuti di vetrificazione",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 04 01",
+      "description": "rifiuti vetrificati",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 04 02*",
+      "description": "ceneri leggere ed altri rifiuti dal trattamento dei fumi",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 04 03*",
+      "description": "fase solida non vetrificata",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 04 04",
+      "description": "rifiuti liquidi acquosi prodotti dalla tempra di rifiuti vetrificati 19 05 rifiuti prodotti dal trattamento aerobico di rifiuti solidi",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 05 01",
+      "description": "parte di rifiuti urbani e simili non compostata",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 05 02",
+      "description": "parte di rifiuti animali e vegetali non compostata",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 05 03",
+      "description": "compost fuori specifica",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 05 99",
+      "description": "rifiuti non specificati altrimenti 19 06 rifiuti prodotti dal trattamento anaerobico dei rifiuti",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 06 03",
+      "description": "liquidi prodotti dal trattamento anaerobico di rifiuti urbani",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 06 04",
+      "description": "digestato prodotto dal trattamento anaerobico di rifiuti urbani",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 06 05",
+      "description": "liquidi prodotti dal trattamento anaerobico di rifiuti di origine animale o vegetale",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 06 06",
+      "description": "digestato prodotto dal trattamento anaerobico di rifiuti di origine animale o vegetale",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 06 99",
+      "description": "rifiuti non specificati altrimenti 19 07 Percolato di discarica",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 07 02*",
+      "description": "percolato di discarica, contenente sostanze pericolose",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 07 03",
+      "description": "percolato di discarica, diverso da quello di cui alla voce 19 07 02 19 08 rifiuti prodotti dagli impianti per il trattamento delle acque reflue, non specificati altrimenti",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 08 01",
+      "description": "residui di vagliatura",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 08 02",
+      "description": "rifiuti da dissabbiamento",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 08 05",
+      "description": "fanghi prodotti dal trattamento delle acque reflue urbane",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 08 06*",
+      "description": "resine a scambio ionico saturate o esaurite",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 08 07*",
+      "description": "soluzioni e fanghi di rigenerazione degli scambiatori di ioni",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 08 08*",
+      "description": "rifiuti prodotti da sistemi a membrana, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 08 09",
+      "description": "miscele di oli e grassi prodotte dalla separazione olio/acqua, contenenti esclusivamente oli e grassi commestibili",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 08 10*",
+      "description": "miscele di oli e grassi prodotte dalla separazione olio/acqua, diverse da quelle di cui alla voce 19 08 09",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 08 11*",
+      "description": "fanghi prodotti dal trattamento biologico delle acque reflue industriali, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 08 12",
+      "description": "fanghi prodotti dal trattamento biologico delle acque reflue industriali, diversi da quelli di cui alla voce 19 08 11",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 08 13*",
+      "description": "fanghi contenenti sostanze pericolose prodotti da altri trattamenti delle acque reflue industriali",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 08 14",
+      "description": "fanghi prodotti da altri trattamenti delle acque reflue industriali, diversi da quelli di cui alla voce 19 08 13",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 08 99",
+      "description": "rifiuti non specificati altrimenti 19 09 rifiuti prodotti dalla potabilizzazione dell'acqua o dalla sua preparazione per uso industriale",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 09 01",
+      "description": "rifiuti solidi prodotti dai processi di filtrazione e vaglio primari",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 09 02",
+      "description": "fanghi prodotti dai processi di chiarificazione dell'acqua",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 09 03",
+      "description": "fanghi prodotti dai processi di decarbonatazione",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 09 04",
+      "description": "carbone attivo esaurito",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 09 05",
+      "description": "resine a scambio ionico saturate o esaurite",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 09 06",
+      "description": "soluzioni e fanghi di rigenerazione delle resine a scambio ionico",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 09 99",
+      "description": "rifiuti non specificati altrimenti 19 10 rifiuti prodotti da operazioni di frantumazione di rifiuti contenenti metallo",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 10 01",
+      "description": "rifiuti di ferro e acciaio",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 10 02",
+      "description": "rifiuti di metalli non ferrosi",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 10 03*",
+      "description": "fluff — frazione leggera e polveri, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 10 04",
+      "description": "fluff — frazione leggera e polveri, diverse da quelle di cui alla voce 19 10 03",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 10 05*",
+      "description": "altre frazioni, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 10 06",
+      "description": "altre frazioni, diverse da quelle di cui alla voce 19 10 05 19 11 rifiuti prodotti dalla rigenerazione degli oli",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 11 01*",
+      "description": "filtri di argilla esauriti",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 11 02*",
+      "description": "catrami acidi",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 11 03*",
+      "description": "rifiuti liquidi acquosi",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 11 04*",
+      "description": "rifiuti prodotti dalla purificazione di carburanti tramite basi",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 11 05*",
+      "description": "fanghi prodotti dal trattamento in loco degli effluenti, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 11 06",
+      "description": "fanghi prodotti dal trattamento in loco degli effluenti, diversi da quelli di cui alla voce 19 11",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "05 19 11",
+      "description": "07 * rifiuti prodotti dalla depurazione di fumi",
+      "hazardous": false,
+      "chapter": "05"
+    },
+    {
+      "code": "19 11 99",
+      "description": "rifiuti non specificati altrimenti 19 12 rifiuti prodotti dal trattamento meccanico dei rifiuti (ad esempio selezione, triturazione, compattazione, riduzione in pellet) non specificati altrimenti",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 12 01",
+      "description": "carta e cartone",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 12 02",
+      "description": "metalli ferrosi",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 12 03",
+      "description": "metalli non ferrosi",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 12 04",
+      "description": "plastica e gomma",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 12 05",
+      "description": "vetro",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 12 06*",
+      "description": "legno, contenente sostanze pericolose",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 12 07",
+      "description": "legno diverso da quello di cui alla voce 19 12 06",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 12 08",
+      "description": "prodotti tessili",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 12 09",
+      "description": "minerali (ad esempio sabbia, rocce)",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 12 10",
+      "description": "rifiuti combustibili (combustibile da rifiuti)",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 12 11*",
+      "description": "altri rifiuti (compresi materiali misti) prodotti dal trattamento meccanico dei rifiuti, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 12 12",
+      "description": "altri rifiuti (compresi materiali misti) prodotti dal trattamento meccanico dei rifiuti, diversi da quelli di cui alla voce 19 12 11 19 13 rifiuti prodotti dalle operazioni di bonifica di terreni e risanamento delle acque di falda",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 13 01*",
+      "description": "rifiuti solidi prodotti dalle operazioni di bonifica dei terreni, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 13 02",
+      "description": "rifiuti solidi prodotti dalle operazioni di bonifica dei terreni, diversi da quelli di cui alla voce 19",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "13 01 19",
+      "description": "13 03 * fanghi prodotti dalle operazioni di bonifica dei terreni, contenenti sostanze pericolose",
+      "hazardous": false,
+      "chapter": "13"
+    },
+    {
+      "code": "19 13 04",
+      "description": "fanghi prodotti dalle operazioni di bonifica dei terreni, diversi da quelli di cui alla voce 19 13",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "03 19 13",
+      "description": "05 * fanghi prodotti dalle operazioni di risanamento delle acque di falda, contenenti sostanze pericolose",
+      "hazardous": false,
+      "chapter": "03"
+    },
+    {
+      "code": "19 13 06",
+      "description": "fanghi prodotti dalle operazioni di risanamento delle acque di falda, diversi da quelli di cui alla voce 19 13 05",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "19 13 07*",
+      "description": "rifiuti liquidi acquosi e rifiuti concentrati acquosi prodotti dalle operazioni di risanamento delle acque di falda, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "19"
+    },
+    {
+      "code": "19 13 08",
+      "description": "rifiuti liquidi acquosi e rifiuti concentrati acquosi prodotti dalle operazioni di risanamento delle acque di falda, diversi da quelli di cui alla voce 19 13 07 20 rifiuti urbani (rifiuti domestici e assimilabili prodotti da attività commerciali e industriali nonché dalle istituzioni) inclusi i rifiuti della raccolta differenziata 20 01 frazioni oggetto di raccolta differenziata (tranne 15 01)",
+      "hazardous": false,
+      "chapter": "19"
+    },
+    {
+      "code": "20 01 01",
+      "description": "carta e cartone",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 02",
+      "description": "vetro",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 08",
+      "description": "rifiuti biodegradabili di cucine e mense",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 10",
+      "description": "abbigliamento",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 11",
+      "description": "prodotti tessili",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 13*",
+      "description": "solventi",
+      "hazardous": true,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 14*",
+      "description": "acidi",
+      "hazardous": true,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 15*",
+      "description": "sostanze alcaline",
+      "hazardous": true,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 17*",
+      "description": "prodotti fotochimici",
+      "hazardous": true,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 19*",
+      "description": "pesticidi",
+      "hazardous": true,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 21*",
+      "description": "tubi fluorescenti ed altri rifiuti contenenti mercurio",
+      "hazardous": true,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 23*",
+      "description": "apparecchiature fuori uso contenenti clorofluorocarburi",
+      "hazardous": true,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 25",
+      "description": "oli e grassi commestibili",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 26*",
+      "description": "oli e grassi diversi da quelli di cui alla voce 20 01 25",
+      "hazardous": true,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 27*",
+      "description": "vernici, inchiostri, adesivi e resine contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 28",
+      "description": "vernici, inchiostri, adesivi e resine, diversi da quelli di cui alla voce 20 01 27",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 29*",
+      "description": "detergenti, contenenti sostanze pericolose",
+      "hazardous": true,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 30",
+      "description": "detergenti diversi da quelli di cui alla voce 20 01 29",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 31*",
+      "description": "medicinali citotossici e citostatici",
+      "hazardous": true,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 32",
+      "description": "medicinali diversi da quelli di cui alla voce 20 01 31",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 33*",
+      "description": "batterie e accumulatori di cui alle voci 16 06 01, 16 06 02 e 16 06 03, nonché batterie e accumulatori non suddivisi contenenti tali batterie",
+      "hazardous": true,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 34",
+      "description": "batterie e accumulatori, diversi da quelli di cui alla voce 20 01 33",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 35*",
+      "description": "apparecchiature elettriche ed elettroniche fuori uso, diverse da quelle di cui alla voce 20 01 21 e 20 01 23, contenenti componenti pericolosi 4",
+      "hazardous": true,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 36",
+      "description": "apparecchiature elettriche ed elettroniche fuori uso, diverse da quelle di cui alle voci 20 01 21, 20 01 23 e 20 01 35",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 37*",
+      "description": "legno contenente sostanze pericolose",
+      "hazardous": true,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 38",
+      "description": "legno diverso da quello di cui alla voce 20 01 37",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 39",
+      "description": "plastica",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 40",
+      "description": "metalli",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 41",
+      "description": "rifiuti prodotti dalla pulizia di camini e ciminiere",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 01 99",
+      "description": "altre frazioni non specificate altrimenti 20 02 rifiuti prodotti da giardini e parchi (inclusi i rifiuti provenienti da cimiteri)",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 02 01",
+      "description": "rifiuti biodegradabili",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 02 02",
+      "description": "terra e roccia",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 02 03",
+      "description": "altri rifiuti non biodegradabili 20 03 Altri rifiuti urbani",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 03 01",
+      "description": "rifiuti urbani non differenziati",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 03 02",
+      "description": "rifiuti dei mercati",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 03 03",
+      "description": "residui della pulizia stradale",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 03 04",
+      "description": "fanghi delle fosse settiche",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 03 06",
+      "description": "rifiuti della pulizia delle fognature",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 03 07",
+      "description": "rifiuti ingombranti",
+      "hazardous": false,
+      "chapter": "20"
+    },
+    {
+      "code": "20 03 99",
+      "description": "rifiuti urbani non specificati altrimenti.",
+      "hazardous": false,
+      "chapter": "20"
+    }
+  ]
+}

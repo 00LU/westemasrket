@@ -6,6 +6,7 @@ const Certification = require('./Certification');
 const CerCode = require('./CerCode');
 const Transaction = require('./Transaction');
 const Notification = require('./Notification');
+const Document = require('./Document');
 
 function initModels() {
   User.hasMany(WasteRequest, { foreignKey: 'producerId', sourceKey: 'id' });
@@ -32,6 +33,9 @@ function initModels() {
   User.hasMany(Notification, { foreignKey: 'userId', sourceKey: 'id' });
   Notification.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
 
+  User.hasMany(Document, { foreignKey: 'userId', sourceKey: 'id' });
+  Document.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
+
   WasteRequest.hasOne(Transaction, { foreignKey: 'wasteRequestId', sourceKey: 'id' });
   Transaction.belongsTo(WasteRequest, { foreignKey: 'wasteRequestId', targetKey: 'id' });
 }
@@ -46,4 +50,5 @@ module.exports = {
   CerCode,
   Transaction,
   Notification,
+  Document,
 };

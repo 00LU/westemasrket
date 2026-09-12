@@ -1,13 +1,16 @@
 const { Op } = require('sequelize');
 const { Bid, RecipientOffer, User, WasteRequest } = require('../models');
 
-const TRANSPORT_BIDDING_STATUSES = ['transporter_matching', 'package_options_ready'];
+const TRANSPORT_BIDDING_STATUSES = ['recipient_matching', 'recipient_options_ready', 'transporter_matching', 'package_options_ready'];
 
 async function createBid(req, res, next) {
   try {
     const {
       wasteRequestId,
       transportPrice,
+      pricingMode = 'fixed_trip',
+      distanceKm,
+      fixedPrice,
       vehicleType,
       availability,
     } = req.body;
@@ -21,17 +24,14 @@ async function createBid(req, res, next) {
       return res.status(400).json({ message: 'Waste request is not open for transport offers' });
     }
 
-    if (!request.selectedRecipientId || !request.selectedRecipientOfferId) {
-      return res.status(400).json({ message: 'Recipient must be selected before transport offers' });
-    }
-
-    const selectedRecipientOffer = await RecipientOffer.findByPk(request.selectedRecipientOfferId);
-    if (!selectedRecipientOffer) {
-      return res.status(400).json({ message: 'Selected recipient offer not found' });
-    }
-
-    const treatmentPrice = Number(selectedRecipientOffer.pricePerTon || 0) * Number(request.quantityTon || 0);
-    const totalPrice = Number(transportPrice) + Number(treatmentPrice);
+    const selectedRecipientOffer = request.selectedRecipientOfferId
+      ? await RecipientOffer.findByPk(request.selectedRecipientOfferId)
+      : null;
+    const treatmentPrice = selectedRecipientOffer ? Number(selectedRecipientOffer.pricePerTon || 0) * Number(request.quantityTon || 0) : 0;
+    const calculatedTransportPrice = pricingMode === 'per_km'
+      ? Number(distanceKm || 0) * Number(transportPrice || 0)
+      : Number(fixedPrice ?? transportPrice ?? 0);
+    const totalPrice = Number(calculatedTransportPrice) + Number(treatmentPrice);
 
     const existingBid = await Bid.findOne({
       where: {
@@ -44,8 +44,10 @@ async function createBid(req, res, next) {
     let bid;
     if (existingBid) {
       bid = await existingBid.update({
-        recipientId: request.selectedRecipientId,
-        transportPrice,
+        recipientId: request.selectedRecipientId || null,
+        transportPrice: calculatedTransportPrice,
+        pricingMode,
+        distanceKm: Number(distanceKm || 0),
         treatmentPrice,
         totalPrice,
         vehicleType,
@@ -55,8 +57,10 @@ async function createBid(req, res, next) {
       bid = await Bid.create({
         wasteRequestId,
         transporterId: req.user.id,
-        recipientId: request.selectedRecipientId,
-        transportPrice,
+        recipientId: request.selectedRecipientId || null,
+        transportPrice: calculatedTransportPrice,
+        pricingMode,
+        distanceKm: Number(distanceKm || 0),
         treatmentPrice,
         totalPrice,
         status: 'active',

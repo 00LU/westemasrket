@@ -7,9 +7,13 @@ import { fetchIncomingShipments, updateRecipientIncomingStatus } from '../../ser
 
 const links = [
   { to: '/recipient', label: 'Dashboard' },
-  { to: '/recipient/notifications', label: 'Notifications' },
-  { to: '/recipient/capacity', label: 'Capacity' },
-  { to: '/recipient/incoming', label: 'Incoming' },
+  { to: '/recipient/opportunities', label: 'Ordini compatibili' },
+  { to: '/recipient/calendar', label: 'Calendario conferimenti' },
+  { to: '/recipient/incoming', label: 'Arrivi e conferimenti' },
+  { to: '/recipient/capacity', label: 'Disponibilita e capacita' },
+  { to: '/recipient/facilities', label: 'Impianti e autorizzazioni' },
+  { to: '/recipient/earnings', label: 'Corrispettivi' },
+  { to: '/profile', label: 'Profilo' },
 ];
 
 export default function IncomingPage() {
@@ -28,7 +32,7 @@ export default function IncomingPage() {
   });
 
   return (
-    <RoleLayout title="Incoming Shipments" links={links}>
+    <RoleLayout title="Arrivi e conferimenti" links={links}>
       <Card title="Activity History">
         {isLoading && <p className="text-sm text-slate-600">Loading incoming shipments...</p>}
         {isError && (

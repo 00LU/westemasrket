@@ -3,6 +3,7 @@ const { WasteRequest, Bid, RecipientOffer, User } = require('../models');
 const { calculateSuggestedRange } = require('../services/pricingCalculator');
 const { matchOperators } = require('../services/matchingEngine');
 const { notifyUser } = require('../services/notificationService');
+const { buildCombinations } = require('../services/combinationEngine');
 
 const ACTIVE_REQUEST_STATUSES = [
   'recipient_matching',
@@ -39,20 +40,35 @@ async function createWasteRequest(req, res, next) {
     const request = await WasteRequest.create({
       producerId: req.user.id,
       cerCode: payload.cerCode,
+      cerKnown: payload.cerKnown !== false,
+      wasteDescription: payload.wasteDescription || null,
+      photoFileName: payload.photoFileName || null,
+      photoData: payload.photoData || null,
+      technicalDocuments: payload.technicalDocuments || null,
+      containment: payload.containment || null,
+      specialInfo: payload.specialInfo || null,
+      recurrenceFrequency: payload.recurrenceFrequency || null,
+      recurrenceStartDate: payload.recurrenceStartDate || null,
+      recurrenceEndDate: payload.recurrenceEndDate || null,
+      recurring: Boolean(payload.recurring),
+      cerRequestNote: payload.cerKnown === false ? (payload.cerRequestNote || 'Il produttore richiede una proposta CER all\'intermediario') : null,
       quantityTon: payload.quantityTon,
       pickupAddress: payload.pickupAddress,
       pickupLat: payload.pickupLat,
       pickupLng: payload.pickupLng,
       deadline: payload.deadline,
       maxPrice: payload.maxPrice,
-      status: 'recipient_matching',
+      status: payload.cerKnown === false ? 'draft' : 'recipient_matching',
     });
 
-    const matches = await matchOperators({
-      cerCode: payload.cerCode,
-      pickupLat: payload.pickupLat,
-      pickupLng: payload.pickupLng,
-    });
+    let matches = { transporters: [], recipients: [] };
+    if (request.cerKnown) {
+      matches = await matchOperators({
+        cerCode: payload.cerCode,
+        pickupLat: payload.pickupLat,
+        pickupLng: payload.pickupLng,
+      });
+    }
 
     await Promise.all([
       ...matches.transporters.map((item) => notifyUser(item.id, 'new_request_match', { wasteRequestId: request.id })),
@@ -89,6 +105,71 @@ async function getOrderHistory(req, res, next) {
       order: [['created_at', 'DESC']],
     });
     return res.json(orders);
+  } catch (error) {
+    return next(error);
+  }
+}
+
+async function getRecurringOrders(req, res, next) {
+  try {
+    const orders = await WasteRequest.findAll({
+      where: { producerId: req.user.id, recurring: true },
+      order: [['created_at', 'DESC']],
+    });
+    return res.json(orders);
+  } catch (error) {
+    return next(error);
+  }
+}
+
+async function repeatWasteRequest(req, res, next) {
+  try {
+    const original = await WasteRequest.findOne({
+      where: { id: req.params.id, producerId: req.user.id, recurring: true },
+    });
+    if (!original) {
+      return res.status(404).json({ message: 'Ordine ricorrente non trovato' });
+    }
+
+    const { quantityTon, deadline, photoFileName, confirmStableData } = req.body;
+    if (!confirmStableData) {
+      return res.status(400).json({ message: 'Conferma che processo e caratteristiche del rifiuto siano invariati' });
+    }
+    if (!quantityTon || !deadline || !photoFileName) {
+      return res.status(400).json({ message: 'Quantita, tempistiche e una nuova foto sono obbligatorie per ripetere un ordine' });
+    }
+
+    const request = await WasteRequest.create({
+      producerId: req.user.id,
+      cerCode: original.cerCode,
+      cerKnown: original.cerKnown,
+      wasteDescription: original.wasteDescription,
+      photoFileName,
+      photoData: req.body.photoData || null,
+      technicalDocuments: original.technicalDocuments,
+      containment: original.containment,
+      specialInfo: original.specialInfo,
+      quantityTon,
+      pickupAddress: original.pickupAddress,
+      pickupLat: original.pickupLat,
+      pickupLng: original.pickupLng,
+      deadline,
+      maxPrice: original.maxPrice,
+      recurring: false,
+      status: original.cerKnown ? 'recipient_matching' : 'draft',
+      cerRequestNote: original.cerKnown ? null : original.cerRequestNote,
+    });
+
+    let matches = { transporters: [], recipients: [] };
+    if (original.cerKnown) {
+      matches = await matchOperators({ cerCode: request.cerCode, pickupLat: request.pickupLat, pickupLng: request.pickupLng });
+      await Promise.all([
+        ...matches.transporters.map((item) => notifyUser(item.id, 'new_request_match', { wasteRequestId: request.id })),
+        ...matches.recipients.map((item) => notifyUser(item.id, 'new_request_match', { wasteRequestId: request.id })),
+      ]);
+    }
+
+    return res.status(201).json({ request, matches });
   } catch (error) {
     return next(error);
   }
@@ -181,7 +262,7 @@ async function getRecipientOffersBoard(req, res, next) {
         producerId: req.user.id,
         status: { [Op.in]: ACTIVE_REQUEST_STATUSES },
       },
-      attributes: ['id', 'cerCode', 'quantityTon', 'pickupAddress', 'status', 'selectedRecipientOfferId', 'selectedBidId', 'created_at'],
+      attributes: ['id', 'cerCode', 'quantityTon', 'pickupAddress', 'status', 'selectedRecipientOfferId', 'selectedBidId', 'created_at', 'wasteDescription', 'photoFileName', 'photoData', 'containment', 'specialInfo', 'deadline', 'recurring'],
       order: [['created_at', 'DESC']],
     });
 
@@ -238,6 +319,68 @@ async function getRecipientOffersBoard(req, res, next) {
     }));
 
     return res.json(board);
+  } catch (error) {
+    return next(error);
+  }
+}
+
+async function getCombinationsBoard(req, res, next) {
+  try {
+    const requests = await WasteRequest.findAll({
+      where: { producerId: req.user.id, status: { [Op.in]: ACTIVE_REQUEST_STATUSES } },
+      order: [['created_at', 'DESC']],
+    });
+    const requestIds = requests.map((request) => request.id);
+    if (requestIds.length === 0) return res.json([]);
+
+    const [offers, bids] = await Promise.all([
+      RecipientOffer.findAll({ where: { wasteRequestId: { [Op.in]: requestIds }, availabilityStatus: 'available' } }),
+      Bid.findAll({ where: { wasteRequestId: { [Op.in]: requestIds }, status: { [Op.in]: ['active', 'accepted'] } } }),
+    ]);
+
+    return res.json(requests.map((request) => ({
+      request,
+      combinations: buildCombinations({
+        request,
+        offers: offers.filter((offer) => offer.wasteRequestId === request.id),
+        bids: bids.filter((bid) => bid.wasteRequestId === request.id),
+      }),
+    })));
+  } catch (error) {
+    return next(error);
+  }
+}
+
+async function selectCombination(req, res, next) {
+  try {
+    const { bidId, recipientOfferId, finalPrice, platformFee } = req.body;
+    const request = await WasteRequest.findOne({ where: { id: req.params.id, producerId: req.user.id } });
+    if (!request) return res.status(404).json({ message: 'Waste request not found' });
+
+    const [bid, offer] = await Promise.all([
+      Bid.findOne({ where: { id: bidId, wasteRequestId: request.id, status: { [Op.in]: ['active', 'accepted'] } } }),
+      RecipientOffer.findOne({ where: { id: recipientOfferId, wasteRequestId: request.id, availabilityStatus: 'available' } }),
+    ]);
+    if (!bid || !offer) return res.status(400).json({ message: 'Combinazione non disponibile' });
+
+    await request.update({
+      selectedBidId: bid.id,
+      selectedTransporterId: bid.transporterId,
+      selectedRecipientOfferId: offer.id,
+      selectedRecipientId: offer.recipientId,
+      selectedFinalPrice: Number(finalPrice || 0),
+      selectedPlatformFee: Number(platformFee || 0),
+      transporterConfirmed: false,
+      recipientConfirmed: false,
+      workflowStatus: 'awaiting_operator_confirmation',
+    });
+
+    await Promise.all([
+      notifyUser(bid.transporterId, 'combination_confirmation_required', { wasteRequestId: request.id, finalPrice: request.selectedFinalPrice }),
+      notifyUser(offer.recipientId, 'combination_confirmation_required', { wasteRequestId: request.id, finalPrice: request.selectedFinalPrice }),
+    ]);
+
+    return res.json({ request, workflowStatus: request.workflowStatus });
   } catch (error) {
     return next(error);
   }
@@ -391,11 +534,15 @@ module.exports = {
   createWasteRequest,
   getActiveOrders,
   getOrderHistory,
+  getRecurringOrders,
+  repeatWasteRequest,
   updateOrderStatus,
   estimatePrice,
   getAuctionData,
   getRecipientOffers,
   getRecipientOffersBoard,
+  getCombinationsBoard,
+  selectCombination,
   selectRecipientOffer,
   selectTransportBid,
 };

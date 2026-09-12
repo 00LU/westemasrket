@@ -8,9 +8,13 @@ import { fetchTransporterJobs, updateTransporterJobStatus } from '../../services
 
 const links = [
   { to: '/transporter', label: 'Dashboard' },
-  { to: '/transporter/notifications', label: 'Notifications' },
-  { to: '/transporter/jobs', label: 'Active Jobs' },
-  { to: '/transporter/earnings', label: 'Earnings' },
+  { to: '/transporter/opportunities', label: 'Opportunita e aste' },
+  { to: '/transporter/planning', label: 'Pianificazione viaggi' },
+  { to: '/transporter/jobs', label: 'Lavori assegnati' },
+  { to: '/transporter/fleet', label: 'Mezzi e conducenti' },
+  { to: '/transporter/authorizations', label: 'Autorizzazioni' },
+  { to: '/transporter/earnings', label: 'Corrispettivi' },
+  { to: '/profile', label: 'Profilo' },
 ];
 
 export default function ActiveJobsPage() {
@@ -29,7 +33,7 @@ export default function ActiveJobsPage() {
   });
 
   return (
-    <RoleLayout title="Active Jobs" links={links}>
+    <RoleLayout title="Lavori assegnati" links={links}>
       <Card title="Activity History">
         {isLoading && <p className="text-sm text-slate-600">Loading jobs...</p>}
         {isError && (

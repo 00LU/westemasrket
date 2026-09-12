@@ -29,3 +29,8 @@ export async function acceptTransportSelection(wasteRequestId) {
   const { data } = await api.patch(`/transporters/waste-requests/${wasteRequestId}/accept-selection`);
   return data;
 }
+
+export async function confirmTransporterCombination(wasteRequestId) {
+  const { data } = await api.patch(`/transporters/waste-requests/${wasteRequestId}/confirm-combination`);
+  return data;
+}

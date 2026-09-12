@@ -20,5 +20,21 @@ export default function StatusBadge({ status }) {
     critical: 'danger',
   };
 
-  return <Badge tone={toneMap[status] || 'neutral'}>{status}</Badge>;
+  const labelMap = {
+    draft: 'Draft',
+    recipient_matching: 'Asta',
+    recipient_options_ready: 'Selezione',
+    recipient_selected: 'Selezione',
+    transporter_matching: 'Pianificazione',
+    package_options_ready: 'Pianificazione',
+    package_selected: 'Pianificazione',
+    assigned: 'Working',
+    in_execution: 'Working',
+    delivered: 'Delivered',
+    completed: 'Completed',
+    cancelled: 'Hold',
+    expired: 'Hold',
+  };
+
+  return <Badge tone={toneMap[status] || 'neutral'}>{labelMap[status] || status}</Badge>;
 }

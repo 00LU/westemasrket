@@ -20,7 +20,7 @@ async function getNotificationsFeed(req, res, next) {
           { status: 'recipient_selected', selectedRecipientId: req.user.id },
         ],
       },
-      attributes: ['id', 'cerCode', 'quantityTon', 'pickupAddress', 'deadline', 'status', 'selectedRecipientId', 'created_at'],
+      attributes: ['id', 'cerCode', 'quantityTon', 'pickupAddress', 'deadline', 'status', 'workflowStatus', 'transporterConfirmed', 'recipientConfirmed', 'selectedRecipientId', 'created_at'],
       order: [['created_at', 'DESC']],
     });
 
@@ -29,7 +29,7 @@ async function getNotificationsFeed(req, res, next) {
         recipientId: req.user.id,
         wasteRequestId: { [Op.in]: requests.map((item) => item.id) },
       },
-      attributes: ['wasteRequestId', 'pricePerTon', 'availabilityStatus', 'destinationAddress'],
+      attributes: ['wasteRequestId', 'pricePerTon', 'pricingUnit', 'availableCapacityTon', 'quantityTolerancePercent', 'availabilityWindow', 'availabilityStatus', 'destinationAddress'],
     });
 
     const offersByRequestId = new Map(existingOffers.map((offer) => [offer.wasteRequestId, offer]));
@@ -43,6 +43,7 @@ async function getNotificationsFeed(req, res, next) {
         deadline: request.deadline,
         status: request.status,
         canAcceptSelection: request.status === 'recipient_selected' && request.selectedRecipientId === req.user.id,
+        canConfirmCombination: ['awaiting_operator_confirmation', 'awaiting_transporter_confirmation', 'awaiting_recipient_confirmation'].includes(request.workflowStatus) && request.selectedRecipientId === req.user.id && !request.recipientConfirmed,
         myOffer: offersByRequestId.get(request.id) || null,
       }))
     );
@@ -99,13 +100,31 @@ async function acceptRecipientSelection(req, res, next) {
   }
 }
 
+async function confirmCombination(req, res, next) {
+  try {
+    const request = await WasteRequest.findByPk(req.params.id);
+    if (!request || request.selectedRecipientId !== req.user.id) return res.status(403).json({ message: 'Combinazione non assegnata a questo destinatario' });
+    if (!['awaiting_operator_confirmation', 'awaiting_transporter_confirmation', 'awaiting_recipient_confirmation'].includes(request.workflowStatus)) return res.status(400).json({ message: 'La combinazione non attende conferma' });
+
+    const workflowStatus = request.transporterConfirmed ? 'confirmed' : 'awaiting_transporter_confirmation';
+    await request.update({ recipientConfirmed: true, workflowStatus });
+    await notifyUser(request.producerId, 'recipient_combination_confirmed', { wasteRequestId: request.id, workflowStatus });
+    return res.json({ requestId: request.id, workflowStatus });
+  } catch (error) {
+    return next(error);
+  }
+}
+
 async function createRecipientOffer(req, res, next) {
   try {
     const {
       wasteRequestId,
       pricePerTon,
+      pricingUnit,
       destinationAddress,
       availableCapacityTon,
+      quantityTolerancePercent,
+      availabilityWindow,
       availabilityStatus,
       notes,
     } = req.body;
@@ -129,8 +148,11 @@ async function createRecipientOffer(req, res, next) {
     if (existingOffer) {
       await existingOffer.update({
         pricePerTon,
+        pricingUnit: pricingUnit || 'per_ton',
         destinationAddress,
         availableCapacityTon,
+        quantityTolerancePercent: quantityTolerancePercent ?? 1,
+        availabilityWindow,
         availabilityStatus: availabilityStatus || 'available',
         notes,
       });
@@ -146,8 +168,11 @@ async function createRecipientOffer(req, res, next) {
       wasteRequestId,
       recipientId: req.user.id,
       pricePerTon,
+      pricingUnit: pricingUnit || 'per_ton',
       destinationAddress,
       availableCapacityTon,
+      quantityTolerancePercent: quantityTolerancePercent ?? 1,
+      availabilityWindow,
       availabilityStatus: availabilityStatus || 'available',
       notes,
     });
@@ -269,6 +294,7 @@ module.exports = {
   getNotificationsFeed,
   createRecipientOffer,
   acceptRecipientSelection,
+  confirmCombination,
   setCerPricing,
   setCapacity,
   getIncomingShipments,

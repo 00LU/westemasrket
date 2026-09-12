@@ -4,13 +4,17 @@ import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { acceptRecipientSelection, createRecipientOffer, fetchRecipientNotifications } from '../../services/recipientApi';
+import { acceptRecipientSelection, confirmRecipientCombination, createRecipientOffer, fetchRecipientNotifications } from '../../services/recipientApi';
 
 const links = [
   { to: '/recipient', label: 'Dashboard' },
-  { to: '/recipient/notifications', label: 'Notifications' },
-  { to: '/recipient/capacity', label: 'Capacity' },
-  { to: '/recipient/incoming', label: 'Incoming' },
+  { to: '/recipient/opportunities', label: 'Ordini compatibili' },
+  { to: '/recipient/calendar', label: 'Calendario conferimenti' },
+  { to: '/recipient/incoming', label: 'Arrivi e conferimenti' },
+  { to: '/recipient/capacity', label: 'Disponibilita e capacita' },
+  { to: '/recipient/facilities', label: 'Impianti e autorizzazioni' },
+  { to: '/recipient/earnings', label: 'Corrispettivi' },
+  { to: '/profile', label: 'Profilo' },
 ];
 
 export default function RecipientNotificationsPage() {
@@ -33,6 +37,10 @@ export default function RecipientNotificationsPage() {
       queryClient.invalidateQueries({ queryKey: ['recipient', 'notifications'] });
     },
   });
+  const confirmMutation = useMutation({
+    mutationFn: confirmRecipientCombination,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['recipient', 'notifications'] }),
+  });
 
   const updateForm = (requestId, field, value) => {
     setFormByRequest((curr) => ({
@@ -46,8 +54,11 @@ export default function RecipientNotificationsPage() {
 
   const getFormValues = (item) => ({
     pricePerTon: formByRequest[item.id]?.pricePerTon || item.myOffer?.pricePerTon || '0',
+    pricingUnit: formByRequest[item.id]?.pricingUnit || item.myOffer?.pricingUnit || 'per_ton',
     destinationAddress: formByRequest[item.id]?.destinationAddress || item.myOffer?.destinationAddress || '',
-    availableCapacityTon: formByRequest[item.id]?.availableCapacityTon || '0',
+    availableCapacityTon: formByRequest[item.id]?.availableCapacityTon || item.myOffer?.availableCapacityTon || '0',
+    quantityTolerancePercent: formByRequest[item.id]?.quantityTolerancePercent || item.myOffer?.quantityTolerancePercent || '1',
+    availabilityWindow: formByRequest[item.id]?.availabilityWindow || item.myOffer?.availabilityWindow || '',
     notes: formByRequest[item.id]?.notes || '',
   });
 
@@ -56,15 +67,18 @@ export default function RecipientNotificationsPage() {
     offerMutation.mutate({
       wasteRequestId: item.id,
       pricePerTon: Number(form.pricePerTon || 0),
+      pricingUnit: form.pricingUnit,
       destinationAddress: form.destinationAddress,
       availableCapacityTon: Number(form.availableCapacityTon || 0),
+      quantityTolerancePercent: Number(form.quantityTolerancePercent || 1),
+      availabilityWindow: form.availabilityWindow,
       availabilityStatus: 'available',
       notes: form.notes,
     });
   };
 
   return (
-    <RoleLayout title="Matching Waste Notifications" links={links}>
+    <RoleLayout title="Ordini compatibili e offerte" links={links}>
       <Card title="Matching Feed">
         {isLoading && <p className="text-sm text-slate-600">Loading notifications...</p>}
         {isError && (
@@ -82,6 +96,7 @@ export default function RecipientNotificationsPage() {
                   <p className="text-slate-600">Pickup: {item.pickupAddress}</p>
                   <p className="text-slate-600">Deadline: {new Date(item.deadline).toLocaleDateString()}</p>
                   {item.canAcceptSelection && <p className="font-semibold text-emerald-700">Sei stato selezionato dal producer</p>}
+                  {item.canConfirmCombination && <p className="font-semibold text-amber-700">Riconferma richiesta dal produttore</p>}
                   {item.myOffer && <p className="text-emerald-700">Existing offer: EUR {item.myOffer.pricePerTon}/ton</p>}
                 </div>
                 {item.canAcceptSelection && (
@@ -93,7 +108,8 @@ export default function RecipientNotificationsPage() {
                     {acceptMutation.isPending ? 'Conferma in corso...' : 'Accetta selezione'}
                   </Button>
                 )}
-                <div className="grid gap-3 sm:grid-cols-2">
+                {item.canConfirmCombination && <Button type="button" onClick={() => confirmMutation.mutate(item.id)} disabled={confirmMutation.isPending}>{confirmMutation.isPending ? 'Conferma in corso...' : 'Riconferma combinazione'}</Button>}
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                   <Input
                     label="Price per ton (EUR)"
                     type="number"
@@ -106,12 +122,15 @@ export default function RecipientNotificationsPage() {
                     value={getFormValues(item).availableCapacityTon}
                     onChange={(event) => updateForm(item.id, 'availableCapacityTon', event.target.value)}
                   />
+                  <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">Unita prezzo<select className="rounded-xl border border-slate-300 px-3 py-2 text-sm" value={getFormValues(item).pricingUnit} onChange={(event) => updateForm(item.id, 'pricingUnit', event.target.value)}><option value="per_kg">EUR/kg</option><option value="per_liter">EUR/litro</option><option value="per_ton">EUR/ton</option></select></label>
+                  <Input label="Tolleranza quantita %" type="number" min="0" value={getFormValues(item).quantityTolerancePercent} onChange={(event) => updateForm(item.id, 'quantityTolerancePercent', event.target.value)} />
                 </div>
                 <Input
                   label="Destination address"
                   value={getFormValues(item).destinationAddress}
                   onChange={(event) => updateForm(item.id, 'destinationAddress', event.target.value)}
                 />
+                <Input label="Disponibilita preliminare" value={getFormValues(item).availabilityWindow} onChange={(event) => updateForm(item.id, 'availabilityWindow', event.target.value)} placeholder="Es. 10-12 ottobre" />
                 <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
                   Notes
                   <textarea

@@ -2,10 +2,10 @@ import RoleLayout from '../../components/shared/RoleLayout';
 import WasteRequestForm from '../../components/forms/WasteRequestForm';
 
 const links = [
+  { to: '/profile', label: 'Profilo' },
   { to: '/producer', label: 'Dashboard' },
   { to: '/producer/new-request', label: 'New Request' },
-  { to: '/producer/auction/123', label: 'Auction Room' },
-  { to: '/producer/orders', label: 'Orders & Docs' },
+  { to: '/producer/recurring-orders', label: 'Ordini ricorrenti' },
 ];
 
 export default function NewRequestPage() {
