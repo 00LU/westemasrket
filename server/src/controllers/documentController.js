@@ -36,7 +36,7 @@ async function getUserDocumentRequirements(req, res, next) {
 
 async function uploadDocument(req, res, next) {
   try {
-    const { documentType, fileName, mimeType, fileSize, fileUrl, notes } = req.body;
+    const { documentType, fileName, mimeType, fileSize, fileUrl, fileData, notes } = req.body;
 
     if (!documentType || !fileName || !mimeType || !fileSize) {
       return res.status(400).json({ message: 'documentType, fileName, mimeType and fileSize are required' });
@@ -54,6 +54,7 @@ async function uploadDocument(req, res, next) {
           mimeType,
           fileSize,
           fileUrl,
+          fileData,
           status: 'pending_review',
           notes,
         })
@@ -64,6 +65,7 @@ async function uploadDocument(req, res, next) {
           mimeType,
           fileSize,
           fileUrl,
+          fileData,
           status: 'pending_review',
           notes,
         });

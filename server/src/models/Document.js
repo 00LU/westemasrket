@@ -31,6 +31,11 @@ const Document = sequelize.define(
       allowNull: true,
       field: 'file_url',
     },
+    fileData: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      field: 'file_data',
+    },
     status: {
       type: DataTypes.ENUM('pending', 'uploaded', 'pending_review', 'approved', 'rejected', 'required_missing'),
       defaultValue: 'pending_review',

@@ -78,14 +78,16 @@ export default function RegisterPage() {
     const file = event.target.files[0];
     if (!file) return;
 
-    setForm((curr) => ({
+    const reader = new FileReader();
+    reader.onload = () => setForm((curr) => ({
       ...curr,
       documents: curr.documents.map((document) => (
         document.documentType === documentType
-          ? { ...document, fileName: file.name, mimeType: file.type || 'application/octet-stream', fileSize: file.size }
+          ? { ...document, fileName: file.name, mimeType: file.type || 'application/octet-stream', fileSize: file.size, fileData: reader.result }
           : document
       )),
     }));
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (event) => {

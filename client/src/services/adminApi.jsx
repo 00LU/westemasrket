@@ -39,3 +39,13 @@ export async function rejectDocument(documentId, notes) {
   const { data } = await api.patch(`/admin/documents/${documentId}/reject`, { notes });
   return data;
 }
+
+export async function fetchCerRecognitionRequests() {
+  const { data } = await api.get('/admin/cer-recognition');
+  return data;
+}
+
+export async function proposeCerCode(requestId, cerCode, notes) {
+  const { data } = await api.patch(`/admin/cer-recognition/${requestId}/propose`, { cerCode, notes });
+  return data;
+}

@@ -5,7 +5,7 @@ const CerCode = sequelize.define(
   'CerCode',
   {
     code: { type: DataTypes.STRING, primaryKey: true },
-    description: { type: DataTypes.STRING, allowNull: false },
+    description: { type: DataTypes.TEXT, allowNull: false },
     category: { type: DataTypes.STRING, allowNull: false },
     hazardous: { type: DataTypes.BOOLEAN, defaultValue: false },
   },

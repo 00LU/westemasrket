@@ -82,13 +82,16 @@ export default function UserProfilePage() {
     const file = event.target.files[0];
     if (!file) return;
 
-    uploadMutation.mutate({
+    const reader = new FileReader();
+    reader.onload = () => uploadMutation.mutate({
       documentType,
       fileName: file.name,
       mimeType: file.type || 'application/octet-stream',
       fileSize: file.size,
+      fileData: reader.result,
       notes: 'Caricato dal profilo utente',
     });
+    reader.readAsDataURL(file);
     event.target.value = '';
   };
 

@@ -57,6 +57,12 @@ async function ensureWasteRequestWorkflowColumns() {
     }
   }
 
+  const documentTableExists = await queryInterface.tableExists('documents');
+  if (documentTableExists) {
+    const documentTable = await queryInterface.describeTable('documents');
+    if (!documentTable.file_data) await queryInterface.addColumn('documents', 'file_data', { type: DataTypes.TEXT, allowNull: true });
+  }
+
   if (!table.selected_recipient_id) {
     await queryInterface.addColumn('waste_requests', 'selected_recipient_id', {
       type: DataTypes.UUID,
