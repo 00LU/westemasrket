@@ -6,5 +6,17 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173,
+    allowedHosts: ['external-molar-player.ngrok-free.dev'],
+    proxy: {
+      '/api': {
+        target: 'http://host.docker.internal:5000',
+        changeOrigin: true,
+      },
+      '/socket.io': {
+        target: 'http://host.docker.internal:5000',
+        changeOrigin: true,
+        ws: true,
+      },
+    },
   },
 });

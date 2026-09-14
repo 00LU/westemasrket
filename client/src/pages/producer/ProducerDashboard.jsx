@@ -28,6 +28,7 @@ const queueFilters = [
   { key: 'recipient_waiting', label: 'Attesa conferma destinatario' },
   { key: 'transport_action', label: 'Da scegliere trasporto' },
   { key: 'transport_waiting', label: 'Attesa conferma trasporto' },
+  { key: 'confirmed', label: 'Confermati' },
   { key: 'execution', label: 'Working' },
   { key: 'delivered', label: 'Delivered' },
   { key: 'completed', label: 'Completed' },
@@ -40,7 +41,8 @@ function getQueueBucket(status) {
   if (status === 'recipient_selected') return 'recipient_waiting';
   if (['transporter_matching', 'package_options_ready'].includes(status)) return 'transport_action';
   if (status === 'package_selected') return 'transport_waiting';
-  if (['assigned', 'in_execution'].includes(status)) return 'execution';
+  if (status === 'assigned') return 'confirmed';
+  if (status === 'in_execution') return 'execution';
   if (status === 'delivered') return 'delivered';
   if (status === 'completed') return 'completed';
   if (['cancelled', 'expired'].includes(status)) return 'hold';
@@ -113,6 +115,7 @@ export default function ProducerDashboard() {
         recipient_waiting: 0,
         transport_action: 0,
         transport_waiting: 0,
+        confirmed: 0,
         execution: 0,
         delivered: 0,
         completed: 0,

@@ -132,10 +132,17 @@ async function confirmCombination(req, res, next) {
     if (!request || request.selectedTransporterId !== req.user.id) return res.status(403).json({ message: 'Combinazione non assegnata a questo trasportatore' });
     if (!['awaiting_operator_confirmation', 'awaiting_transporter_confirmation', 'awaiting_recipient_confirmation'].includes(request.workflowStatus)) return res.status(400).json({ message: 'La combinazione non attende conferma' });
 
-    const workflowStatus = request.recipientConfirmed ? 'confirmed' : 'awaiting_recipient_confirmation';
-    await request.update({ transporterConfirmed: true, workflowStatus });
+    const bothOperatorsConfirmed = request.recipientConfirmed;
+    const workflowStatus = bothOperatorsConfirmed ? 'confirmed' : 'awaiting_recipient_confirmation';
+    const status = bothOperatorsConfirmed ? 'assigned' : request.status;
+    await request.update({ transporterConfirmed: true, workflowStatus, status });
+
     await notifyUser(request.producerId, 'transporter_combination_confirmed', { wasteRequestId: request.id, workflowStatus });
-    return res.json({ requestId: request.id, workflowStatus });
+    if (bothOperatorsConfirmed) {
+      await notifyUser(request.producerId, 'combination_accepted', { wasteRequestId: request.id, status });
+    }
+
+    return res.json({ requestId: request.id, workflowStatus, status });
   } catch (error) {
     return next(error);
   }

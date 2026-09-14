@@ -28,7 +28,7 @@ export default function StatusBadge({ status }) {
     transporter_matching: 'Pianificazione',
     package_options_ready: 'Pianificazione',
     package_selected: 'Pianificazione',
-    assigned: 'Working',
+    assigned: 'Confermato',
     in_execution: 'Working',
     delivered: 'Delivered',
     completed: 'Completed',
