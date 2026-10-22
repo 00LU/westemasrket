@@ -6,7 +6,7 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import ProducerDashboard from './pages/producer/ProducerDashboard';
 import NewRequestPage from './pages/producer/NewRequestPage';
-import AuctionRoomPage from './pages/producer/AuctionRoomPage';
+import ProducerPickupPage from './pages/producer/ProducerPickupPage';
 import ProducerOrdersPage from './pages/producer/ProducerOrdersPage';
 import TransporterDashboard from './pages/transporter/TransporterDashboard';
 import TransporterNotificationsPage from './pages/transporter/TransporterNotificationsPage';
@@ -42,7 +42,7 @@ export default function App() {
 
       <Route path="/producer" element={<ProtectedRoute roles={['producer']}><ProducerDashboard /></ProtectedRoute>} />
       <Route path="/producer/new-request" element={<ProtectedRoute roles={['producer']}><NewRequestPage /></ProtectedRoute>} />
-      <Route path="/producer/auction/:id" element={<ProtectedRoute roles={['producer']}><AuctionRoomPage /></ProtectedRoute>} />
+      <Route path="/producer/pickups/:id" element={<ProtectedRoute roles={['producer']}><ProducerPickupPage /></ProtectedRoute>} />
       <Route path="/producer/orders" element={<ProtectedRoute roles={['producer']}><ProducerOrdersPage /></ProtectedRoute>} />
 
       <Route path="/transporter" element={<ProtectedRoute roles={['transporter']}><TransporterDashboard /></ProtectedRoute>} />

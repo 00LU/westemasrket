@@ -1,43 +1,33 @@
 import RoleLayout from '../../components/shared/RoleLayout';
 import Card from '../../components/ui/Card';
 import { useQuery } from '@tanstack/react-query';
-import { fetchIncomingShipments, fetchRecipientNotifications } from '../../services/recipientApi';
-
-const links = [
-  { to: '/recipient', label: 'Dashboard' },
-  { to: '/recipient/notifications', label: 'Notifications' },
-  { to: '/recipient/capacity', label: 'Capacity' },
-  { to: '/recipient/incoming', label: 'Incoming' },
-];
+import { recipientLinks } from '../../components/shared/navLinks';
+import { fetchRecipientPickups } from '../../services/recipientApi';
+import { errorMessage } from '../../services/labels';
 
 export default function RecipientDashboard() {
-  const notificationsQuery = useQuery({
-    queryKey: ['recipient', 'notifications'],
-    queryFn: fetchRecipientNotifications,
-  });
-  const incomingQuery = useQuery({
-    queryKey: ['recipient', 'incoming'],
-    queryFn: fetchIncomingShipments,
+  const { data = [], isError, error } = useQuery({
+    queryKey: ['recipient', 'pickups'],
+    queryFn: fetchRecipientPickups,
   });
 
-  const notifications = notificationsQuery.data || [];
-  const incoming = incomingQuery.data || [];
-  const incomingTon = incoming.reduce((sum, item) => sum + Number(item.quantityTon || 0), 0);
-  const hasError = notificationsQuery.isError || incomingQuery.isError;
+  const toRespond = data.filter((item) => item.stage === 'to_respond').length;
+  const inProgress = data.filter((item) => item.stage === 'in_agreement').length;
+  const confirmed = data.filter((item) => item.stage === 'confirmed');
+  const confirmedTon = confirmed.reduce((sum, item) => sum + Number(item.quantityTon || 0), 0);
 
   return (
-    <RoleLayout title="Recipient Dashboard" links={links}>
-      {hasError && (
+    <RoleLayout title="Dashboard destinatario" links={recipientLinks}>
+      {isError && (
         <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          {notificationsQuery.error?.response?.status === 401 || incomingQuery.error?.response?.status === 401
-            ? 'Unauthorized: please login again as recipient.'
-            : 'Unable to load recipient metrics.'}
+          {errorMessage(error, 'Impossibile caricare i dati.')}
         </p>
       )}
-      <div className="grid gap-4 sm:grid-cols-3">
-        <Card title="Incoming Today"><p className="text-3xl font-bold">{incoming.length}</p></Card>
-        <Card title="Incoming Volume"><p className="text-3xl font-bold">{incomingTon.toLocaleString()} ton</p></Card>
-        <Card title="Matching Requests"><p className="text-3xl font-bold">{notifications.length}</p></Card>
+      <div className="grid gap-4 sm:grid-cols-4">
+        <Card title="Da confermare"><p className="text-3xl font-bold">{toRespond}</p></Card>
+        <Card title="In accordo"><p className="text-3xl font-bold">{inProgress}</p></Card>
+        <Card title="Ritiri confermati"><p className="text-3xl font-bold">{confirmed.length}</p></Card>
+        <Card title="Volume confermato"><p className="text-3xl font-bold">{confirmedTon.toLocaleString()} ton</p></Card>
       </div>
     </RoleLayout>
   );

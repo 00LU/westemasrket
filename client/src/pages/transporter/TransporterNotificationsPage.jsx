@@ -1,132 +1,100 @@
+import { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import RoleLayout from '../../components/shared/RoleLayout';
 import Card from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
-import { acceptTransportSelection, createTransportOffer, fetchTransporterNotifications } from '../../services/transporterApi';
+import StatusBadge from '../../components/shared/StatusBadge';
+import PickupSummary from '../../components/shared/PickupSummary';
+import { transporterLinks } from '../../components/shared/navLinks';
+import { fetchTransporterPickups, submitTransportProposal } from '../../services/transporterApi';
+import { RESPONSE_LABELS, errorMessage, formatEuro } from '../../services/labels';
 
-const links = [
-  { to: '/transporter', label: 'Dashboard' },
-  { to: '/transporter/notifications', label: 'Notifications' },
-  { to: '/transporter/jobs', label: 'Active Jobs' },
-  { to: '/transporter/earnings', label: 'Earnings' },
-];
+function ProposalForm({ item, onDone }) {
+  const mine = item.myProposal;
+  const [form, setForm] = useState({
+    price: mine.price ?? '',
+    vehicleType: mine.vehicleType ?? 'ADR Truck',
+    availabilityNote: mine.availabilityNote ?? '',
+  });
+  const [message, setMessage] = useState('');
+  const set = (field) => (event) => setForm((curr) => ({ ...curr, [field]: event.target.value }));
+
+  const mutation = useMutation({
+    mutationFn: submitTransportProposal,
+    onSuccess: () => {
+      setMessage('');
+      onDone();
+    },
+    onError: (error) => setMessage(errorMessage(error)),
+  });
+
+  const submit = (event) => {
+    event.preventDefault();
+    mutation.mutate({ id: item.id, price: Number(form.price), vehicleType: form.vehicleType, availabilityNote: form.availabilityNote });
+  };
+
+  return (
+    <form className="space-y-3" onSubmit={submit}>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Input label="Prezzo del trasporto (EUR)" type="number" min="0" step="0.01" value={form.price} onChange={set('price')} required />
+        <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
+          Mezzo
+          <select className="rounded-xl border border-slate-300 px-3 py-2 text-sm" value={form.vehicleType} onChange={set('vehicleType')}>
+            <option>ADR Truck</option>
+            <option>Container Truck</option>
+            <option>Tank Trailer</option>
+          </select>
+        </label>
+      </div>
+      <Input label="Disponibilità (es. entro 48 ore)" value={form.availabilityNote} onChange={set('availabilityNote')} />
+      <div className="flex flex-wrap gap-2">
+        <Button type="submit" disabled={mutation.isPending}>
+          {mine.status === 'submitted' ? 'Aggiorna proposta' : 'Invia proposta'}
+        </Button>
+        <Button type="button" variant="secondary" disabled={mutation.isPending} onClick={() => mutation.mutate({ id: item.id, decline: true })}>
+          Non partecipo
+        </Button>
+      </div>
+      {message && <p className="text-sm text-red-600">{message}</p>}
+    </form>
+  );
+}
 
 export default function TransporterNotificationsPage() {
   const queryClient = useQueryClient();
   const { data = [], isLoading, isError, error } = useQuery({
-    queryKey: ['transporter', 'notifications'],
-    queryFn: fetchTransporterNotifications,
+    queryKey: ['transporter', 'pickups'],
+    queryFn: fetchTransporterPickups,
   });
-  const [formByRequest, setFormByRequest] = useState({});
-
-  const bidMutation = useMutation({
-    mutationFn: createTransportOffer,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['transporter', 'notifications'] });
-    },
-  });
-  const acceptMutation = useMutation({
-    mutationFn: acceptTransportSelection,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['transporter', 'notifications'] });
-    },
-  });
-
-  const updateForm = (requestId, field, value) => {
-    setFormByRequest((curr) => ({
-      ...curr,
-      [requestId]: {
-        ...curr[requestId],
-        [field]: value,
-      },
-    }));
-  };
-
-  const getForm = (item) => ({
-    transportPrice: formByRequest[item.id]?.transportPrice || item.myBid?.transportPrice || '0',
-    vehicleType: formByRequest[item.id]?.vehicleType || item.myBid?.vehicleType || 'ADR Truck',
-    availability: formByRequest[item.id]?.availability || item.myBid?.availability || '',
-  });
-
-  const submitOffer = (item) => {
-    const form = getForm(item);
-    bidMutation.mutate({
-      wasteRequestId: item.id,
-      transportPrice: Number(form.transportPrice || 0),
-      vehicleType: form.vehicleType,
-      availability: form.availability,
-    });
-  };
+  const refresh = () => queryClient.invalidateQueries({ queryKey: ['transporter'] });
 
   return (
-    <RoleLayout title="Nearby Compatible Requests" links={links}>
-      <div className="grid gap-6">
-        <Card title="Request Feed">
-          {isLoading && <p className="text-sm text-slate-600">Loading notifications...</p>}
-          {isError && (
-            <p className="text-sm text-red-600">
-              {error?.response?.status === 401 ? 'Unauthorized: please login again as transporter.' : 'Unable to load notifications.'}
-            </p>
-          )}
-          {!isLoading && !isError && (
-            <div className="space-y-3 text-sm">
-              {data.length === 0 && <p className="text-slate-600">No compatible requests at the moment.</p>}
-              {data.map((item) => (
-                <div key={item.id} className="space-y-3 rounded-xl border border-slate-200 p-3">
-                  <div>
-                    <p className="font-semibold text-slate-800">CER {item.cerCode} | {item.quantityTon} ton</p>
-                    <p className="text-slate-600">Pickup: {item.pickupAddress}</p>
-                    <p className="text-slate-600">Destination: {item.destinationAddress}</p>
-                    <p className="text-slate-600">Recipient component: EUR {Number(item.recipientPricePerTon || 0).toLocaleString()}/ton</p>
-                    {item.canAcceptSelection && <p className="font-semibold text-emerald-700">Sei stato selezionato per il trasporto</p>}
-                    {item.myBid && <p className="text-emerald-700">Your current offer: EUR {Number(item.myBid.transportPrice || 0).toLocaleString()}</p>}
-                  </div>
-                  {item.canAcceptSelection && (
-                    <Button
-                      type="button"
-                      onClick={() => acceptMutation.mutate(item.id)}
-                      disabled={acceptMutation.isPending}
-                    >
-                      {acceptMutation.isPending ? 'Conferma in corso...' : 'Accetta incarico trasporto'}
-                    </Button>
-                  )}
-                  <div className="grid gap-3 sm:grid-cols-3">
-                    <Input
-                      label="Transport price (EUR)"
-                      type="number"
-                      value={getForm(item).transportPrice}
-                      onChange={(event) => updateForm(item.id, 'transportPrice', event.target.value)}
-                    />
-                    <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
-                      Vehicle type
-                      <select
-                        className="rounded-xl border border-slate-300 px-3 py-2 text-sm"
-                        value={getForm(item).vehicleType}
-                        onChange={(event) => updateForm(item.id, 'vehicleType', event.target.value)}
-                      >
-                        <option>ADR Truck</option>
-                        <option>Container Truck</option>
-                        <option>Tank Trailer</option>
-                      </select>
-                    </label>
-                    <Input
-                      label="Availability"
-                      value={getForm(item).availability}
-                      onChange={(event) => updateForm(item.id, 'availability', event.target.value)}
-                      placeholder="Next 24h"
-                    />
-                  </div>
-                  <Button type="button" onClick={() => submitOffer(item)} disabled={bidMutation.isPending || item.canAcceptSelection}>
-                    {bidMutation.isPending ? 'Sending...' : item.myBid ? 'Update transport offer' : 'Send transport offer'}
-                  </Button>
+    <RoleLayout title="Richieste di ritiro" links={transporterLinks}>
+      <Card title="Richieste per cui puoi fare una proposta">
+        {isLoading && <p className="text-sm text-slate-600">Caricamento...</p>}
+        {isError && <p className="text-sm text-red-600">{errorMessage(error, 'Impossibile caricare le richieste.')}</p>}
+        {!isLoading && !isError && (
+          <div className="space-y-3 text-sm">
+            {data.length === 0 && <p className="text-slate-600">Nessuna richiesta disponibile.</p>}
+            {data.map((item) => (
+              <div key={item.id} className="space-y-3 rounded-xl border border-slate-200 p-3">
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <PickupSummary pickup={item} />
+                  <StatusBadge status={item.stage} kind="stage" />
                 </div>
-              ))}
-            </div>
-          )}
-        </Card>
-      </div>
+                {item.myProposal.status === 'submitted' && (
+                  <p className="text-emerald-700">La tua proposta: {formatEuro(item.myProposal.price)}</p>
+                )}
+                {!['invited', 'submitted'].includes(item.myProposal.status) && (
+                  <p className="text-slate-600">{RESPONSE_LABELS[item.myProposal.status]}</p>
+                )}
+                {item.canRespond && <ProposalForm item={item} onDone={refresh} />}
+              </div>
+            ))}
+          </div>
+        )}
+      </Card>
     </RoleLayout>
   );
 }

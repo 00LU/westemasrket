@@ -3,12 +3,7 @@ import Card from '../../components/ui/Card';
 import { useQuery } from '@tanstack/react-query';
 import { fetchTransporterEarnings } from '../../services/transporterApi';
 
-const links = [
-  { to: '/transporter', label: 'Dashboard' },
-  { to: '/transporter/notifications', label: 'Notifications' },
-  { to: '/transporter/jobs', label: 'Active Jobs' },
-  { to: '/transporter/earnings', label: 'Earnings' },
-];
+import { transporterLinks as links } from '../../components/shared/navLinks';
 
 export default function EarningsPage() {
   const { data, isLoading, isError, error } = useQuery({

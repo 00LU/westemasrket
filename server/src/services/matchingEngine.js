@@ -1,26 +1,13 @@
 const { User, Certification } = require('../models');
 
-async function matchOperators({ cerCode, pickupLat, pickupLng }) {
-  const [transporters, recipients] = await Promise.all([
-    User.findAll({ where: { role: 'transporter', verified: true } }),
-    User.findAll({ where: { role: 'recipient', verified: true } }),
-  ]);
+// Eligibility is currently "verified operators of the right role".
+// CER / zone / capacity filtering plugs in here without touching the workflow.
+async function findEligibleRecipients(_request, { transaction } = {}) {
+  return User.findAll({ where: { role: 'recipient', verified: true }, transaction });
+}
 
-  return {
-    transporters: transporters.map((entity) => ({
-      id: entity.id,
-      companyName: entity.companyName,
-      compatibility: 'zone+certification',
-      score: 0.85,
-    })),
-    recipients: recipients.map((entity) => ({
-      id: entity.id,
-      companyName: entity.companyName,
-      compatibility: `cer:${cerCode}+capacity+distance`,
-      score: 0.88,
-    })),
-    origin: { pickupLat, pickupLng },
-  };
+async function findEligibleTransporters(_request, { transaction } = {}) {
+  return User.findAll({ where: { role: 'transporter', verified: true }, transaction });
 }
 
 async function hasValidCertification(userId, type) {
@@ -29,6 +16,7 @@ async function hasValidCertification(userId, type) {
 }
 
 module.exports = {
-  matchOperators,
+  findEligibleRecipients,
+  findEligibleTransporters,
   hasValidCertification,
 };

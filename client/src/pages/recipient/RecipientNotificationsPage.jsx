@@ -1,129 +1,99 @@
+import { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import RoleLayout from '../../components/shared/RoleLayout';
 import Card from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
-import { acceptRecipientSelection, createRecipientOffer, fetchRecipientNotifications } from '../../services/recipientApi';
+import StatusBadge from '../../components/shared/StatusBadge';
+import PickupSummary from '../../components/shared/PickupSummary';
+import { recipientLinks } from '../../components/shared/navLinks';
+import { fetchRecipientPickups, respondRecipientAvailability } from '../../services/recipientApi';
+import { RESPONSE_LABELS, errorMessage, formatEuro } from '../../services/labels';
 
-const links = [
-  { to: '/recipient', label: 'Dashboard' },
-  { to: '/recipient/notifications', label: 'Notifications' },
-  { to: '/recipient/capacity', label: 'Capacity' },
-  { to: '/recipient/incoming', label: 'Incoming' },
-];
-
-export default function RecipientNotificationsPage() {
-  const queryClient = useQueryClient();
-  const { data = [], isLoading, isError, error } = useQuery({
-    queryKey: ['recipient', 'notifications'],
-    queryFn: fetchRecipientNotifications,
+function AvailabilityForm({ item, onDone }) {
+  const mine = item.myResponse;
+  const [form, setForm] = useState({
+    pricePerTon: mine.pricePerTon ?? '',
+    destinationAddress: mine.destinationAddress ?? '',
+    availableCapacityTon: mine.availableCapacityTon ?? '',
+    notes: mine.notes ?? '',
   });
-  const [formByRequest, setFormByRequest] = useState({});
+  const [message, setMessage] = useState('');
+  const set = (field) => (event) => setForm((curr) => ({ ...curr, [field]: event.target.value }));
 
-  const offerMutation = useMutation({
-    mutationFn: createRecipientOffer,
+  const mutation = useMutation({
+    mutationFn: respondRecipientAvailability,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['recipient', 'notifications'] });
+      setMessage('');
+      onDone();
     },
-  });
-  const acceptMutation = useMutation({
-    mutationFn: acceptRecipientSelection,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['recipient', 'notifications'] });
-    },
+    onError: (error) => setMessage(errorMessage(error)),
   });
 
-  const updateForm = (requestId, field, value) => {
-    setFormByRequest((curr) => ({
-      ...curr,
-      [requestId]: {
-        ...curr[requestId],
-        [field]: value,
-      },
-    }));
-  };
-
-  const getFormValues = (item) => ({
-    pricePerTon: formByRequest[item.id]?.pricePerTon || item.myOffer?.pricePerTon || '0',
-    destinationAddress: formByRequest[item.id]?.destinationAddress || item.myOffer?.destinationAddress || '',
-    availableCapacityTon: formByRequest[item.id]?.availableCapacityTon || '0',
-    notes: formByRequest[item.id]?.notes || '',
-  });
-
-  const submitOffer = (item) => {
-    const form = getFormValues(item);
-    offerMutation.mutate({
-      wasteRequestId: item.id,
-      pricePerTon: Number(form.pricePerTon || 0),
+  const confirm = (event) => {
+    event.preventDefault();
+    mutation.mutate({
+      id: item.id,
+      available: true,
+      pricePerTon: Number(form.pricePerTon),
       destinationAddress: form.destinationAddress,
-      availableCapacityTon: Number(form.availableCapacityTon || 0),
-      availabilityStatus: 'available',
+      availableCapacityTon: form.availableCapacityTon === '' ? undefined : Number(form.availableCapacityTon),
       notes: form.notes,
     });
   };
 
   return (
-    <RoleLayout title="Matching Waste Notifications" links={links}>
-      <Card title="Matching Feed">
-        {isLoading && <p className="text-sm text-slate-600">Loading notifications...</p>}
-        {isError && (
-          <p className="text-sm text-red-600">
-            {error?.response?.status === 401 ? 'Unauthorized: please login again as recipient.' : 'Unable to load notifications.'}
-          </p>
-        )}
+    <form className="space-y-3" onSubmit={confirm}>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Input label="Prezzo smaltimento (EUR/ton)" type="number" min="0" step="0.01" value={form.pricePerTon} onChange={set('pricePerTon')} required />
+        <Input label="Capacità disponibile (ton)" type="number" min="0" step="0.01" value={form.availableCapacityTon} onChange={set('availableCapacityTon')} />
+      </div>
+      <Input label="Indirizzo di destinazione" value={form.destinationAddress} onChange={set('destinationAddress')} required />
+      <Input label="Note" value={form.notes} onChange={set('notes')} />
+      <div className="flex flex-wrap gap-2">
+        <Button type="submit" disabled={mutation.isPending}>
+          {mine.status === 'available' ? 'Aggiorna disponibilità' : 'Conferma disponibilità'}
+        </Button>
+        <Button type="button" variant="secondary" disabled={mutation.isPending} onClick={() => mutation.mutate({ id: item.id, available: false })}>
+          Non sono disponibile
+        </Button>
+      </div>
+      {message && <p className="text-sm text-red-600">{message}</p>}
+    </form>
+  );
+}
+
+export default function RecipientNotificationsPage() {
+  const queryClient = useQueryClient();
+  const { data = [], isLoading, isError, error } = useQuery({
+    queryKey: ['recipient', 'pickups'],
+    queryFn: fetchRecipientPickups,
+  });
+  const refresh = () => queryClient.invalidateQueries({ queryKey: ['recipient'] });
+
+  return (
+    <RoleLayout title="Richieste di ritiro" links={recipientLinks}>
+      <Card title="Richieste ricevute">
+        {isLoading && <p className="text-sm text-slate-600">Caricamento...</p>}
+        {isError && <p className="text-sm text-red-600">{errorMessage(error, 'Impossibile caricare le richieste.')}</p>}
         {!isLoading && !isError && (
-          <div className="space-y-2 text-sm">
-            {data.length === 0 && <p className="text-slate-600">No matching waste notifications.</p>}
+          <div className="space-y-3 text-sm">
+            {data.length === 0 && <p className="text-slate-600">Nessuna richiesta di ritiro.</p>}
             {data.map((item) => (
               <div key={item.id} className="space-y-3 rounded-xl border border-slate-200 p-3">
-                <div>
-                  <p className="font-semibold text-slate-800">CER {item.cerCode} | {item.quantityTon} ton</p>
-                  <p className="text-slate-600">Pickup: {item.pickupAddress}</p>
-                  <p className="text-slate-600">Deadline: {new Date(item.deadline).toLocaleDateString()}</p>
-                  {item.canAcceptSelection && <p className="font-semibold text-emerald-700">Sei stato selezionato dal producer</p>}
-                  {item.myOffer && <p className="text-emerald-700">Existing offer: EUR {item.myOffer.pricePerTon}/ton</p>}
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <PickupSummary pickup={item} />
+                  <StatusBadge status={item.stage} kind="stage" />
                 </div>
-                {item.canAcceptSelection && (
-                  <Button
-                    type="button"
-                    onClick={() => acceptMutation.mutate(item.id)}
-                    disabled={acceptMutation.isPending}
-                  >
-                    {acceptMutation.isPending ? 'Conferma in corso...' : 'Accetta selezione'}
-                  </Button>
+                {item.myResponse.status === 'available' && (
+                  <p className="text-emerald-700">
+                    La tua disponibilità: {formatEuro(item.myResponse.pricePerTon)}/ton presso {item.myResponse.destinationAddress}
+                  </p>
                 )}
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <Input
-                    label="Price per ton (EUR)"
-                    type="number"
-                    value={getFormValues(item).pricePerTon}
-                    onChange={(event) => updateForm(item.id, 'pricePerTon', event.target.value)}
-                  />
-                  <Input
-                    label="Available capacity (ton)"
-                    type="number"
-                    value={getFormValues(item).availableCapacityTon}
-                    onChange={(event) => updateForm(item.id, 'availableCapacityTon', event.target.value)}
-                  />
-                </div>
-                <Input
-                  label="Destination address"
-                  value={getFormValues(item).destinationAddress}
-                  onChange={(event) => updateForm(item.id, 'destinationAddress', event.target.value)}
-                />
-                <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
-                  Notes
-                  <textarea
-                    className="min-h-20 rounded-xl border border-slate-300 px-3 py-2 text-sm"
-                    value={getFormValues(item).notes}
-                    onChange={(event) => updateForm(item.id, 'notes', event.target.value)}
-                    placeholder="Availability details or treatment notes"
-                  />
-                </label>
-                <Button type="button" onClick={() => submitOffer(item)} disabled={offerMutation.isPending || item.canAcceptSelection}>
-                  {offerMutation.isPending ? 'Sending...' : item.myOffer ? 'Update Offer' : 'Send Offer'}
-                </Button>
+                {item.myResponse.status !== 'pending' && item.myResponse.status !== 'available' && (
+                  <p className="text-slate-600">{RESPONSE_LABELS[item.myResponse.status]}</p>
+                )}
+                {item.canRespond && <AvailabilityForm item={item} onDone={refresh} />}
               </div>
             ))}
           </div>

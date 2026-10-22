@@ -1,4 +1,4 @@
-const { User, WasteRequest, Transaction } = require('../models');
+const { User, PickupRequest, Transaction } = require('../models');
 
 async function listPendingUsers(_req, res, next) {
   try {
@@ -39,7 +39,7 @@ async function analytics(_req, res, next) {
   try {
     const [activeUsers, totalOrders, transactions] = await Promise.all([
       User.count({ where: { verified: true } }),
-      WasteRequest.count(),
+      PickupRequest.count(),
       Transaction.findAll(),
     ]);
 

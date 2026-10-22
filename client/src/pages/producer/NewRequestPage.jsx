@@ -1,16 +1,10 @@
 import RoleLayout from '../../components/shared/RoleLayout';
 import WasteRequestForm from '../../components/forms/WasteRequestForm';
-
-const links = [
-  { to: '/producer', label: 'Dashboard' },
-  { to: '/producer/new-request', label: 'New Request' },
-  { to: '/producer/auction/123', label: 'Auction Room' },
-  { to: '/producer/orders', label: 'Orders & Docs' },
-];
+import { producerLinks } from '../../components/shared/navLinks';
 
 export default function NewRequestPage() {
   return (
-    <RoleLayout title="Create Waste Request" links={links}>
+    <RoleLayout title="Nuova richiesta di ritiro" links={producerLinks}>
       <WasteRequestForm />
     </RoleLayout>
   );

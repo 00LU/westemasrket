@@ -6,12 +6,7 @@ import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { updateRecipientCapacity, updateRecipientPricing } from '../../services/recipientApi';
 
-const links = [
-  { to: '/recipient', label: 'Dashboard' },
-  { to: '/recipient/notifications', label: 'Notifications' },
-  { to: '/recipient/capacity', label: 'Capacity' },
-  { to: '/recipient/incoming', label: 'Incoming' },
-];
+import { recipientLinks as links } from '../../components/shared/navLinks';
 
 export default function CapacityPage() {
   const [cerCode, setCerCode] = useState('15 01 10*');
