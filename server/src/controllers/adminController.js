@@ -1,6 +1,5 @@
-const { User, WasteRequest, Transaction, CerCode } = require('../models');
-const { matchOperators } = require('../services/matchingEngine');
-const { notifyUser } = require('../services/notificationService');
+const { User, PickupRequest, Transaction, CerCode } = require('../models');
+const { notifyUsers } = require('../services/notificationService');
 
 async function listPendingUsers(_req, res, next) {
   try {
@@ -41,7 +40,7 @@ async function analytics(_req, res, next) {
   try {
     const [activeUsers, totalOrders, transactions] = await Promise.all([
       User.count({ where: { verified: true } }),
-      WasteRequest.count(),
+      PickupRequest.count(),
       Transaction.findAll(),
     ]);
 
@@ -68,7 +67,7 @@ async function complianceStatus(_req, res) {
 
 async function listCerRecognitionRequests(_req, res, next) {
   try {
-    const requests = await WasteRequest.findAll({
+    const requests = await PickupRequest.findAll({
       where: { cerKnown: false },
       include: [{ model: User, as: 'producer', attributes: ['id', 'companyName', 'email'] }],
       order: [['created_at', 'DESC']],
@@ -82,7 +81,7 @@ async function listCerRecognitionRequests(_req, res, next) {
 async function proposeCerCode(req, res, next) {
   try {
     const { cerCode, notes } = req.body;
-    const request = await WasteRequest.findByPk(req.params.id);
+    const request = await PickupRequest.findByPk(req.params.id);
     if (!request || request.cerKnown) return res.status(404).json({ message: 'CER recognition request not found' });
 
     const catalogEntry = await CerCode.findByPk(cerCode);
@@ -91,19 +90,13 @@ async function proposeCerCode(req, res, next) {
     await request.update({
       cerCode,
       cerKnown: true,
-      status: 'recipient_matching',
-      workflowStatus: null,
       cerRequestNote: notes || `CER proposed by Admin: ${cerCode}`,
     });
 
-    const matches = await matchOperators({ cerCode, pickupLat: request.pickupLat, pickupLng: request.pickupLng });
-    await Promise.all([
-      ...matches.transporters.map((item) => notifyUser(item.id, 'new_request_match', { wasteRequestId: request.id })),
-      ...matches.recipients.map((item) => notifyUser(item.id, 'new_request_match', { wasteRequestId: request.id })),
-      notifyUser(request.producerId, 'cer_proposed_by_admin', { wasteRequestId: request.id, cerCode }),
-    ]);
+    // The request stays a draft: the producer reviews the proposed CER and publishes it.
+    await notifyUsers(request.producerId, 'cer_proposed_by_admin', { pickupRequestId: request.id, cerCode });
 
-    return res.json({ request, matches });
+    return res.json({ request });
   } catch (error) {
     return next(error);
   }

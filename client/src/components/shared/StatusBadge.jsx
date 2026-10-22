@@ -1,40 +1,21 @@
 import Badge from '../ui/Badge';
+import { REQUEST_STATUS_LABELS, STAGE_LABELS } from '../../services/labels';
 
-export default function StatusBadge({ status }) {
-  const toneMap = {
-    active: 'success',
-    recipient_matching: 'warning',
-    recipient_options_ready: 'success',
-    recipient_selected: 'success',
-    transporter_matching: 'warning',
-    package_options_ready: 'success',
-    package_selected: 'success',
-    assigned: 'success',
-    in_execution: 'warning',
-    delivered: 'neutral',
-    completed: 'success',
-    cancelled: 'danger',
-    expired: 'danger',
-    pending: 'warning',
-    closed: 'neutral',
-    critical: 'danger',
-  };
+const TONES = {
+  draft: 'neutral',
+  awaiting_recipients: 'warning',
+  awaiting_transporters: 'warning',
+  packages_ready: 'success',
+  in_agreement: 'warning',
+  confirmed: 'success',
+  cancelled: 'danger',
+  to_respond: 'warning',
+  responded: 'neutral',
+  waiting: 'neutral',
+  closed: 'neutral',
+};
 
-  const labelMap = {
-    draft: 'Draft',
-    recipient_matching: 'Asta',
-    recipient_options_ready: 'Selezione',
-    recipient_selected: 'Selezione',
-    transporter_matching: 'Pianificazione',
-    package_options_ready: 'Pianificazione',
-    package_selected: 'Pianificazione',
-    assigned: 'Confermato',
-    in_execution: 'Working',
-    delivered: 'Delivered',
-    completed: 'Completed',
-    cancelled: 'Hold',
-    expired: 'Hold',
-  };
-
-  return <Badge tone={toneMap[status] || 'neutral'}>{labelMap[status] || status}</Badge>;
+export default function StatusBadge({ status, kind = 'request' }) {
+  const labels = kind === 'stage' ? STAGE_LABELS : REQUEST_STATUS_LABELS;
+  return <Badge tone={TONES[status] || 'neutral'}>{labels[status] || status}</Badge>;
 }

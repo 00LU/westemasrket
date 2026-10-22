@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import RoleLayout from '../../components/shared/RoleLayout';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
-import { fetchTransporterJobs } from '../../services/transporterApi';
+import { fetchTransporterPickups } from '../../services/transporterApi';
 
 const links = [
   { to: '/transporter', label: 'Dashboard' },
@@ -24,8 +24,12 @@ function dateKey(value) {
 
 export default function TransporterPlanningPage() {
   const [month, setMonth] = useState(() => new Date());
-  const jobsQuery = useQuery({ queryKey: ['transporter', 'planning'], queryFn: fetchTransporterJobs });
-  const jobs = jobsQuery.data || [];
+  const jobsQuery = useQuery({ queryKey: ['transporter', 'pickups'], queryFn: fetchTransporterPickups });
+  // Only pickups whose day/time was confirmed by all three parties are planned trips.
+  const jobs = useMemo(
+    () => (jobsQuery.data || []).filter((item) => item.stage === 'confirmed').map((item) => ({ ...item, deadline: item.scheduledAt })),
+    [jobsQuery.data]
+  );
   const jobsByDate = useMemo(() => jobs.reduce((map, job) => ({ ...map, [dateKey(job.deadline)]: [...(map[dateKey(job.deadline)] || []), job] }), {}), [jobs]);
   const firstDay = new Date(month.getFullYear(), month.getMonth(), 1);
   const offset = (firstDay.getDay() + 6) % 7;

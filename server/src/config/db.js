@@ -9,6 +9,8 @@ const sequelize = new Sequelize(
     port: Number(process.env.DB_PORT || 5432),
     dialect: 'postgres',
     logging: process.env.DB_LOGGING === 'true' ? console.log : false,
+    // Optional isolated schema (used by the automated tests).
+    define: process.env.DB_SCHEMA ? { schema: process.env.DB_SCHEMA } : {},
   }
 );
 

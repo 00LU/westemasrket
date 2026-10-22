@@ -3,14 +3,16 @@ import RoleLayout from '../../components/shared/RoleLayout';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import { useQuery } from '@tanstack/react-query';
-import { fetchIncomingShipments } from '../../services/recipientApi';
+import { fetchRecipientPickups } from '../../services/recipientApi';
 
 const links = [{ to: '/recipient', label: 'Dashboard' }, { to: '/recipient/opportunities', label: 'Ordini compatibili' }, { to: '/recipient/calendar', label: 'Calendario conferimenti' }, { to: '/recipient/incoming', label: 'Arrivi e conferimenti' }, { to: '/recipient/capacity', label: 'Disponibilita e capacita' }, { to: '/recipient/facilities', label: 'Impianti e autorizzazioni' }, { to: '/recipient/earnings', label: 'Corrispettivi' }, { to: '/profile', label: 'Profilo' }];
 const dateKey = (value) => { if (!value) return ''; const date = new Date(value); return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`; };
 
 export default function RecipientCalendarPage() {
   const [month, setMonth] = useState(() => new Date());
-  const { data = [], isLoading } = useQuery({ queryKey: ['recipient', 'calendar'], queryFn: fetchIncomingShipments });
+  const { data: pickups = [], isLoading } = useQuery({ queryKey: ['recipient', 'pickups'], queryFn: fetchRecipientPickups });
+  // Only pickups whose day/time was confirmed by all three parties are on the calendar.
+  const data = useMemo(() => pickups.filter((item) => item.stage === 'confirmed').map((item) => ({ ...item, deadline: item.scheduledAt })), [pickups]);
   const byDate = useMemo(() => data.reduce((map, item) => ({ ...map, [dateKey(item.deadline)]: [...(map[dateKey(item.deadline)] || []), item] }), {}), [data]);
   const first = new Date(month.getFullYear(), month.getMonth(), 1);
   const offset = (first.getDay() + 6) % 7;

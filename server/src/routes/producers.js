@@ -2,39 +2,28 @@ const express = require('express');
 const auth = require('../middleware/auth');
 const roleGuard = require('../middleware/roleGuard');
 const validate = require('../middleware/validation');
-const {
-  createWasteRequest,
-  getActiveOrders,
-  getOrderHistory,
-  getRecurringOrders,
-  repeatWasteRequest,
-  updateOrderStatus,
-  estimatePrice,
-  getAuctionData,
-  getRecipientOffers,
-  getRecipientOffersBoard,
-  getCombinationsBoard,
-  selectCombination,
-  selectRecipientOffer,
-  selectTransportBid,
-} = require('../controllers/producerController');
+const uuidParam = require('../middleware/uuidParam');
+const c = require('../controllers/producerController');
 
 const router = express.Router();
 
+router.param('id', uuidParam);
+router.param('packageId', uuidParam);
+
 router.use(auth, roleGuard(['producer']));
-router.post('/waste-requests', validate(['cerCode', 'quantityTon', 'pickupAddress', 'deadline', 'maxPrice']), createWasteRequest);
-router.post('/pricing/estimate', validate(['quantityTon', 'distanceKm']), estimatePrice);
-router.get('/recipient-offers', getRecipientOffersBoard);
-router.get('/combinations', getCombinationsBoard);
-router.post('/waste-requests/:id/select-combination', validate(['bidId', 'recipientOfferId']), selectCombination);
-router.patch('/waste-requests/:id/select-recipient', validate(['recipientOfferId']), selectRecipientOffer);
-router.patch('/waste-requests/:id/select-transport', validate(['bidId']), selectTransportBid);
-router.patch('/waste-requests/:id/status', validate(['status']), updateOrderStatus);
-router.get('/waste-requests/:id/recipient-offers', getRecipientOffers);
-router.get('/orders/active', getActiveOrders);
-router.get('/orders/history', getOrderHistory);
-router.get('/orders/recurring', getRecurringOrders);
-router.post('/orders/recurring/:id/repeat', repeatWasteRequest);
-router.get('/auctions/:id', getAuctionData);
+router.post('/pricing/estimate', validate(['quantityTon', 'distanceKm']), c.estimatePrice);
+
+router.get('/pickups', c.listPickups);
+router.get('/pickups/recurring', c.listRecurring);
+router.post('/pickups/:id/repeat', c.repeatRecurring);
+router.post('/pickups', validate(['cerCode', 'quantityTon', 'pickupAddress', 'deadline', 'maxPrice']), c.createPickup);
+router.get('/pickups/:id', c.getPickup);
+router.patch('/pickups/:id', c.updatePickup);
+router.post('/pickups/:id/publish', c.publishPickup);
+router.post('/pickups/:id/close-recipients', c.closeRecipients);
+router.post('/pickups/:id/close-transporters', c.closeTransporters);
+router.post('/pickups/:id/packages/:packageId/select', c.selectPackage);
+router.post('/pickups/:id/withdraw-selection', c.withdrawSelection);
+router.post('/pickups/:id/cancel', c.cancelPickup);
 
 module.exports = router;

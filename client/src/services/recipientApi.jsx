@@ -1,32 +1,17 @@
 import api from './api';
 
-export async function fetchRecipientNotifications() {
-  const { data } = await api.get('/recipients/notifications');
+export async function fetchRecipientPickups() {
+  const { data } = await api.get('/recipients/pickups');
   return data;
 }
 
-export async function createRecipientOffer(payload) {
-  const { data } = await api.post('/recipients/offers', payload);
+export async function fetchRecipientPickup(id) {
+  const { data } = await api.get(`/recipients/pickups/${id}`);
   return data;
 }
 
-export async function acceptRecipientSelection(wasteRequestId) {
-  const { data } = await api.patch(`/recipients/waste-requests/${wasteRequestId}/accept-selection`);
-  return data;
-}
-
-export async function confirmRecipientCombination(wasteRequestId) {
-  const { data } = await api.patch(`/recipients/waste-requests/${wasteRequestId}/confirm-combination`);
-  return data;
-}
-
-export async function fetchIncomingShipments() {
-  const { data } = await api.get('/recipients/incoming');
-  return data;
-}
-
-export async function updateRecipientIncomingStatus({ wasteRequestId, status }) {
-  const { data } = await api.patch(`/recipients/waste-requests/${wasteRequestId}/status`, { status });
+export async function respondRecipientAvailability({ id, ...payload }) {
+  const { data } = await api.post(`/recipients/pickups/${id}/availability`, payload);
   return data;
 }
 

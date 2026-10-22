@@ -1,7 +1,19 @@
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 const sequelize = require('../src/config/db');
-const { initModels, User, WasteRequest, Bid, RecipientOffer, Document, Notification, Transaction } = require('../src/models');
+const {
+  initModels,
+  User,
+  PickupRequest,
+  RecipientAvailability,
+  TransportProposal,
+  PickupPackage,
+  SlotProposal,
+  PickupStatusHistory,
+  Document,
+  Notification,
+  Transaction,
+} = require('../src/models');
 
 const DEMO_EMAILS = [
   'demo.producer@wastemarket.local',
@@ -19,20 +31,12 @@ const requiredDocuments = {
 
 const orderStatuses = [
   'draft',
-  'recipient_matching',
-  'recipient_options_ready',
-  'recipient_selected',
-  'transporter_matching',
-  'package_options_ready',
-  'package_selected',
-  'assigned',
-  'in_execution',
-  'delivered',
-  'completed',
+  'awaiting_recipients',
+  'awaiting_transporters',
+  'packages_ready',
+  'in_agreement',
+  'confirmed',
   'cancelled',
-  'expired',
-  'active',
-  'awarded',
 ];
 
 async function deleteDemoData(transaction) {
@@ -40,19 +44,21 @@ async function deleteDemoData(transaction) {
   const userIds = users.map((user) => user.id);
   if (userIds.length === 0) return;
 
-  const producerOrders = await WasteRequest.findAll({ where: { producerId: userIds }, attributes: ['id'], transaction });
+  const producerOrders = await PickupRequest.findAll({ where: { producerId: userIds }, attributes: ['id'], transaction });
   const orderIds = producerOrders.map((order) => order.id);
 
   await Notification.destroy({ where: { userId: userIds }, transaction });
   await Document.destroy({ where: { userId: userIds }, transaction });
-  await Bid.destroy({ where: { transporterId: userIds }, transaction });
-  await RecipientOffer.destroy({ where: { recipientId: userIds }, transaction });
   if (orderIds.length > 0) {
-    await Transaction.destroy({ where: { wasteRequestId: orderIds }, transaction });
-    await Bid.destroy({ where: { wasteRequestId: orderIds }, transaction });
-    await RecipientOffer.destroy({ where: { wasteRequestId: orderIds }, transaction });
+    const where = { pickupRequestId: orderIds };
+    await Transaction.destroy({ where, transaction });
+    await SlotProposal.destroy({ where, transaction });
+    await PickupPackage.destroy({ where, transaction });
+    await TransportProposal.destroy({ where, transaction });
+    await RecipientAvailability.destroy({ where, transaction });
+    await PickupStatusHistory.destroy({ where, transaction });
   }
-  await WasteRequest.destroy({ where: { producerId: userIds }, transaction });
+  await PickupRequest.destroy({ where: { producerId: userIds }, transaction });
   await User.destroy({ where: { id: userIds }, transaction });
 }
 
@@ -135,9 +141,11 @@ async function main() {
     ]);
 
     const createdOrders = [];
+    const at = (days) => new Date(Date.now() + days * 86400000);
     for (let index = 0; index < orderStatuses.length; index += 1) {
       const status = orderStatuses[index];
-      const order = await WasteRequest.create({
+      const quantityTon = 2 + index;
+      const order = await PickupRequest.create({
         producerId: producer.id,
         cerCode: index % 2 === 0 ? '15 01 10*' : '16 01 03',
         cerKnown: true,
@@ -145,57 +153,103 @@ async function main() {
         photoFileName: 'demo-waste.jpg',
         containment: 'Big bag',
         specialInfo: 'Dati demo per verifica workflow',
-        quantityTon: 2 + index,
+        quantityTon,
         pickupAddress: `Via Demo ${index + 10}, Milano`,
         pickupLat: 45.4642,
         pickupLng: 9.19,
-        deadline: new Date(Date.now() + (index + 1) * 86400000),
-        maxPrice: 500 + index * 25,
+        deadline: at(index + 10),
+        maxPrice: 1500 + index * 25,
         status,
         recurring: index === 1,
         recurrenceFrequency: index === 1 ? 'monthly' : null,
-        workflowStatus: status === 'completed' ? 'confirmed' : null,
+        cancelReason: status === 'cancelled' ? 'producer_cancelled' : null,
       }, { transaction });
+      await PickupStatusHistory.create({ pickupRequestId: order.id, toStatus: status, actorId: producer.id, note: 'demo seed' }, { transaction });
 
-      const recipientOffer = await RecipientOffer.create({
-        wasteRequestId: order.id,
+      // Related records are created only for the phases that have them.
+      if (status === 'draft') {
+        createdOrders.push({ id: order.id, status });
+        continue;
+      }
+
+      const pricePerTon = 120 + index;
+      const availability = await RecipientAvailability.create({
+        pickupRequestId: order.id,
         recipientId: recipient.id,
-        pricePerTon: 120 + index,
+        status: status === 'awaiting_recipients' ? 'pending' : 'available',
         pricingUnit: 'per_ton',
+        unitPrice: pricePerTon,
+        pricePerTon,
         availableCapacityTon: 20,
         quantityTolerancePercent: 1,
         availabilityWindow: 'Lun-Ven 08:00-17:00',
-        availabilityStatus: 'available',
         destinationAddress: 'Demo Recipient Impianto, Via Demo 3, Monza',
-        notes: 'Offerta demo per test',
-      }, { transaction });
-      const bid = await Bid.create({
-        wasteRequestId: order.id,
-        transporterId: transporter.id,
-        recipientId: recipient.id,
-        transportPrice: 180 + index * 10,
-        pricingMode: index % 2 === 0 ? 'per_km' : 'fixed_trip',
-        distanceKm: 42,
-        treatmentPrice: (120 + index) * (2 + index),
-        totalPrice: 180 + index * 10 + (120 + index) * (2 + index),
-        vehicleType: 'ADR Truck',
-        availability: 'Lun-Ven 08:00-17:00',
-        status: ['cancelled', 'expired'].includes(status) ? 'rejected' : 'active',
+        notes: 'Disponibilità demo',
+        respondedAt: status === 'awaiting_recipients' ? null : new Date(),
       }, { transaction });
 
-      const selected = ['recipient_selected', 'transporter_matching', 'package_options_ready', 'package_selected', 'assigned', 'in_execution', 'delivered', 'completed'].includes(status);
-      if (selected) {
-        await order.update({
-          selectedRecipientId: recipient.id,
-          selectedRecipientOfferId: recipientOffer.id,
-          selectedTransporterId: transporter.id,
-          selectedBidId: bid.id,
-          selectedFinalPrice: bid.totalPrice,
-          selectedPlatformFee: Math.round(bid.totalPrice * 0.02 * 100) / 100,
-          workflowStatus: status === 'completed' ? 'confirmed' : 'awaiting_operator_confirmation',
-          transporterConfirmed: status === 'completed',
-          recipientConfirmed: status === 'completed',
+      if (['awaiting_recipients', 'cancelled'].includes(status)) {
+        createdOrders.push({ id: order.id, status });
+        continue;
+      }
+
+      const transportPrice = 180 + index * 10;
+      const proposal = await TransportProposal.create({
+        pickupRequestId: order.id,
+        transporterId: transporter.id,
+        status: status === 'awaiting_transporters' ? 'invited' : 'submitted',
+        pricingMode: 'per_km',
+        unitPrice: transportPrice / 42,
+        distanceKm: 42,
+        price: status === 'awaiting_transporters' ? null : transportPrice,
+        vehicleType: 'ADR Truck',
+        availabilityNote: 'Lun-Ven 08:00-17:00',
+        respondedAt: status === 'awaiting_transporters' ? null : new Date(),
+      }, { transaction });
+
+      if (status !== 'awaiting_transporters') {
+        const treatmentPrice = pricePerTon * quantityTon;
+        const pkg = await PickupPackage.create({
+          pickupRequestId: order.id,
+          recipientAvailabilityId: availability.id,
+          transportProposalId: proposal.id,
+          recipientId: recipient.id,
+          transporterId: transporter.id,
+          treatmentPrice,
+          transportPrice,
+          totalPrice: treatmentPrice + transportPrice,
+          score: treatmentPrice + transportPrice,
+          rank: 1,
+          status: { packages_ready: 'proposed', in_agreement: 'selected', confirmed: 'confirmed' }[status],
         }, { transaction });
+
+        if (['in_agreement', 'confirmed'].includes(status)) {
+          const scheduledAt = at(5);
+          await SlotProposal.create({
+            pickupRequestId: order.id,
+            packageId: pkg.id,
+            proposedById: producer.id,
+            proposedByRole: 'producer',
+            scheduledAt,
+            producerAccepted: true,
+            recipientAccepted: status === 'confirmed',
+            transporterAccepted: status === 'confirmed',
+            status: status === 'confirmed' ? 'agreed' : 'active',
+          }, { transaction });
+          await order.update({
+            selectedPackageId: pkg.id,
+            agreementDeadline: status === 'in_agreement' ? at(2) : null,
+            confirmedSlotAt: status === 'confirmed' ? scheduledAt : null,
+          }, { transaction });
+          if (status === 'confirmed') {
+            await Transaction.create({
+              pickupRequestId: order.id,
+              packageId: pkg.id,
+              platformFee: Math.round(pkg.totalPrice * 0.02 * 100) / 100,
+              status: 'open',
+            }, { transaction });
+          }
+        }
       }
       createdOrders.push({ id: order.id, status });
     }

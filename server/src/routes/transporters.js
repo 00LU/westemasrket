@@ -1,24 +1,17 @@
 const express = require('express');
 const auth = require('../middleware/auth');
 const roleGuard = require('../middleware/roleGuard');
-const validate = require('../middleware/validation');
-const {
-  getNotificationsFeed,
-  acceptTransportSelection,
-  confirmCombination,
-  getActiveJobs,
-  updateJobStatus,
-  getEarnings,
-} = require('../controllers/transporterController');
+const uuidParam = require('../middleware/uuidParam');
+const c = require('../controllers/transporterController');
 
 const router = express.Router();
 
+router.param('id', uuidParam);
+
 router.use(auth, roleGuard(['transporter']));
-router.get('/notifications', getNotificationsFeed);
-router.patch('/waste-requests/:id/accept-selection', acceptTransportSelection);
-router.patch('/waste-requests/:id/confirm-combination', confirmCombination);
-router.get('/jobs', getActiveJobs);
-router.patch('/waste-requests/:id/status', validate(['status']), updateJobStatus);
-router.get('/earnings', getEarnings);
+router.get('/pickups', c.listPickups);
+router.get('/pickups/:id', c.getPickup);
+router.post('/pickups/:id/proposal', c.submitProposal);
+router.get('/earnings', c.getEarnings);
 
 module.exports = router;

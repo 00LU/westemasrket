@@ -33,8 +33,7 @@ export default function RecurringOrdersPage() {
       setMessage('Nuovo ordine creato. Sono stati generati un nuovo order_id e una nuova procedura di matching.');
       setSelectedOrder(null);
       setForm(emptyRepeatForm);
-      queryClient.invalidateQueries({ queryKey: ['producer', 'active-orders'] });
-      queryClient.invalidateQueries({ queryKey: ['producer', 'recurring-orders'] });
+      queryClient.invalidateQueries({ queryKey: ['producer'] });
     },
     onError: (requestError) => {
       setMessage('');

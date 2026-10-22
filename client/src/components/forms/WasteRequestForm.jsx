@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import Input from '../ui/Input';
 import Button from '../ui/Button';
 import CERSelector from './CERSelector';
-import { createProducerWasteRequest } from '../../services/producerApi';
+import { createProducerPickup, publishProducerPickup } from '../../services/producerApi';
+import { errorMessage } from '../../services/labels';
 
 const steps = [
   'Sede / luogo',
@@ -51,19 +53,40 @@ export default function WasteRequestForm() {
     setForm((current) => ({ ...current, [field]: value }));
   };
 
+  const navigate = useNavigate();
+
   const createMutation = useMutation({
-    mutationFn: createProducerWasteRequest,
-    onSuccess: (data) => {
+    mutationFn: async (payload) => {
+      const draft = await createProducerPickup(payload);
+      // With an unknown CER the request waits (as a draft) for the admin's proposal.
+      if (draft.cerKnown === false) return { draft, published: false };
+      try {
+        await publishProducerPickup(draft.id);
+      } catch (publishError) {
+        publishError.draft = draft;
+        throw publishError;
+      }
+      return { draft, published: true };
+    },
+    onSuccess: ({ draft, published }) => {
       setError('');
-      setMessage(data.request.cerKnown === false
-        ? 'Richiesta inviata all\'intermediario per la proposta CER.'
-        : 'Ordine pubblicato e inviato al matching.');
+      if (published) {
+        navigate(`/producer/pickups/${draft.id}`);
+        return;
+      }
+      setMessage('Richiesta inviata all\'intermediario per la proposta CER.');
       setForm(initialForm);
       setStep(0);
     },
     onError: (requestError) => {
       setMessage('');
-      setError(requestError?.response?.data?.message || 'Impossibile creare l\'ordine.');
+      const text = errorMessage(requestError, 'Impossibile creare l\'ordine.');
+      // The order was saved but could not be published: continue on its page, where it can be retried.
+      if (requestError.draft) {
+        navigate(`/producer/pickups/${requestError.draft.id}`, { state: { notice: `Salvato come bozza. Pubblicazione non riuscita: ${text}` } });
+      } else {
+        setError(text);
+      }
     },
   });
 
@@ -80,12 +103,14 @@ export default function WasteRequestForm() {
 
   const submit = (event) => {
     event.preventDefault();
+    const dueDate = form.deadline || form.recurrenceEndDate;
     createMutation.mutate({
       ...form,
       quantityTon: Number(form.quantityTon),
       pickupLat: 45.4642,
       pickupLng: 9.19,
-      deadline: form.deadline || form.recurrenceEndDate,
+      // Date-only input: the pickup is due by the end of that day in the user's timezone.
+      deadline: dueDate ? new Date(`${dueDate}T23:59:00`).toISOString() : '',
       maxPrice: Number(form.maxPrice || 0),
       cerRequestNote: form.cerKnown ? '' : 'Richiesta proposta CER da parte dell\'intermediario',
     });

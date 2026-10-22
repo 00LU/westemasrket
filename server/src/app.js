@@ -4,8 +4,8 @@ const authRoutes = require('./routes/auth');
 const producerRoutes = require('./routes/producers');
 const transporterRoutes = require('./routes/transporters');
 const recipientRoutes = require('./routes/recipients');
-const auctionRoutes = require('./routes/auctions');
-const bidRoutes = require('./routes/bids');
+const pickupRoutes = require('./routes/pickups');
+const notificationRoutes = require('./routes/notifications');
 const adminRoutes = require('./routes/admin');
 const documentsRoutes = require('./routes/documents');
 const cerRoutes = require('./routes/cer');
@@ -51,14 +51,14 @@ app.use('/api/auth', authRoutes);
 app.use('/api/producers', producerRoutes);
 app.use('/api/transporters', transporterRoutes);
 app.use('/api/recipients', recipientRoutes);
-app.use('/api/auctions', auctionRoutes);
-app.use('/api/bids', bidRoutes);
+app.use('/api/pickups', pickupRoutes);
+app.use('/api/notifications', notificationRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/documents', documentsRoutes);
 app.use('/api/cer-codes', cerRoutes);
 
 app.use((err, _req, res, _next) => {
-  console.error(err);
+  if (!err.status) console.error(err);
   res.status(err.status || 500).json({ message: err.message || 'Internal server error' });
 });
 

@@ -7,6 +7,7 @@ import RegisterPage from './pages/auth/RegisterPage';
 import ProducerDashboard from './pages/producer/ProducerDashboard';
 import NewRequestPage from './pages/producer/NewRequestPage';
 import RecurringOrdersPage from './pages/producer/RecurringOrdersPage';
+import ProducerPickupPage from './pages/producer/ProducerPickupPage';
 import TransporterDashboard from './pages/transporter/TransporterDashboard';
 import TransporterNotificationsPage from './pages/transporter/TransporterNotificationsPage';
 import ActiveJobsPage from './pages/transporter/ActiveJobsPage';
@@ -49,6 +50,7 @@ export default function App() {
 
       <Route path="/producer" element={<ProtectedRoute roles={['producer']}><ProducerDashboard /></ProtectedRoute>} />
       <Route path="/producer/new-request" element={<ProtectedRoute roles={['producer']}><NewRequestPage /></ProtectedRoute>} />
+      <Route path="/producer/pickups/:id" element={<ProtectedRoute roles={['producer']}><ProducerPickupPage /></ProtectedRoute>} />
       <Route path="/producer/recurring-orders" element={<ProtectedRoute roles={['producer']}><RecurringOrdersPage /></ProtectedRoute>} />
 
       <Route path="/transporter" element={<ProtectedRoute roles={['transporter']}><TransporterDashboard /></ProtectedRoute>} />

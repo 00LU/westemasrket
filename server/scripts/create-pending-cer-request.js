@@ -1,6 +1,6 @@
 require('dotenv').config();
 const sequelize = require('../src/config/db');
-const { initModels, User, WasteRequest } = require('../src/models');
+const { initModels, User, PickupRequest } = require('../src/models');
 
 async function main() {
   initModels();
@@ -9,8 +9,8 @@ async function main() {
   const producer = await User.findOne({ where: { email: 'demo.producer@wastemarket.local' } });
   if (!producer) throw new Error('Demo producer not found');
 
-  const existing = await WasteRequest.findOne({ where: { producerId: producer.id, cerKnown: false } });
-  const request = existing || await WasteRequest.create({
+  const existing = await PickupRequest.findOne({ where: { producerId: producer.id, cerKnown: false } });
+  const request = existing || await PickupRequest.create({
     producerId: producer.id,
     cerCode: 'UNKNOWN',
     cerKnown: false,
