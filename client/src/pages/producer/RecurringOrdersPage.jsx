@@ -64,7 +64,7 @@ export default function RecurringOrdersPage() {
             {data.map((order) => (
               <div key={order.id} className="flex flex-col gap-3 rounded-xl border border-slate-200 p-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="text-sm">
-                  <p className="font-semibold text-slate-800">CER {order.cerCode} | {order.quantityTon} ton</p>
+                  <p className="font-semibold text-slate-800">{order.requestCode || '—'} · CER {order.cerCode} | {order.quantityTon} ton</p>
                   <p className="text-slate-600">{order.pickupAddress}</p>
                   <p className="text-slate-500">Frequenza: {order.recurrenceFrequency || 'non configurata'} · Ultima scadenza: {order.deadline || '-'}</p>
                   <StatusBadge status={order.status} />

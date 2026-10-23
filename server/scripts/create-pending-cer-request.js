@@ -1,11 +1,13 @@
 require('dotenv').config();
 const sequelize = require('../src/config/db');
 const { initModels, User, PickupRequest } = require('../src/models');
+const { ensurePickupColumns } = require('../src/services/pickupSchema');
 
 async function main() {
   initModels();
   await sequelize.authenticate();
   await sequelize.sync();
+  await ensurePickupColumns();
   const producer = await User.findOne({ where: { email: 'demo.producer@wastemarket.local' } });
   if (!producer) throw new Error('Demo producer not found');
 
@@ -30,7 +32,7 @@ async function main() {
     cerRequestNote: 'Richiesta proposta CER all\'intermediario',
   });
 
-  console.log(JSON.stringify({ message: 'Pending CER request ready', orderId: request.id, status: request.status, cerKnown: request.cerKnown }, null, 2));
+  console.log(JSON.stringify({ message: 'Pending CER request ready', requestCode: request.requestCode, orderId: request.id, status: request.status, cerKnown: request.cerKnown }, null, 2));
   await sequelize.close();
 }
 

@@ -36,7 +36,7 @@ export default function OperatorPickupPage({ role }) {
       )}
       {item && (
         <>
-          <Card title="Richiesta" action={<StatusBadge status={item.stage} kind="stage" />}>
+          <Card title={item.requestCode || '—'} action={<StatusBadge status={item.stage} kind="stage" />}>
             <div className="space-y-3 text-sm">
               <PickupSummary pickup={item} />
               {!item.agreement && (

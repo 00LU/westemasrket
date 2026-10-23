@@ -58,7 +58,7 @@ export default function TransporterDashboard() {
         <Card title="Nuovi ordini e aste attive" action={<a className="text-sm font-semibold text-brand-900" href="/transporter/opportunities">Vedi tutti</a>}>
           {pickupsReady && notifications.length === 0 && <p className="text-sm text-slate-600">Nessuna nuova richiesta al momento.</p>}
           <div className="space-y-2 text-sm">
-            {notifications.slice(0, 4).map((item) => <div key={item.id} className="flex items-center justify-between rounded-xl border border-slate-200 px-3 py-2"><span>CER {item.cerCode} · {item.quantityTon} ton</span><span className="text-slate-500">{item.deadline ? new Date(item.deadline).toLocaleDateString('it-IT') : '-'}</span></div>)}
+            {notifications.slice(0, 4).map((item) => <div key={item.id} className="flex items-center justify-between rounded-xl border border-slate-200 px-3 py-2"><span>{item.requestCode || '—'} · CER {item.cerCode} · {item.quantityTon} ton</span><span className="text-slate-500">{item.deadline ? new Date(item.deadline).toLocaleDateString('it-IT') : '-'}</span></div>)}
           </div>
         </Card>
         <Card title="Pianificazione e calendario viaggi" action={<a className="text-sm font-semibold text-brand-900" href="/transporter/planning">Apri calendario</a>}>

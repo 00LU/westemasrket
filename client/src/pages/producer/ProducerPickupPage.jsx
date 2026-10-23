@@ -148,7 +148,7 @@ export default function ProducerPickupPage() {
 
   return (
     <RoleLayout title="Dettaglio ritiro" links={producerLinks}>
-      <Card title="Richiesta" action={<StatusBadge status={request.status} />}>
+      <Card title={request.requestCode || '—'} action={<StatusBadge status={request.status} />}>
         <div className="space-y-3">
           <PickupSummary pickup={request}>
             <p className="text-slate-600">Budget indicativo: {request.maxPrice > 0 ? formatEuro(request.maxPrice) : 'non indicato'}</p>

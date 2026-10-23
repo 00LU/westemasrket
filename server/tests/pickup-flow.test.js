@@ -163,6 +163,7 @@ describe('pickup schema upgrade', () => {
     const queryInterface = sequelize.getQueryInterface();
     const missingColumns = [
       [PickupRequest, [
+        'request_code',
         'cer_known', 'cer_request_note', 'waste_description', 'photo_file_name', 'photo_data',
         'technical_documents', 'containment', 'special_info', 'recurring',
         'recurrence_frequency', 'recurrence_start_date', 'recurrence_end_date',
@@ -189,9 +190,12 @@ describe('pickup schema upgrade', () => {
       const actual = await queryInterface.describeTable(model.getTableName());
       for (const column of columns) assert.ok(actual[column], `missing ${column}`);
     }
+    const pickupIndexes = await queryInterface.showIndex(PickupRequest.getTableName());
+    assert.ok(pickupIndexes.some((index) => index.name === 'pickup_requests_request_code_uq' && index.unique));
     const restored = await PickupRequest.findByPk(existing.id);
     assert.equal(restored.pickupAddress, 'Via Migrazione 1');
     assert.equal(restored.cerKnown, true);
+    assert.match(restored.requestCode, /^WM-\d{4}-[A-Z0-9]{6}$/);
     assert.equal(restored.recurring, false);
     assert.equal(restored.wasteDescription, null);
     const recipient = await RecipientAvailability.findOne({ where: { pickupRequestId: existing.id } });
@@ -205,6 +209,8 @@ describe('pickup schema upgrade', () => {
       deadline: future(10), maxPrice: 500, wasteDescription: 'Migration check',
     }), 201);
     assert.equal(draft.status, 'draft');
+    assert.match(draft.requestCode, /^WM-\d{4}-[A-Z0-9]{6}$/);
+    assert.notEqual(draft.requestCode, restored.requestCode);
     assert.equal((await producerListItem(draft.id)).actionRequired, true);
     assert.equal(draft.wasteDescription, 'Migration check');
     await RecipientAvailability.destroy({ where: { pickupRequestId: existing.id } });
@@ -316,6 +322,7 @@ describe('full flow: steps 1-6', () => {
   test('2b. recipients see only what concerns them (no max price, no other offers)', async () => {
     const detail = await expectOk(api('GET', `/api/recipients/pickups/${id}`, tok('rec1')));
     assert.equal(detail.stage, 'to_respond');
+    assert.match(detail.requestCode, /^WM-\d{4}-[A-Z0-9]{6}$/);
     assert.equal(detail.maxPrice, undefined);
     assert.equal(detail.producerId, undefined);
     assert.equal(detail.recipients, undefined);
@@ -355,6 +362,7 @@ describe('full flow: steps 1-6', () => {
 
     const view = await expectOk(api('GET', `/api/transporters/pickups/${id}`, tok('tra1')));
     assert.equal(view.stage, 'to_respond');
+    assert.match(view.requestCode, /^WM-\d{4}-[A-Z0-9]{6}$/);
     assert.equal(view.maxPrice, undefined);
     assert.equal(JSON.stringify(view).includes('pricePerTon'), false, 'no recipient price leaks to transporters');
 
@@ -759,6 +767,8 @@ describe('features of the onboarding branch inside the new flow', () => {
       201
     );
     assert.notEqual(copy.id, draft.id);
+    assert.notEqual(copy.requestCode, draft.requestCode);
+    assert.match(copy.requestCode, /^WM-\d{4}-[A-Z0-9]{6}$/);
     assert.equal(copy.recurring, false);
     assert.equal(copy.containment, 'Big bag');
     assert.equal((await producerDetail(copy.id)).request.status, 'awaiting_recipients');

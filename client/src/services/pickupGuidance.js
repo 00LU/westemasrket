@@ -55,6 +55,6 @@ export function filterPickups(items, status, search) {
       || (status === 'waiting' && ['responded', 'waiting'].includes(item.stage))
       || (status === 'agreement' && ['in_agreement', 'confirmed'].includes(item.stage))
       || (status === 'closed' && ['closed', 'cancelled'].includes(item.stage));
-    return matchesStatus && (!needle || `${item.cerCode} ${item.pickupAddress} ${item.wasteDescription || ''}`.toLocaleLowerCase('it-IT').includes(needle));
+    return matchesStatus && (!needle || `${item.requestCode || ''} ${item.cerCode} ${item.pickupAddress} ${item.wasteDescription || ''}`.toLocaleLowerCase('it-IT').includes(needle));
   });
 }

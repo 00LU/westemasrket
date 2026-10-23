@@ -43,11 +43,12 @@ test('producer guidance covers every state, including unknown CER and optional e
 
 test('opportunity filters preserve all states and combine search with status', () => {
   const items = ['to_respond', 'responded', 'waiting', 'in_agreement', 'confirmed', 'closed', 'cancelled']
-    .map((stage, index) => ({ id: index, stage, cerCode: index ? '16 01 03' : '15 01 10*', pickupAddress: 'Milano', wasteDescription: 'Solventi' }));
+    .map((stage, index) => ({ id: index, stage, requestCode: `WM-2026-A7K2P${index}`, cerCode: index ? '16 01 03' : '15 01 10*', pickupAddress: 'Milano', wasteDescription: 'Solventi' }));
   assert.equal(filterPickups(items, 'all', '').length, 7);
   assert.equal(filterPickups(items, 'action', '').length, 1);
   for (const filter of ['waiting', 'agreement', 'closed']) assert.equal(filterPickups(items, filter, '').length, 2);
   assert.equal(filterPickups(items, 'action', '  MILANO ').length, 1);
   assert.equal(filterPickups(items, 'action', '16 01').length, 0);
   assert.equal(filterPickups(items, 'all', 'solventi').length, 7);
+  assert.equal(filterPickups(items, 'action', 'WM-2026-A7K2P0').length, 1);
 });

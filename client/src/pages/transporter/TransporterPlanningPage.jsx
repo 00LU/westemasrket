@@ -48,7 +48,7 @@ export default function TransporterPlanningPage() {
         </div>
         <div className="grid grid-cols-7 gap-1 text-center text-xs font-semibold text-slate-500">{['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'].map((day) => <span key={day}>{day}</span>)}</div>
         <div className="mt-1 grid grid-cols-7 gap-1">
-          {days.map((day, index) => <div key={day?.toISOString() || `empty-${index}`} className={`min-h-20 rounded-lg border p-2 ${day ? 'border-slate-200 bg-white' : 'border-transparent bg-slate-50'}`}>{day && <><p className="text-xs font-semibold">{day.getDate()}</p>{(jobsByDate[dateKey(day)] || []).map((job) => <div key={job.id} className="mt-1 truncate rounded bg-brand-900 px-1 text-[10px] text-white">CER {job.cerCode}</div>)}</>}</div>)}
+          {days.map((day, index) => <div key={day?.toISOString() || `empty-${index}`} className={`min-h-20 rounded-lg border p-2 ${day ? 'border-slate-200 bg-white' : 'border-transparent bg-slate-50'}`}>{day && <><p className="text-xs font-semibold">{day.getDate()}</p>{(jobsByDate[dateKey(day)] || []).map((job) => <div key={job.id} className="mt-1 truncate rounded bg-brand-900 px-1 text-[10px] text-white">{job.requestCode || `CER ${job.cerCode}`}</div>)}</>}</div>)}
         </div>
       </Card>
     </RoleLayout>

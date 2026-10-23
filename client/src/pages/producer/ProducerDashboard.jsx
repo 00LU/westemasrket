@@ -72,7 +72,7 @@ export default function ProducerDashboard() {
                 className="block rounded-xl border border-slate-200 px-3 py-3 hover:bg-slate-50"
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="font-semibold text-slate-800">CER {request.cerCode} | {request.quantityTon} ton</span>
+                  <span className="font-semibold text-slate-800">{request.requestCode || '—'} · CER {request.cerCode} | {request.quantityTon} ton</span>
                   <StatusBadge status={request.status} />
                 </div>
                 <p className="text-slate-600">{request.pickupAddress}</p>

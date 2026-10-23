@@ -14,7 +14,7 @@ function AgreementItem({ scope, role, item, fetchOne }) {
 
   return (
     <div className="space-y-3">
-      <Card title="Richiesta" action={<StatusBadge status={item.stage} kind="stage" />}>
+      <Card title={item.requestCode || '—'} action={<StatusBadge status={item.stage} kind="stage" />}>
         <PickupSummary pickup={item} />
       </Card>
       {isLoading && <p className="text-sm text-slate-600">Caricamento...</p>}

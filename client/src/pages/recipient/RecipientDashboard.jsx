@@ -45,7 +45,7 @@ export default function RecipientDashboard() {
       </div>
       <div className="grid gap-6 lg:grid-cols-2">
         <Card title="Nuovi ordini compatibili" action={<a className="text-sm font-semibold text-brand-900" href="/recipient/opportunities">Vedi tutti</a>}>
-          {notifications.slice(0, 4).map((item) => <div key={item.id} className="mb-2 flex items-center justify-between rounded-xl border border-slate-200 px-3 py-2 text-sm"><span>CER {item.cerCode} · {item.quantityTon} ton</span><span className="text-slate-500">{item.deadline ? new Date(item.deadline).toLocaleDateString('it-IT') : '-'}</span></div>)}
+          {notifications.slice(0, 4).map((item) => <div key={item.id} className="mb-2 flex items-center justify-between rounded-xl border border-slate-200 px-3 py-2 text-sm"><span>{item.requestCode || '—'} · CER {item.cerCode} · {item.quantityTon} ton</span><span className="text-slate-500">{item.deadline ? new Date(item.deadline).toLocaleDateString('it-IT') : '-'}</span></div>)}
           {ready && notifications.length === 0 && <p className="text-sm text-slate-600">Nessuna nuova richiesta.</p>}
         </Card>
         <Card title="Calendario conferimenti" action={<a className="text-sm font-semibold text-brand-900" href="/recipient/calendar">Apri calendario</a>}>

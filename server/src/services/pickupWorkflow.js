@@ -1,4 +1,4 @@
-const { Op } = require('sequelize');
+const { Op, UniqueConstraintError } = require('sequelize');
 const sequelize = require('../config/db');
 const {
   PickupRequest,
@@ -20,9 +20,25 @@ const { WorkflowError, transition } = require('./pickupStateMachine');
 const { findEligibleRecipients, findEligibleTransporters } = require('./matchingEngine');
 const { rankPackages } = require('./packageOptimizer');
 const { notifyUsers } = require('./notificationService');
+const { generateRequestCode, REQUEST_CODE_INDEX } = require('./requestCode');
 
 function fail(message, status = 400) {
   throw new WorkflowError(message, status);
+}
+
+async function createRequestWithCode(values) {
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    try {
+      return await PickupRequest.create({ ...values, requestCode: generateRequestCode() });
+    } catch (error) {
+      const isCodeCollision = error instanceof UniqueConstraintError
+        && (error.original?.constraint === REQUEST_CODE_INDEX
+          || Object.hasOwn(error.fields || {}, 'request_code')
+          || Object.hasOwn(error.fields || {}, 'requestCode'));
+      if (!isCodeCollision || attempt === 4) throw error;
+    }
+  }
+  throw new Error('Impossibile generare un codice univoco per la richiesta');
 }
 
 // Conversion of the unit entered by the recipient into EUR per ton (1 liter is assumed to weigh 1 kg).
@@ -120,7 +136,7 @@ function validateRequestInput(data, { partial = false } = {}) {
 // ---------------------------------------------------------------------------
 
 async function createDraft(user, data) {
-  return PickupRequest.create({
+  return createRequestWithCode({
     ...validateRequestInput(data),
     producerId: user.id,
     status: S.DRAFT,
@@ -136,7 +152,7 @@ async function repeatRecurring(user, requestId, body) {
     fail('Quantità, tempistiche e una nuova foto sono obbligatorie per ripetere un ordine');
   }
 
-  const request = await PickupRequest.create({
+  const request = await createRequestWithCode({
     ...validateRequestInput({ quantityTon: body.quantityTon, deadline: body.deadline }, { partial: true }),
     producerId: user.id,
     status: S.DRAFT,

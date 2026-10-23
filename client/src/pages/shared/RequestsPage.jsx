@@ -197,9 +197,9 @@ export default function RequestsPage({ role }) {
                     >
                       <td className="px-3 py-3">
                         <Link to={detailPath} onClick={(event) => event.stopPropagation()} className="font-semibold text-brand-900 hover:underline">
-                          CER {item.cerCode === 'UNKNOWN' ? 'da proporre' : item.cerCode}
+                          {item.requestCode || '—'}
                         </Link>
-                        <p className="mt-1 text-xs text-slate-500">{item.quantityTon} ton · {item.wasteDescription || 'Descrizione non indicata'}</p>
+                        <p className="mt-1 text-xs text-slate-500">CER {item.cerCode === 'UNKNOWN' ? 'da proporre' : item.cerCode} · {item.quantityTon} ton · {item.wasteDescription || 'Descrizione non indicata'}</p>
                       </td>
                       <td className="whitespace-nowrap px-3 py-3 text-slate-600">{formatDateTime(eventDate(item))}</td>
                       <td className="max-w-56 px-3 py-3 text-slate-600">{item.pickupAddress}</td>

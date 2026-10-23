@@ -1,11 +1,13 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
 const { REQUEST_STATUS } = require('../config/pickupFlow');
+const { generateRequestCode } = require('../services/requestCode');
 
 const PickupRequest = sequelize.define(
   'PickupRequest',
   {
     id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
+    requestCode: { type: DataTypes.STRING(14), allowNull: false, defaultValue: generateRequestCode },
     producerId: { type: DataTypes.UUID, allowNull: false },
     cerCode: { type: DataTypes.STRING, allowNull: false },
     quantityTon: { type: DataTypes.FLOAT, allowNull: false },

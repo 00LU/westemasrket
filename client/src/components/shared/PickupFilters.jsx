@@ -10,7 +10,7 @@ export default function PickupFilters({ status, onStatus, search, onSearch }) {
           <option value="all">Tutte</option>
         </select>
       </label>
-      <label className="flex flex-col gap-1 text-sm">Cerca per CER, indirizzo o rifiuto
+      <label className="flex flex-col gap-1 text-sm">Cerca per codice, CER, indirizzo o rifiuto
         <input type="search" value={search} onChange={(event) => onSearch(event.target.value)} className="rounded-xl border border-slate-300 p-2" />
       </label>
     </div>

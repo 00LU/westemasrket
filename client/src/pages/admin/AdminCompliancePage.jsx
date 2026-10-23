@@ -110,7 +110,7 @@ export default function AdminCompliancePage() {
             return <div key={request.id} className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm">
               <div className="grid gap-3 lg:grid-cols-2">
                 <div>
-                  <p className="font-semibold text-slate-800">Ordine {request.id}</p>
+                  <p className="font-semibold text-slate-800">{request.requestCode || '—'}</p>
                   <p>Produttore: {request.producer?.companyName || '-'}</p>
                   <p>Descrizione: {request.wasteDescription || '-'}</p>
                   <p>Quantita: {request.quantityTon} ton</p>

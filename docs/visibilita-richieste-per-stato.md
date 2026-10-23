@@ -2,6 +2,8 @@
 
 Questo documento descrive cosa appare nelle aree personali per ciascuno dei sette stati della richiesta di ritiro.
 
+Ogni richiesta ha un codice univoco, generato automaticamente e distinto dal codice CER (ad esempio `WM-2026-A7K2P9`). Il codice identifica la richiesta nelle liste, nei dettagli e nella pianificazione; il CER continua a identificare il tipo di rifiuto.
+
 ## Come leggere gli stati
 
 Lo stato ufficiale della richiesta e mostrato al produttore. Destinatari e trasportatori vedono invece una fase personale (`stage`): dipende anche dalla loro risposta e dal fatto che il produttore abbia selezionato il loro pacchetto. Di conseguenza, la stessa richiesta puo avere una fase diversa nell'area dei diversi operatori.

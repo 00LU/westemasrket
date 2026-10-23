@@ -1,0 +1,5 @@
+Startup failed Error: No description found for "waste_requests" table. Check the table name and schema; remember, they _are_ case sensitive.
+    at PostgresQueryInterface.describeTable (C:\Users\LU\Desktop\westemasrket\server\node_modules\sequelize\lib\dialects\abstract\query-interface.js:168:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async ensureWasteRequestWorkflowColumns (C:\Users\LU\Desktop\westemasrket\server\src\index.js:26:17)
+    at async bootstrap (C:\Users\LU\Desktop\westemasrket\server\src\index.js:61:5)

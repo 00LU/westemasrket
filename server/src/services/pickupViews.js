@@ -24,6 +24,7 @@ async function companyNames(ids) {
 function publicRequestFields(request, { withPhoto = false } = {}) {
   return {
     id: request.id,
+    requestCode: request.requestCode,
     cerCode: request.cerCode,
     quantityTon: request.quantityTon,
     pickupAddress: request.pickupAddress,

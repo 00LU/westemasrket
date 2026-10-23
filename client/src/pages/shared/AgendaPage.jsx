@@ -54,6 +54,7 @@ function normalizeEvent(role, item, detail) {
     const transporters = pkg?.transporter?.companyName || agreement?.parties?.transporter?.companyName;
     return {
       id: item.id,
+      requestCode: request.requestCode,
       scheduledAt: request.confirmedSlotAt,
       cerCode: request.cerCode,
       quantityTon: request.quantityTon,
@@ -81,6 +82,7 @@ function normalizeEvent(role, item, detail) {
 
   return {
     id: item.id,
+    requestCode: item.requestCode,
     scheduledAt: item.scheduledAt,
     cerCode: item.cerCode,
     quantityTon: item.quantityTon,
@@ -129,6 +131,7 @@ function AgendaEvent({ event, role, detailPath }) {
     <Link to={detailPath(event.id)} className="block rounded-xl border border-slate-200 p-4 transition hover:border-brand-300 hover:bg-brand-50">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
+          <p className="font-semibold text-brand-900">{event.requestCode || '—'}</p>
           <p className="font-semibold text-slate-900">{formatDateTime(event.scheduledAt)}</p>
           <p className="mt-1 text-sm text-slate-600">CER {event.cerCode} · {event.quantityTon} ton</p>
         </div>

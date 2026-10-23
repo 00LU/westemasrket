@@ -14,6 +14,7 @@ const {
   Notification,
   Transaction,
 } = require('../src/models');
+const { ensurePickupColumns } = require('../src/services/pickupSchema');
 
 const DEMO_EMAILS = [
   'demo.producer@wastemarket.local',
@@ -94,6 +95,7 @@ async function main() {
   initModels();
   await sequelize.authenticate();
   await sequelize.sync();
+  await ensurePickupColumns();
   const transaction = await sequelize.transaction();
 
   try {
