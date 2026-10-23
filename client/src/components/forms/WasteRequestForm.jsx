@@ -1,151 +1,180 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Input from '../ui/Input';
 import Button from '../ui/Button';
 import CERSelector from './CERSelector';
-import { createProducerPickup, publishProducerPickup } from '../../services/producerApi';
+import { createProducerPickup, publishProducerPickup, updateProducerPickup } from '../../services/producerApi';
 import { errorMessage } from '../../services/labels';
+import { PICKUP_FORM_DEFAULTS, pickupFormErrors, pickupToForm } from '../../services/pickupForm';
 
-const steps = [
-  'Sede / luogo',
-  'Descrizione rifiuto',
-  'Foto',
-  'CER / EER',
-  'Documenti tecnici',
-  'Quantita',
-  'Contenimento / carico',
-  'Informazioni speciali',
-  'Tempistiche',
-  'Ricorrenza',
-  'Riepilogo',
+const steps = ['Rifiuto', 'Ritiro', 'Allegati e opzioni', 'Riepilogo'];
+const stepFields = [
+  ['cerCode', 'quantityTon'],
+  ['pickupAddress', 'deadline'],
+  ['recurrenceStartDate', 'recurrenceEndDate'],
+  ['maxPrice'],
 ];
 
-const initialForm = {
-  pickupAddress: '',
-  wasteDescription: '',
-  photoFileName: '',
-  photoData: '',
-  cerKnown: true,
-  cerCode: '15 01 10*',
-  technicalDocuments: '',
-  quantityTon: '2.5',
-  containment: '',
-  specialInfo: '',
-  deadline: '',
-  urgency: 'normal',
-  recurring: false,
-  recurrenceFrequency: 'monthly',
-  recurrenceStartDate: '',
-  recurrenceEndDate: '',
-  maxPrice: '',
-  distanceKm: '85',
-};
-
-export default function WasteRequestForm() {
+export default function WasteRequestForm({ initialPickup }) {
   const [step, setStep] = useState(0);
-  const [form, setForm] = useState(initialForm);
-  const [message, setMessage] = useState('');
+  const [form, setForm] = useState(() => initialPickup ? pickupToForm(initialPickup) : { ...PICKUP_FORM_DEFAULTS });
+  const initial = useRef(JSON.stringify(form));
+  const savedId = useRef(initialPickup?.id);
+  const [errors, setErrors] = useState({});
   const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const dirty = JSON.stringify(form) !== initial.current;
+
+  useEffect(() => {
+    const beforeUnload = (event) => {
+      if (dirty) { event.preventDefault(); event.returnValue = ''; }
+    };
+    window.addEventListener('beforeunload', beforeUnload);
+    return () => window.removeEventListener('beforeunload', beforeUnload);
+  }, [dirty]);
+  useEffect(() => {
+    const guardNavigation = (event) => {
+      const link = event.target.closest('a[href]');
+      if (dirty && link && !event.ctrlKey && !event.metaKey && !event.shiftKey && link.target !== '_blank'
+        && !window.confirm('Hai modifiche non salvate. Vuoi uscire senza salvarle?')) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    };
+    document.addEventListener('click', guardNavigation, true);
+    return () => document.removeEventListener('click', guardNavigation, true);
+  }, [dirty]);
 
   const update = (field) => (event) => {
     const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
     setForm((current) => ({ ...current, [field]: value }));
+    setErrors((current) => ({ ...current, [field]: undefined }));
   };
+  const input = (field, props) => (
+    <div>
+      <Input {...props} value={form[field]} onChange={update(field)} aria-invalid={Boolean(errors[field])} aria-describedby={errors[field] ? `${field}-error` : undefined} />
+      {errors[field] && <p id={`${field}-error`} className="mt-1 text-sm text-red-700">{errors[field]}</p>}
+    </div>
+  );
 
-  const navigate = useNavigate();
-
-  const createMutation = useMutation({
-    mutationFn: async (payload) => {
-      const draft = await createProducerPickup(payload);
-      // With an unknown CER the request waits (as a draft) for the admin's proposal.
-      if (draft.cerKnown === false) return { draft, published: false };
-      try {
-        await publishProducerPickup(draft.id);
-      } catch (publishError) {
-        publishError.draft = draft;
-        throw publishError;
+  const saveMutation = useMutation({
+    mutationFn: async (publish) => {
+      const payload = {
+        ...form,
+        quantityTon: Number(form.quantityTon),
+        deadline: new Date(`${form.deadline}T23:59:00`).toISOString(),
+        maxPrice: Number(form.maxPrice || 0),
+        recurrenceStartDate: form.recurring ? form.recurrenceStartDate : null,
+        recurrenceEndDate: form.recurring ? form.recurrenceEndDate : null,
+        cerRequestNote: form.cerKnown ? '' : 'Richiesta di assistenza per il codice CER',
+      };
+      const draft = savedId.current
+        ? await updateProducerPickup({ id: savedId.current, ...payload })
+        : await createProducerPickup(payload);
+      savedId.current = draft.id;
+      initial.current = JSON.stringify(form);
+      await queryClient.invalidateQueries({ queryKey: ['producer'] });
+      if (publish && form.cerKnown) {
+        try {
+          await publishProducerPickup(draft.id);
+        } catch (publishError) {
+          navigate(`/producer/pickups/${draft.id}`, { state: { notice: `Bozza salvata. Pubblicazione non riuscita: ${errorMessage(publishError)}` } });
+          return;
+        }
       }
-      return { draft, published: true };
+      navigate(`/producer/pickups/${draft.id}`, {
+        state: { notice: publish && form.cerKnown ? 'Richiesta pubblicata: i destinatari sono stati avvisati.' : 'Bozza salvata. Puoi modificarla e pubblicarla dal dettaglio.' },
+      });
     },
-    onSuccess: ({ draft, published }) => {
-      setError('');
-      if (published) {
-        navigate(`/producer/pickups/${draft.id}`);
-        return;
-      }
-      setMessage('Richiesta inviata all\'intermediario per la proposta CER.');
-      setForm(initialForm);
-      setStep(0);
-    },
-    onError: (requestError) => {
-      setMessage('');
-      const text = errorMessage(requestError, 'Impossibile creare l\'ordine.');
-      // The order was saved but could not be published: continue on its page, where it can be retried.
-      if (requestError.draft) {
-        navigate(`/producer/pickups/${requestError.draft.id}`, { state: { notice: `Salvato come bozza. Pubblicazione non riuscita: ${text}` } });
-      } else {
-        setError(text);
-      }
-    },
+    onError: (requestError) => setError(errorMessage(requestError, 'Impossibile salvare la richiesta. I dati inseriti sono ancora qui.')),
   });
 
-  const next = (event) => {
-    event.preventDefault();
+  const advance = () => {
+    const validation = pickupFormErrors(form);
+    const currentErrors = Object.fromEntries(stepFields[step].filter((field) => validation[field]).map((field) => [field, validation[field]]));
+    setErrors(currentErrors);
+    if (Object.keys(currentErrors).length === 0) setStep((current) => Math.min(current + 1, 3));
+  };
+  const save = (publish) => {
+    const validation = pickupFormErrors(form);
+    setErrors(validation);
     setError('');
-    setStep((current) => Math.min(current + 1, steps.length - 1));
+    if (Object.keys(validation).length) {
+      setStep(stepFields.findIndex((fields) => fields.some((field) => validation[field])));
+      setError('Completa i campi evidenziati prima di salvare.');
+      return;
+    }
+    saveMutation.mutate(publish);
   };
-
-  const previous = () => {
-    setError('');
-    setStep((current) => Math.max(current - 1, 0));
-  };
-
-  const submit = (event) => {
-    event.preventDefault();
-    const dueDate = form.deadline || form.recurrenceEndDate;
-    createMutation.mutate({
-      ...form,
-      quantityTon: Number(form.quantityTon),
-      pickupLat: 45.4642,
-      pickupLng: 9.19,
-      // Date-only input: the pickup is due by the end of that day in the user's timezone.
-      deadline: dueDate ? new Date(`${dueDate}T23:59:00`).toISOString() : '',
-      maxPrice: Number(form.maxPrice || 0),
-      cerRequestNote: form.cerKnown ? '' : 'Richiesta proposta CER da parte dell\'intermediario',
-    });
-  };
-
-  const estimatedPrice = Math.round(120 * Number(form.quantityTon || 0) + 2.2 * Number(form.distanceKm || 0));
-
   return (
-    <form className="panel space-y-5" onSubmit={submit}>
-      <div>
-        <p className="text-sm font-semibold uppercase tracking-wide text-brand-700">Creazione nuovo ordine</p>
-        <h3 className="font-display text-xl font-semibold text-slate-900">Procedura guidata</h3>
-      </div>
-      <div className="grid gap-1 sm:grid-cols-11" aria-label="Avanzamento ordine">
-        {steps.map((label, index) => (
-          <div key={label} title={label} className={`h-2 rounded-full ${index <= step ? 'bg-brand-900' : 'bg-slate-200'}`} />
-        ))}
-      </div>
-      <p className="text-sm font-semibold text-slate-700">Step {step + 1} di {steps.length}: {steps[step]}</p>
-
-      {step === 0 && <Input label="Sede registrata o luogo diverso" placeholder="Via Industria 14, Milano" value={form.pickupAddress} onChange={update('pickupAddress')} />}
-      {step === 1 && <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">Descrizione del rifiuto<textarea className="min-h-32 rounded-xl border border-slate-300 px-3 py-2" value={form.wasteDescription} onChange={update('wasteDescription')} placeholder="Processo di origine, materiale, stato fisico..." /></label>}
-      {step === 2 && <Input label="Foto del rifiuto (opzionale)" type="file" accept="image/*" onChange={(event) => { const file = event.target.files[0]; if (!file) return; if (file.size > 1000000) { setError('La foto deve essere inferiore a 1 MB.'); return; } const reader = new FileReader(); reader.onload = () => setForm((current) => ({ ...current, photoFileName: file.name, photoData: reader.result })); reader.readAsDataURL(file); }} />}
-      {step === 3 && <section className="space-y-3"><label className="flex items-center gap-2 text-sm font-medium"><input type="checkbox" checked={!form.cerKnown} onChange={(event) => setForm((current) => ({ ...current, cerKnown: !event.target.checked }))} /> Non conosco il codice CER / EER</label>{form.cerKnown ? <CERSelector value={form.cerCode} onChange={(value) => setForm((current) => ({ ...current, cerCode: value }))} /> : <p className="rounded-xl bg-amber-50 p-3 text-sm text-amber-800">L'ordine andra in stato di attesa proposta CER e sara analizzato dall'amministratore.</p>}</section>}
-      {step === 4 && <Input label="Documenti tecnici / analisi (opzionale)" placeholder="Nome file o riferimento documento" value={form.technicalDocuments} onChange={update('technicalDocuments')} />}
-      {step === 5 && <div className="grid gap-3 sm:grid-cols-2"><Input label="Quantita (ton)" type="number" min="0" step="0.1" value={form.quantityTon} onChange={update('quantityTon')} /><Input label="Distanza stimata (km)" type="number" min="0" value={form.distanceKm} onChange={update('distanceKm')} /></div>}
-      {step === 6 && <Input label="Contenimento / carico" placeholder="Big bag, fusti, cassone, cisterna..." value={form.containment} onChange={update('containment')} />}
-      {step === 7 && <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">Informazioni speciali<textarea className="min-h-32 rounded-xl border border-slate-300 px-3 py-2" value={form.specialInfo} onChange={update('specialInfo')} placeholder="ADR, requisiti specifici, tempi di attesa..." /></label>}
-      {step === 8 && <div className="grid gap-3 sm:grid-cols-2"><Input label="Data limite" type="date" value={form.deadline} onChange={update('deadline')} /><label className="flex flex-col gap-2 text-sm font-medium text-slate-700">Urgenza<select className="rounded-xl border border-slate-300 px-3 py-2" value={form.urgency} onChange={update('urgency')}><option value="normal">Normale</option><option value="urgent">Urgente</option></select></label></div>}
-      {step === 9 && <section className="space-y-3"><label className="flex items-center gap-2 text-sm font-medium"><input type="checkbox" checked={form.recurring} onChange={update('recurring')} /> Ordine ricorrente</label>{form.recurring && <div className="grid gap-3 sm:grid-cols-3"><label className="flex flex-col gap-2 text-sm font-medium">Frequenza<select className="rounded-xl border border-slate-300 px-3 py-2" value={form.recurrenceFrequency} onChange={update('recurrenceFrequency')}><option value="weekly">Settimanale</option><option value="monthly">Mensile</option><option value="quarterly">Trimestrale</option></select></label><Input label="Inizio" type="date" value={form.recurrenceStartDate} onChange={update('recurrenceStartDate')} /><Input label="Fine" type="date" value={form.recurrenceEndDate} onChange={update('recurrenceEndDate')} /></div>}</section>}
-      {step === 10 && <section className="space-y-3 rounded-xl bg-slate-50 p-4 text-sm"><p><strong>Sede:</strong> {form.pickupAddress || '-'}</p><p><strong>Rifiuto:</strong> {form.wasteDescription || '-'}</p><p><strong>CER:</strong> {form.cerKnown ? form.cerCode : 'Da proporre tramite intermediario'}</p><p><strong>Quantita:</strong> {form.quantityTon} ton</p><p><strong>Tempistiche:</strong> {form.deadline || 'Da definire'}</p><p><strong>Stima base:</strong> EUR {estimatedPrice.toLocaleString()}</p><Input label="Prezzo massimo (opzionale)" type="number" min="0" value={form.maxPrice} onChange={update('maxPrice')} /></section>}
-
-      {message && <p className="text-sm text-emerald-700">{message}</p>}
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      <div className="flex justify-between gap-3"><Button type="button" variant="secondary" onClick={previous} disabled={step === 0 || createMutation.isPending}>Indietro</Button>{step < steps.length - 1 ? <Button type="button" onClick={next}>Continua</Button> : <Button type="submit" disabled={createMutation.isPending}>{createMutation.isPending ? 'Creazione...' : (form.cerKnown ? 'Pubblica ordine' : 'Richiedi proposta CER')}</Button>}</div>
-    </form>
+    <div>
+      <form className="panel space-y-5" noValidate onSubmit={(event) => { event.preventDefault(); if (step < 3) advance(); else save(true); }}>
+        <fieldset disabled={saveMutation.isPending} className="space-y-5">
+          <legend className="font-display text-xl font-semibold text-slate-900">{initialPickup ? 'Modifica bozza' : 'Nuova richiesta di ritiro'}</legend>
+          <ol aria-label="Avanzamento richiesta" className="flex flex-wrap gap-2">
+            {steps.map((label, index) => <li key={label} aria-current={step === index ? 'step' : undefined} className={`rounded-full px-3 py-1 text-sm ${step === index ? 'bg-brand-900 text-white' : 'bg-slate-100 text-slate-600'}`}>{index + 1}. {label}</li>)}
+          </ol>
+          <p className="text-sm text-slate-600">Passaggio {step + 1} di 4. I campi indicati come obbligatori servono anche per salvare la bozza.</p>
+          {step === 0 && (
+            <section className="space-y-3" aria-label="Rifiuto">
+              {input('wasteDescription', { label: 'Descrizione del rifiuto', placeholder: 'Materiale, origine e stato fisico' })}
+              <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!form.cerKnown} onChange={(event) => { setForm((current) => ({ ...current, cerKnown: !event.target.checked })); setErrors({}); }} />Non conosco il codice CER / EER</label>
+              {form.cerKnown ? <><CERSelector value={form.cerCode} onChange={(value) => { setForm((current) => ({ ...current, cerCode: value })); setErrors((current) => ({ ...current, cerCode: undefined })); }} />{errors.cerCode && <p className="text-sm text-red-700">{errors.cerCode}</p>}</> : <p className="rounded-xl bg-amber-50 p-3 text-sm">La richiesta resterà in bozza finché l’amministratore non proporrà il CER. Non verranno ancora invitati destinatari.</p>}
+              {input('quantityTon', { label: 'Quantità (ton) — obbligatoria', type: 'number', min: '0.001', step: 'any' })}
+            </section>
+          )}
+          {step === 1 && (
+            <section className="space-y-3" aria-label="Ritiro">
+              {input('pickupAddress', { label: 'Indirizzo di ritiro — obbligatorio', placeholder: 'Via, numero civico, comune' })}
+              {input('deadline', { label: 'Data limite del ritiro — obbligatoria', type: 'date' })}
+              <p className="text-sm text-slate-600">È il termine entro cui richiedi il ritiro, non una prenotazione: giorno e orario saranno concordati dopo la scelta del pacchetto.</p>
+              {input('containment', { label: 'Contenimento e modalità di carico', placeholder: 'Big bag, fusti, cassone, cisterna...' })}
+              {input('specialInfo', { label: 'Esigenze particolari', placeholder: 'ADR, accesso mezzi, attrezzature...' })}
+            </section>
+          )}
+          {step === 2 && (
+            <section className="space-y-3" aria-label="Allegati e opzioni">
+              <Input label="Foto del rifiuto (opzionale, massimo 1 MB)" type="file" accept="image/*" onChange={(event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+                if (file.size > 1000000) { setError('La foto deve essere inferiore a 1 MB.'); return; }
+                const reader = new FileReader();
+                reader.onerror = () => setError('Impossibile leggere la foto. Seleziona nuovamente il file.');
+                reader.onload = () => { setError(''); setForm((current) => ({ ...current, photoFileName: file.name, photoData: reader.result })); };
+                reader.readAsDataURL(file);
+              }} />
+              {form.photoFileName && <p className="text-sm">Foto selezionata: {form.photoFileName}</p>}
+              {input('technicalDocuments', { label: 'Riferimenti a documenti tecnici / analisi (opzionale)', placeholder: 'Nome o riferimento; questo campo non carica file' })}
+              <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.recurring} onChange={update('recurring')} />Usa come modello ricorrente</label>
+              {form.recurring && <div className="space-y-3"><p className="text-sm text-slate-600">La ricorrenza crea un modello riutilizzabile: non pubblica automaticamente nuovi ritiri.</p><label className="flex flex-col gap-2 text-sm">Frequenza<select value={form.recurrenceFrequency} onChange={update('recurrenceFrequency')} className="rounded-xl border p-3"><option value="weekly">Settimanale</option><option value="monthly">Mensile</option><option value="quarterly">Trimestrale</option></select></label>{input('recurrenceStartDate', { label: 'Inizio ricorrenza', type: 'date' })}{input('recurrenceEndDate', { label: 'Fine ricorrenza', type: 'date' })}</div>}
+            </section>
+          )}
+          {step === 3 && (
+            <section className="space-y-3 rounded-xl bg-slate-50 p-4 text-sm" aria-label="Riepilogo">
+              <p><strong>Rifiuto:</strong> {form.wasteDescription || 'Non indicato'} · CER: {form.cerKnown ? form.cerCode : 'Da proporre'} · {form.quantityTon} ton</p>
+              <Button type="button" variant="secondary" onClick={() => setStep(0)}>Modifica rifiuto</Button>
+              <p><strong>Ritiro:</strong> {form.pickupAddress} · entro il {form.deadline}</p>
+              <p>{form.containment || 'Contenimento non indicato'} · {form.specialInfo || 'Nessuna esigenza particolare indicata'}</p>
+              <Button type="button" variant="secondary" onClick={() => setStep(1)}>Modifica ritiro</Button>
+              <p><strong>Foto:</strong> {form.photoFileName || 'Nessuna'} · <strong>Documenti:</strong> {form.technicalDocuments || 'Nessun riferimento'}</p>
+              <p><strong>Modello ricorrente:</strong> {form.recurring ? `${form.recurrenceFrequency}, dal ${form.recurrenceStartDate} al ${form.recurrenceEndDate}` : 'No'}</p>
+              <Button type="button" variant="secondary" onClick={() => setStep(2)}>Modifica allegati e opzioni</Button>
+              {input('maxPrice', { label: 'Budget indicativo totale (EUR, opzionale)', type: 'number', min: '0', step: '0.01' })}
+              <p>Vuoto o zero = nessun budget. Le offerte oltre budget saranno segnalate, non escluse. Il prezzo sarà determinato dalle proposte ricevute.</p>
+              <p>{form.cerKnown ? 'Pubblicando inviterai i destinatari. I trasportatori saranno avvisati solo dopo le disponibilità.' : 'Salverai una bozza in attesa della proposta CER dell’amministratore.'}</p>
+            </section>
+          )}
+          {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
+          {Object.values(errors).some(Boolean) && <p role="alert" className="text-sm text-red-700">Controlla i campi evidenziati.</p>}
+          <div className="flex flex-wrap justify-between gap-3">
+            <Button type="button" variant="secondary" onClick={() => { setErrors({}); setError(''); setStep((current) => Math.max(current - 1, 0)); }} disabled={step === 0}>Indietro</Button>
+            <Button type="button" variant="secondary" onClick={() => save(false)}>Salva bozza</Button>
+            <Button type="submit">{saveMutation.isPending ? 'Salvataggio...' : step < 3 ? 'Continua' : form.cerKnown ? 'Pubblica richiesta' : 'Salva e richiedi proposta CER'}</Button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
   );
 }

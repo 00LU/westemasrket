@@ -7,7 +7,7 @@ import { errorMessage } from '../../services/labels';
 
 function AgreementItem({ scope, role, item, fetchOne }) {
   const queryClient = useQueryClient();
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: [scope, 'pickup', item.id],
     queryFn: () => fetchOne(item.id),
   });
@@ -18,6 +18,7 @@ function AgreementItem({ scope, role, item, fetchOne }) {
         <PickupSummary pickup={item} />
       </Card>
       {isLoading && <p className="text-sm text-slate-600">Caricamento...</p>}
+      {isError && <div role="alert" className="text-sm text-red-700"><p>{errorMessage(error, 'Impossibile caricare l’accordo.')}</p><button type="button" className="underline" onClick={() => refetch()}>Riprova</button></div>}
       {data && (
         <AgreementPanel
           pickupId={item.id}

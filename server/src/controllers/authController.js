@@ -1,8 +1,10 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { UniqueConstraintError } = require('sequelize');
 const sequelize = require('../config/db');
 const { User, Document } = require('../models');
 const { getRequiredDocumentsForRole } = require('../services/documentRequirements');
+const { isAutomaticApprovalEnabled } = require('../services/automaticApproval');
 
 function signToken(user) {
   return jwt.sign(
@@ -20,12 +22,8 @@ async function register(req, res, next) {
       role,
       companyName,
       piva,
-      legalForm,
       registeredOffice,
-      localSites,
       contactPerson,
-      pecEmail,
-      operationalEmail,
       phone,
       productionSites,
       intermediaryDocuments,
@@ -69,12 +67,8 @@ async function register(req, res, next) {
       role,
       companyName,
       piva,
-      legalForm,
       registeredOffice,
-      localSites,
       contactPerson,
-      pecEmail,
-      operationalEmail,
       phone,
       productionSites,
       intermediaryDocuments,
@@ -90,7 +84,7 @@ async function register(req, res, next) {
       commercialPreferences,
       email,
       passwordHash,
-      verified: role === 'producer' ? true : false,
+      verified: role === 'producer' || (isAutomaticApprovalEnabled() && ['recipient', 'transporter'].includes(role)),
     }, { transaction });
 
     if (documents.length > 0) {
@@ -102,7 +96,7 @@ async function register(req, res, next) {
           mimeType: document.mimeType,
           fileSize: Number(document.fileSize),
           fileUrl: document.fileUrl || null,
-          status: 'pending_review',
+          status: isAutomaticApprovalEnabled() ? 'approved' : 'pending_review',
           notes: 'Submitted during registration',
         })),
         { transaction }
@@ -117,12 +111,8 @@ async function register(req, res, next) {
         role: user.role,
         companyName: user.companyName,
         piva: user.piva,
-        legalForm: user.legalForm,
         registeredOffice: user.registeredOffice,
-        localSites: user.localSites,
         contactPerson: user.contactPerson,
-        pecEmail: user.pecEmail,
-        operationalEmail: user.operationalEmail,
         phone: user.phone,
         productionSites: user.productionSites,
         intermediaryDocuments: user.intermediaryDocuments,
@@ -144,6 +134,21 @@ async function register(req, res, next) {
   } catch (error) {
     if (!transaction.finished) {
       await transaction.rollback();
+    }
+    if (error instanceof UniqueConstraintError) {
+      const fields = new Set(error.errors.map((item) => item.path));
+      if (fields.has('email')) {
+        return res.status(409).json({
+          message: 'Questa email e gia registrata. Accedi con il tuo account oppure usa un indirizzo diverso.',
+          field: 'email',
+        });
+      }
+      if (fields.has('piva')) {
+        return res.status(409).json({
+          message: 'Questa partita IVA / codice fiscale e gia registrata. Accedi con il tuo account.',
+          field: 'piva',
+        });
+      }
     }
     return next(error);
   }
@@ -169,12 +174,8 @@ async function login(req, res, next) {
         role: user.role,
         companyName: user.companyName,
         piva: user.piva,
-        legalForm: user.legalForm,
         registeredOffice: user.registeredOffice,
-        localSites: user.localSites,
         contactPerson: user.contactPerson,
-        pecEmail: user.pecEmail,
-        operationalEmail: user.operationalEmail,
         phone: user.phone,
         productionSites: user.productionSites,
         intermediaryDocuments: user.intermediaryDocuments,

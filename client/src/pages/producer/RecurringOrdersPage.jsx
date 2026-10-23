@@ -3,15 +3,9 @@ import RoleLayout from '../../components/shared/RoleLayout';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import StatusBadge from '../../components/shared/StatusBadge';
+import { producerLinks } from '../../components/shared/navLinks';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchProducerRecurringOrders, repeatProducerOrder } from '../../services/producerApi';
-
-const links = [
-  { to: '/profile', label: 'Profilo' },
-  { to: '/producer', label: 'Dashboard' },
-  { to: '/producer/new-request', label: 'New Request' },
-  { to: '/producer/recurring-orders', label: 'Ordini ricorrenti' },
-];
 
 const emptyRepeatForm = { quantityTon: '', deadline: '', photoFileName: '', confirmStableData: false };
 
@@ -59,7 +53,7 @@ export default function RecurringOrdersPage() {
   };
 
   return (
-    <RoleLayout title="Ordini ricorrenti" links={links}>
+    <RoleLayout title="Ordini ricorrenti" links={producerLinks}>
       <Card title="Modelli riutilizzabili">
         <p className="mb-4 text-sm text-slate-600">I dati stabili vengono riutilizzati, ma ogni ripetizione crea un nuovo ordine, una nuova asta, un nuovo FIR e un nuovo settlement.</p>
         {isLoading && <p className="text-sm text-slate-600">Caricamento ordini ricorrenti...</p>}

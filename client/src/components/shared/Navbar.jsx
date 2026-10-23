@@ -2,6 +2,7 @@ import { LogOut } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import NotificationBell from './NotificationBell';
+import { ROLE_LABELS } from '../../services/labels';
 
 export default function Navbar({ title }) {
   const { user, logout } = useAuth();
@@ -23,10 +24,10 @@ export default function Navbar({ title }) {
             </span>
             <span className="hidden text-right sm:block">
               <span className="block text-sm font-semibold text-slate-800">{profileName}</span>
-              <span className="block text-xs uppercase tracking-wide text-slate-500">{user?.role}</span>
+              <span className="block text-xs uppercase tracking-wide text-slate-500">{ROLE_LABELS[user?.role] || 'Amministratore'}</span>
             </span>
           </Link>
-          <button className="rounded-lg border border-slate-300 p-2 text-slate-600 hover:bg-slate-100" onClick={logout}>
+          <button type="button" aria-label="Esci dall’account" className="rounded-lg border border-slate-300 p-2 text-slate-600 hover:bg-slate-100" onClick={logout}>
             <LogOut size={16} />
           </button>
         </div>

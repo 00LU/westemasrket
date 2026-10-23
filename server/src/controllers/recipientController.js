@@ -22,12 +22,12 @@ const respondAvailability = handle(async (req, res) => {
   res.json(await views.recipientDetail(req.user.id, req.params.id));
 });
 
-async function setCerPricing(req, res) {
-  return res.json({ message: 'CER pricing updated (placeholder)', payload: req.body });
+async function setCerPricing(_req, res) {
+  return res.status(501).json({ message: 'Le tariffe CER generali non sono ancora disponibili. Indica il prezzo rispondendo alla singola richiesta di ritiro.' });
 }
 
-async function setCapacity(req, res) {
-  return res.json({ message: 'Capacity calendar updated (placeholder)', payload: req.body });
+async function setCapacity(_req, res) {
+  return res.status(501).json({ message: 'Il calendario generale di capacità non è ancora disponibile. Indica la capacità rispondendo alla singola richiesta di ritiro.' });
 }
 
 module.exports = {

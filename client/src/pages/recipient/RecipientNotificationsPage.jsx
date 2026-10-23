@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
 import RoleLayout from '../../components/shared/RoleLayout';
 import Card from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
@@ -9,8 +10,10 @@ import PickupSummary from '../../components/shared/PickupSummary';
 import { recipientLinks } from '../../components/shared/navLinks';
 import { fetchRecipientPickups, respondRecipientAvailability } from '../../services/recipientApi';
 import { RESPONSE_LABELS, errorMessage, formatEuro } from '../../services/labels';
+import PickupFilters from '../../components/shared/PickupFilters';
+import { filterPickups } from '../../services/pickupGuidance';
 
-function AvailabilityForm({ item, onDone }) {
+export function AvailabilityForm({ item, onDone }) {
   const mine = item.myResponse;
   const [form, setForm] = useState({
     pricingUnit: mine.pricingUnit ?? 'per_ton',
@@ -56,7 +59,7 @@ function AvailabilityForm({ item, onDone }) {
           <select className="rounded-xl border border-slate-300 px-3 py-2 text-sm" value={form.pricingUnit} onChange={set('pricingUnit')}>
             <option value="per_ton">EUR / tonnellata</option>
             <option value="per_kg">EUR / kg</option>
-            <option value="per_liter">EUR / litro</option>
+            {form.pricingUnit === 'per_liter' && <option value="per_liter" disabled>EUR / litro — da aggiornare</option>}
           </select>
         </label>
         <Input label="Prezzo di smaltimento (EUR)" type="number" min="0" step="0.001" value={form.unitPrice} onChange={set('unitPrice')} required />
@@ -68,6 +71,12 @@ function AvailabilityForm({ item, onDone }) {
       </div>
       <Input label="Indirizzo di destinazione" value={form.destinationAddress} onChange={set('destinationAddress')} required />
       <Input label="Note" value={form.notes} onChange={set('notes')} />
+      {form.unitPrice !== '' && ['per_ton', 'per_kg'].includes(form.pricingUnit) && (
+        <p role="status" className="rounded-xl bg-slate-50 p-3 text-sm">
+          {item.quantityTon} ton × {formatEuro(Number(form.unitPrice) * (form.pricingUnit === 'per_kg' ? 1000 : 1))}/ton = <strong>{formatEuro(item.quantityTon * Number(form.unitPrice) * (form.pricingUnit === 'per_kg' ? 1000 : 1))} di trattamento</strong>.
+        </p>
+      )}
+      <p className="text-xs text-slate-600">Tariffe a litro non disponibili finché non viene gestita la densità. Specifica nelle note IVA ed eventuali extra: non vengono calcolati separatamente dalla piattaforma.</p>
       <div className="flex flex-wrap gap-2">
         <Button type="submit" disabled={mutation.isPending}>
           {mine.status === 'available' ? 'Aggiorna disponibilità' : 'Conferma disponibilità'}
@@ -76,28 +85,30 @@ function AvailabilityForm({ item, onDone }) {
           Non sono disponibile
         </Button>
       </div>
-      {message && <p className="text-sm text-red-600">{message}</p>}
+      {message && <p role="alert" className="text-sm text-red-600">{message}</p>}
     </form>
   );
 }
 
 export default function RecipientNotificationsPage() {
-  const queryClient = useQueryClient();
+  const [status, setStatus] = useState('action');
+  const [search, setSearch] = useState('');
   const { data = [], isLoading, isError, error } = useQuery({
     queryKey: ['recipient', 'pickups'],
     queryFn: fetchRecipientPickups,
   });
-  const refresh = () => queryClient.invalidateQueries({ queryKey: ['recipient'] });
+  const items = filterPickups(data, status, search);
 
   return (
     <RoleLayout title="Ordini compatibili" links={recipientLinks}>
       <Card title="Richieste ricevute">
+        <PickupFilters status={status} onStatus={setStatus} search={search} onSearch={setSearch} />
         {isLoading && <p className="text-sm text-slate-600">Caricamento...</p>}
         {isError && <p className="text-sm text-red-600">{errorMessage(error, 'Impossibile caricare le richieste.')}</p>}
         {!isLoading && !isError && (
           <div className="space-y-3 text-sm">
-            {data.length === 0 && <p className="text-slate-600">Nessuna richiesta di ritiro.</p>}
-            {data.map((item) => (
+            {items.length === 0 && <p className="text-slate-600">Nessuna richiesta per questi filtri. Scegli “Tutte” o modifica la ricerca.</p>}
+            {items.map((item) => (
               <div key={item.id} className="space-y-3 rounded-xl border border-slate-200 p-3">
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <PickupSummary pickup={item} />
@@ -111,7 +122,7 @@ export default function RecipientNotificationsPage() {
                 {item.myResponse.status !== 'pending' && item.myResponse.status !== 'available' && (
                   <p className="text-slate-600">{RESPONSE_LABELS[item.myResponse.status]}</p>
                 )}
-                {item.canRespond && <AvailabilityForm item={item} onDone={refresh} />}
+                <Link to={`/recipient/pickups/${item.id}`} className="inline-block font-semibold text-brand-900 underline">{item.canRespond ? 'Apri e rispondi' : 'Apri richiesta'}</Link>
               </div>
             ))}
           </div>

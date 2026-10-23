@@ -55,6 +55,10 @@ server/src/config
 
 ## Core Features Implemented
 
+Sessions are validated against `/api/auth/me` before protected pages render, including
+after a page reload. Invalid sessions return to login; temporary verification failures
+are shown explicitly. Logout and account changes clear the previous account's query cache.
+
 - Multi-role authentication scaffold (producer, transporter, recipient, admin)
 - Producer workflows:
   - Create / publish pickup requests (draft -> published)
@@ -94,6 +98,46 @@ Request states: `draft`, `awaiting_recipients`, `awaiting_transporters`, `packag
 
 Each role only receives its own data (see [`pickupViews.js`](server/src/services/pickupViews.js)): max price and all offers are visible to the producer only; recipients never see transport prices and transporters never see treatment prices.
 
+### Pickup user experience
+
+- Creation has four sections: waste, pickup, attachments/options, review. No CER, quantity,
+  distance or estimated price is prefilled. Required fields are validated before advancing.
+- A server-side draft can be saved once CER (or assistance), positive quantity, address and
+  deadline are provided. Draft details offer editing; saving updates the same request.
+  Leaving an edited form or reloading warns about unsaved changes. There is no automatic saving.
+- Details explain the next actor and action. The producer's "requests you can act on" count
+  includes publishable drafts, selectable packages, unanswered date proposals and optional
+  early collection closure; it excludes agreements already accepted by the producer.
+- Early phase closure, date counterproposals, withdrawal, rejection and over-budget package
+  selection explain their consequences before confirmation.
+- Notifications distinguish loading, failure/retry and empty results. "Open request" goes to
+  `/producer/pickups/:id`, `/recipient/pickups/:id` or `/transporter/pickups/:id`.
+  These pages use the existing server-side ownership/invitation checks, including for closed requests.
+- Recipient/transporter opportunities have status and text filters, with forms in pickup details.
+  Mobile navigation is collapsed and keyboard operable; notifications and logout have accessible names.
+- Budgets are indicative, not hard caps. Package ranking still uses only total price.
+  Treatment and per-km transport totals are shown before submission. VAT/extras are not
+  separately calculated; agreed amounts are not presented as invoices or received payments.
+- New per-liter treatment offers are rejected until density conversion is implemented.
+  Existing stored offers are not rewritten. General CER pricing/capacity settings remain
+  unavailable: the page explains this and their endpoints return HTTP 501 rather than false success.
+
+Manual verification:
+
+1. As producer, start a request with empty fields: continue must highlight the missing CER/quantity.
+   Complete the waste and pickup sections, save a draft, reload, edit it and save again:
+   the request ID must stay unchanged.
+2. Publish; follow recipient and transporter notification links using their respective accounts.
+   Submit availability and a transport offer. Check displayed totals and role-restricted pricing.
+3. As producer, compare packages. A package above the indicative budget must require confirmation.
+   After selecting and proposing a date, the next-step text must identify the other two parties,
+   and the request must no longer appear in the producer's action filter.
+4. Counterpropose: the warning must explain acceptance reset. Accept the same date with all three
+   accounts and check confirmation. On another request, reject and verify remaining packages or
+   cancellation if none remain. Cancelling a confirmation dialog must not change the request.
+5. Check notification failure/retry separately from "no notifications", opportunity filters and
+   collapsed navigation at mobile width. Capacity settings must not offer a fake save.
+
 ## Tests
 
 ```bash
@@ -102,8 +146,37 @@ npm test
 ```
 
 Runs the whole flow (including refusal and timeout) against PostgreSQL in a temporary schema that is dropped at the end.
+It also verifies upgrading populated pickup tables from the earlier schema and repeated migration runs.
+
+On API startup, missing pickup dossier, recurring-order and pricing columns are added in a transaction
+before the server accepts requests. Existing rows are preserved; earlier requests default to known CER
+and non-recurring, recipient prices to per-ton and transport prices to fixed-trip.
+Migration errors stop startup rather than serving requests against an incomplete schema.
+
+Frontend pure validation/guidance/filter tests (no extra test dependencies):
+
+```bash
+cd client
+npm test
+npm run build
+```
 
 ## Environment Files
+
+### Temporary automatic operator approval
+
+`AUTO_APPROVE_OPERATORS` defaults to `false` (manual approval). Set it to `true` in
+`server/.env` and restart the API to enable the temporary test mode:
+
+- Existing producer, recipient and transporter accounts are verified at startup;
+  their pending or rejected documents are approved without assigning a human reviewer.
+- Newly registered operators and uploaded/replaced documents are automatically approved.
+- Recipients and transporters can receive pickup invitations even without mandatory documents.
+- Roles, authentication and access to other users' data remain unchanged. No admin account is created.
+
+This mode is not suitable for production compliance checks. Set the flag back to `false`
+and restart to restore manual approval and mandatory-document eligibility. Previously
+auto-approved accounts/documents remain approved; review them explicitly if necessary.
 
 Copy examples and customize:
 

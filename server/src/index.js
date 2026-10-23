@@ -9,6 +9,8 @@ const { registerNotificationSocket } = require('./websocket/notificationSocket')
 const { setSocketServer } = require('./services/notificationService');
 const { expireStaleAgreements } = require('./services/pickupWorkflow');
 const { settings } = require('./config/pickupFlow');
+const { ensurePickupColumns } = require('./services/pickupSchema');
+const { approveExistingOperators } = require('./services/automaticApproval');
 
 // Columns added to existing tables after their first creation (sync() never alters tables).
 async function ensureProfileColumns() {
@@ -19,12 +21,8 @@ async function ensureProfileColumns() {
   if (await queryInterface.tableExists(schema ? { tableName: 'users', schema } : 'users')) {
     const table = await describe('users');
     const optionalColumns = {
-      legal_form: DataTypes.STRING,
       registered_office: DataTypes.STRING,
-      local_sites: DataTypes.TEXT,
       contact_person: DataTypes.STRING,
-      pec_email: DataTypes.STRING,
-      operational_email: DataTypes.STRING,
       phone: DataTypes.STRING,
       production_sites: DataTypes.TEXT,
       intermediary_documents: DataTypes.TEXT,
@@ -39,6 +37,12 @@ async function ensureProfileColumns() {
       operational_limitations: DataTypes.TEXT,
       commercial_preferences: DataTypes.TEXT,
     };
+    const removedColumns = ['legal_form', 'local_sites', 'pec_email', 'operational_email'];
+    for (const column of removedColumns) {
+      if (table[column]) {
+        await queryInterface.removeColumn(schema ? { tableName: 'users', schema } : 'users', column);
+      }
+    }
     for (const [column, type] of Object.entries(optionalColumns)) {
       if (!table[column]) {
         await queryInterface.addColumn(schema ? { tableName: 'users', schema } : 'users', column, { type, allowNull: true });
@@ -73,8 +77,10 @@ setSocketServer(io);
     await sequelize.authenticate();
     if (process.env.DB_SCHEMA) await sequelize.query(`CREATE SCHEMA IF NOT EXISTS "${process.env.DB_SCHEMA}"`);
     await sequelize.sync();
+    await ensurePickupColumns();
     await ensureProfileColumns();
     await sequelize.sync();
+    await approveExistingOperators();
     server.listen(port, () => {
       console.log(`WasteMarket API running on port ${port}`);
     });

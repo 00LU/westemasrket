@@ -22,12 +22,8 @@ export default function RegisterPage() {
   const [form, setForm] = useState({
     companyName: '',
     piva: '',
-    legalForm: '',
     registeredOffice: '',
-    localSites: '',
     contactPerson: '',
-    pecEmail: '',
-    operationalEmail: '',
     phone: '',
     productionSites: '',
     intermediaryDocuments: '',
@@ -99,12 +95,8 @@ export default function RegisterPage() {
         role: form.role,
         companyName: form.companyName,
         piva: form.piva,
-        legalForm: form.legalForm,
         registeredOffice: form.registeredOffice,
-        localSites: form.localSites,
         contactPerson: form.contactPerson,
-        pecEmail: form.pecEmail,
-        operationalEmail: form.operationalEmail,
         phone: form.phone,
         productionSites: form.productionSites,
         intermediaryDocuments: form.intermediaryDocuments,
@@ -177,14 +169,10 @@ export default function RegisterPage() {
             <div className="grid gap-3 sm:grid-cols-2">
               <Input label="Nome azienda / ragione sociale" value={form.companyName} onChange={updateField('companyName')} required />
               <Input label="P.IVA / CF" value={form.piva} onChange={updateField('piva')} required />
-              <Input label="Forma giuridica (opzionale)" value={form.legalForm} onChange={updateField('legalForm')} />
               <Input label="Sede legale" value={form.registeredOffice} onChange={updateField('registeredOffice')} />
-              <Input label="Sedi / unita locali (opzionale)" value={form.localSites} onChange={updateField('localSites')} />
               <Input label="Persona di contatto" value={form.contactPerson} onChange={updateField('contactPerson')} />
-              <Input label="PEC (opzionale)" type="email" value={form.pecEmail} onChange={updateField('pecEmail')} />
-              <Input label="Email operativa (opzionale)" type="email" value={form.operationalEmail} onChange={updateField('operationalEmail')} />
               <Input label="Telefono (opzionale)" value={form.phone} onChange={updateField('phone')} />
-              <Input label="Email" type="email" value={form.email} onChange={updateField('email')} required />
+              <Input label="Email (PEC o operativa)" type="email" value={form.email} onChange={updateField('email')} required />
               <Input label="Password" type="password" value={form.password} onChange={updateField('password')} required />
             </div>
           </section>
@@ -235,7 +223,7 @@ export default function RegisterPage() {
           <section className="space-y-3">
             <div>
               <h2 className="text-lg font-semibold text-slate-800">Documenti di onboarding</h2>
-              <p className="text-sm text-slate-600">Carica i documenti richiesti per il ruolo selezionato. La verifica sara effettuata dall'amministratore.</p>
+              <p className="text-sm text-slate-600">Puoi caricare i documenti del ruolo selezionato anche in seguito dal profilo. La verifica segue la modalita di approvazione attiva sulla piattaforma.</p>
             </div>
             {form.documents.map((document) => (
               <Input

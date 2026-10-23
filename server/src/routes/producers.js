@@ -16,7 +16,7 @@ router.post('/pricing/estimate', validate(['quantityTon', 'distanceKm']), c.esti
 router.get('/pickups', c.listPickups);
 router.get('/pickups/recurring', c.listRecurring);
 router.post('/pickups/:id/repeat', c.repeatRecurring);
-router.post('/pickups', validate(['cerCode', 'quantityTon', 'pickupAddress', 'deadline', 'maxPrice']), c.createPickup);
+router.post('/pickups', validate(['quantityTon', 'pickupAddress', 'deadline', 'maxPrice']), c.createPickup);
 router.get('/pickups/:id', c.getPickup);
 router.patch('/pickups/:id', c.updatePickup);
 router.post('/pickups/:id/publish', c.publishPickup);

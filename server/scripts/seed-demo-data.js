@@ -70,8 +70,6 @@ async function createUser({ role, companyName, piva, email, registeredOffice, co
     email,
     registeredOffice,
     contactPerson,
-    pecEmail: `${email.replace('@', '.pec@')}`,
-    operationalEmail: email,
     phone: '+39 02 0000000',
     passwordHash: await bcrypt.hash(password, 10),
     verified: true,

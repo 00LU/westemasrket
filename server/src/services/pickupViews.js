@@ -16,6 +16,11 @@ const { WorkflowError } = require('./pickupStateMachine');
 
 const notFound = () => new WorkflowError('Richiesta di ritiro non trovata', 404);
 
+async function companyNames(ids) {
+  const users = await User.findAll({ where: { id: { [Op.in]: [...new Set(ids.filter(Boolean))] } }, attributes: ['id', 'companyName'] });
+  return new Map(users.map((u) => [u.id, u.companyName]));
+}
+
 function publicRequestFields(request, { withPhoto = false } = {}) {
   return {
     id: request.id,
@@ -33,11 +38,6 @@ function publicRequestFields(request, { withPhoto = false } = {}) {
     status: request.status,
     created_at: request.created_at,
   };
-}
-
-async function companyNames(ids) {
-  const users = await User.findAll({ where: { id: { [Op.in]: [...new Set(ids.filter(Boolean))] } }, attributes: ['id', 'companyName'] });
-  return new Map(users.map((u) => [u.id, u.companyName]));
 }
 
 // ---------------------------------------------------------------------------
@@ -127,26 +127,45 @@ async function producerList(userId) {
   if (requests.length === 0) return [];
 
   const ids = requests.map((r) => r.id);
-  const [availabilities, proposals, packages] = await Promise.all([
+  const [availabilities, proposals, packages, slots] = await Promise.all([
     RecipientAvailability.findAll({ where: { pickupRequestId: { [Op.in]: ids } }, attributes: ['pickupRequestId', 'status'] }),
     TransportProposal.findAll({ where: { pickupRequestId: { [Op.in]: ids } }, attributes: ['pickupRequestId', 'status'] }),
     PickupPackage.findAll({ where: { pickupRequestId: { [Op.in]: ids }, status: PK.PROPOSED }, attributes: ['pickupRequestId'] }),
+    SlotProposal.findAll({
+      where: { pickupRequestId: { [Op.in]: ids }, status: SL.ACTIVE },
+      attributes: ['pickupRequestId', 'packageId', 'producerAccepted', 'recipientAccepted', 'transporterAccepted'],
+    }),
   ]);
 
   const count = (rows, id, status) =>
     rows.filter((row) => row.pickupRequestId === id && (!status || row.status === status)).length;
 
-  return requests.map((request) => ({
-    ...request.toJSON(),
-    counts: {
-      recipientsInvited: count(availabilities, request.id),
-      recipientsAvailable: count(availabilities, request.id, 'available'),
-      recipientsPending: count(availabilities, request.id, 'pending'),
-      transportersInvited: count(proposals, request.id),
-      proposalsSubmitted: count(proposals, request.id, 'submitted'),
-      packagesAvailable: count(packages, request.id),
-    },
-  }));
+  return requests.map((request) => {
+    const slot = slots.find((item) => item.pickupRequestId === request.id && item.packageId === request.selectedPackageId);
+    const pendingAgreementRoles = request.status === S.IN_AGREEMENT
+      ? slot
+        ? ['producer', 'recipient', 'transporter'].filter((role) => !slot[`${role}Accepted`])
+        : ['producer']
+      : [];
+    const actionRequired = (request.status === S.DRAFT && request.cerKnown)
+      || request.status === S.PACKAGES_READY
+      || pendingAgreementRoles.includes('producer')
+      || (request.status === S.AWAITING_RECIPIENTS && count(availabilities, request.id, 'available') > 0)
+      || (request.status === S.AWAITING_TRANSPORTERS && count(proposals, request.id, 'submitted') > 0);
+    return {
+      ...request.toJSON(),
+      actionRequired,
+      pendingAgreementRoles,
+      counts: {
+        recipientsInvited: count(availabilities, request.id),
+        recipientsAvailable: count(availabilities, request.id, 'available'),
+        recipientsPending: count(availabilities, request.id, 'pending'),
+        transportersInvited: count(proposals, request.id),
+        proposalsSubmitted: count(proposals, request.id, 'submitted'),
+        packagesAvailable: count(packages, request.id),
+      },
+    };
+  });
 }
 
 async function producerRecurring(userId) {
@@ -157,7 +176,7 @@ async function producerRecurring(userId) {
   });
 }
 
-function serializePackage(pkg, request, names, availabilityById, proposalById) {
+function serializePackage(pkg, request, names, availabilityById, proposalById, revealIdentities = false) {
   const availability = availabilityById.get(pkg.recipientAvailabilityId);
   const proposal = proposalById.get(pkg.transportProposalId);
   return {
@@ -171,7 +190,7 @@ function serializePackage(pkg, request, names, availabilityById, proposalById) {
     totalPrice: pkg.totalPrice,
     overBudget: request.maxPrice > 0 && pkg.totalPrice > request.maxPrice,
     recipient: {
-      companyName: names.get(pkg.recipientId),
+      ...(revealIdentities ? { companyName: names.get(pkg.recipientId) } : {}),
       pricePerTon: availability?.pricePerTon,
       pricingUnit: availability?.pricingUnit,
       unitPrice: availability?.unitPrice,
@@ -179,7 +198,7 @@ function serializePackage(pkg, request, names, availabilityById, proposalById) {
       availabilityWindow: availability?.availabilityWindow,
     },
     transporter: {
-      companyName: names.get(pkg.transporterId),
+      ...(revealIdentities ? { companyName: names.get(pkg.transporterId) } : {}),
       vehicleType: proposal?.vehicleType,
       availabilityNote: proposal?.availabilityNote,
       pricingMode: proposal?.pricingMode,
@@ -204,17 +223,23 @@ async function producerDetail(userId, requestId) {
   ]);
   const availabilityById = new Map(availabilities.map((a) => [a.id, a]));
   const proposalById = new Map(proposals.map((p) => [p.id, p]));
-  const serialize = (pkg) => serializePackage(pkg, request, names, availabilityById, proposalById);
-
   const proposed = packages.filter((pkg) => pkg.status === PK.PROPOSED);
   const failed = packages.filter((pkg) => [PK.REJECTED, PK.EXPIRED].includes(pkg.status));
   const current = packages.find((pkg) => [PK.SELECTED, PK.CONFIRMED].includes(pkg.status));
+  const serialize = (pkg) => serializePackage(
+    pkg,
+    request,
+    names,
+    availabilityById,
+    proposalById,
+    [PK.SELECTED, PK.CONFIRMED].includes(pkg.status)
+  );
 
   return {
     request: request.toJSON(),
     recipients: availabilities.map((a) => ({
       id: a.id,
-      companyName: names.get(a.recipientId),
+      ...(current?.recipientId === a.recipientId ? { companyName: names.get(a.recipientId) } : {}),
       status: a.status,
       pricePerTon: a.pricePerTon,
       pricingUnit: a.pricingUnit,
@@ -228,7 +253,7 @@ async function producerDetail(userId, requestId) {
     })),
     proposals: proposals.map((p) => ({
       id: p.id,
-      companyName: names.get(p.transporterId),
+      ...(current?.transporterId === p.transporterId ? { companyName: names.get(p.transporterId) } : {}),
       status: p.status,
       price: p.price,
       pricingMode: p.pricingMode,

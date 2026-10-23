@@ -1,17 +1,20 @@
 import RoleLayout from '../../components/shared/RoleLayout';
 import WasteRequestForm from '../../components/forms/WasteRequestForm';
-
-const links = [
-  { to: '/profile', label: 'Profilo' },
-  { to: '/producer', label: 'Dashboard' },
-  { to: '/producer/new-request', label: 'New Request' },
-  { to: '/producer/recurring-orders', label: 'Ordini ricorrenti' },
-];
+import { producerLinks } from '../../components/shared/navLinks';
+import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { fetchProducerPickup } from '../../services/producerApi';
+import { errorMessage } from '../../services/labels';
 
 export default function NewRequestPage() {
+  const { id } = useParams();
+  const query = useQuery({ queryKey: ['producer', 'pickup', id], queryFn: () => fetchProducerPickup(id), enabled: Boolean(id) });
   return (
-    <RoleLayout title="Create Waste Request" links={links}>
-      <WasteRequestForm />
+    <RoleLayout title={id ? 'Modifica bozza' : 'Nuova richiesta di ritiro'} links={producerLinks}>
+      {id && query.isLoading && <p role="status">Caricamento bozza...</p>}
+      {id && query.isError && <p role="alert">{errorMessage(query.error, 'Impossibile caricare la bozza.')}</p>}
+      {id && query.data && query.data.request.status !== 'draft' && <p role="alert">Solo le bozze possono essere modificate.</p>}
+      {(!id || query.data?.request.status === 'draft') && <WasteRequestForm key={id || 'new'} initialPickup={query.data?.request} />}
     </RoleLayout>
   );
 }

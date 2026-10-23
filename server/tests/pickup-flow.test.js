@@ -5,6 +5,7 @@
 
 process.env.DB_SCHEMA = `wm_test_${Date.now()}`;
 process.env.JWT_SECRET = process.env.JWT_SECRET || 'test-secret';
+process.env.AUTO_APPROVE_OPERATORS = 'false';
 require('dotenv').config();
 
 const { test, describe, before, after } = require('node:test');
@@ -20,6 +21,7 @@ const { registerNotificationSocket } = require('../src/websocket/notificationSoc
 const { setSocketServer } = require('../src/services/notificationService');
 const workflow = require('../src/services/pickupWorkflow');
 const { rankPackages, STRATEGIES } = require('../src/services/packageOptimizer');
+const { ensurePickupColumns } = require('../src/services/pickupSchema');
 
 const { User, Document, CerCode, PickupRequest, PickupPackage, Transaction, TransportProposal, RecipientAvailability } = models;
 const { REQUIRED_DOCUMENTS } = require('../src/services/documentRequirements');
@@ -112,6 +114,7 @@ const propose = (key, id, price) =>
   api('POST', `/api/transporters/pickups/${id}/proposal`, tok(key), { price, vehicleType: 'ADR Truck', availabilityNote: 'Domani' });
 const decline = (key, id) => api('POST', `/api/transporters/pickups/${id}/proposal`, tok(key), { decline: true });
 const producerDetail = (id, key = 'prod') => expectOk(api('GET', `/api/producers/pickups/${id}`, tok(key)));
+const producerListItem = async (id) => (await expectOk(api('GET', '/api/producers/pickups', tok('prod')))).find((item) => item.id === id);
 
 before(async () => {
   models.initModels();
@@ -147,6 +150,69 @@ after(async () => {
   await sequelize.close();
 });
 
+describe('pickup schema upgrade', () => {
+  test('upgrades populated earlier tables, preserves data and can run again', async () => {
+    const existing = await PickupRequest.create({
+      producerId: people.prod.id,
+      cerCode: '15 01 10*',
+      quantityTon: 10,
+      pickupAddress: 'Via Migrazione 1',
+      deadline: future(10),
+      maxPrice: 1200,
+    });
+    const queryInterface = sequelize.getQueryInterface();
+    const missingColumns = [
+      [PickupRequest, [
+        'cer_known', 'cer_request_note', 'waste_description', 'photo_file_name', 'photo_data',
+        'technical_documents', 'containment', 'special_info', 'recurring',
+        'recurrence_frequency', 'recurrence_start_date', 'recurrence_end_date',
+      ]],
+      [RecipientAvailability, [
+        'pricing_unit', 'unit_price', 'quantity_tolerance_percent', 'availability_window',
+      ]],
+      [TransportProposal, ['pricing_mode', 'unit_price', 'distance_km']],
+    ];
+    await RecipientAvailability.create({
+      pickupRequestId: existing.id, recipientId: people.rec1.id, pricePerTon: 25,
+    });
+    await TransportProposal.create({
+      pickupRequestId: existing.id, transporterId: people.tra1.id, price: 100,
+    });
+    for (const [model, columns] of missingColumns) {
+      for (const column of columns) await queryInterface.removeColumn(model.getTableName(), column);
+    }
+
+    await ensurePickupColumns();
+    await ensurePickupColumns();
+
+    for (const [model, columns] of missingColumns) {
+      const actual = await queryInterface.describeTable(model.getTableName());
+      for (const column of columns) assert.ok(actual[column], `missing ${column}`);
+    }
+    const restored = await PickupRequest.findByPk(existing.id);
+    assert.equal(restored.pickupAddress, 'Via Migrazione 1');
+    assert.equal(restored.cerKnown, true);
+    assert.equal(restored.recurring, false);
+    assert.equal(restored.wasteDescription, null);
+    const recipient = await RecipientAvailability.findOne({ where: { pickupRequestId: existing.id } });
+    assert.equal(recipient.pricingUnit, 'per_ton');
+    assert.equal(recipient.pricePerTon, 25);
+    const transporter = await TransportProposal.findOne({ where: { pickupRequestId: existing.id } });
+    assert.equal(transporter.pricingMode, 'fixed_trip');
+    assert.equal(transporter.price, 100);
+    const draft = await expectOk(api('POST', '/api/producers/pickups', tok('prod'), {
+      cerCode: '15 01 10*', quantityTon: 2, pickupAddress: 'Via Nuova 1',
+      deadline: future(10), maxPrice: 500, wasteDescription: 'Migration check',
+    }), 201);
+    assert.equal(draft.status, 'draft');
+    assert.equal((await producerListItem(draft.id)).actionRequired, true);
+    assert.equal(draft.wasteDescription, 'Migration check');
+    await RecipientAvailability.destroy({ where: { pickupRequestId: existing.id } });
+    await TransportProposal.destroy({ where: { pickupRequestId: existing.id } });
+    await PickupRequest.destroy({ where: { id: [existing.id, draft.id] } });
+  });
+});
+
 describe('package optimizer', () => {
   const pkg = (id, treatment, transport) => ({ id, treatmentPrice: treatment, transportPrice: transport, totalPrice: treatment + transport });
 
@@ -162,6 +228,34 @@ describe('package optimizer', () => {
     assert.equal(ranked[0].id, 'b');
     delete STRATEGIES.test_strategy;
     assert.throws(() => rankPackages([pkg('a', 1, 1)], 'nope'));
+  });
+});
+
+describe('registration conflicts', () => {
+  test('duplicate email returns an actionable conflict without creating an account', async () => {
+    const existing = await User.findByPk(people.prod.id);
+    const count = await User.count();
+    const result = await api('POST', '/api/auth/register', null, {
+      role: 'producer', companyName: 'Duplicate email', piva: `DUP-EMAIL-${stamp}`,
+      email: existing.email, password: 'secret1',
+    });
+    assert.equal(result.status, 409);
+    assert.equal(result.body.field, 'email');
+    assert.match(result.body.message, /email.*gia registrata/);
+    assert.equal(await User.count(), count);
+  });
+
+  test('duplicate fiscal identifier returns an actionable conflict without creating an account', async () => {
+    const existing = await User.findByPk(people.prod.id);
+    const count = await User.count();
+    const result = await api('POST', '/api/auth/register', null, {
+      role: 'producer', companyName: 'Duplicate fiscal identifier', piva: existing.piva,
+      email: `dup-fiscal-${stamp}@test.local`, password: 'secret1',
+    });
+    assert.equal(result.status, 409);
+    assert.equal(result.body.field, 'piva');
+    assert.match(result.body.message, /partita IVA.*gia registrata/);
+    assert.equal(await User.count(), count);
   });
 });
 
@@ -202,6 +296,7 @@ describe('full flow: steps 1-6', () => {
 
     const published = await expectOk(api('POST', `/api/producers/pickups/${id}/publish`, tok('prod')));
     assert.equal(published.status, 'awaiting_recipients');
+    assert.equal((await producerListItem(id)).actionRequired, false);
     assert.equal((await api('POST', `/api/producers/pickups/${id}/publish`, tok('prod'))).status, 409);
   });
 
@@ -230,6 +325,7 @@ describe('full flow: steps 1-6', () => {
 
   test('2c. recipients confirm availability and the transporter phase opens only after all responded', async () => {
     assert.equal((await available('rec1', id, 100)).status, 200);
+    assert.equal((await producerListItem(id)).actionRequired, true, 'can close recipient collection early');
     assert.equal((await available('rec1', id, 0, '')).status, 400);
     assert.equal((await api('POST', `/api/recipients/pickups/${id}/availability`, tok('rec1'), {})).status, 400);
     assert.equal((await api('POST', `/api/recipients/pickups/${id}/availability`, tok('rec2'), {
@@ -243,6 +339,7 @@ describe('full flow: steps 1-6', () => {
     assert.equal((await unavailable('rec3', id)).status, 200);
     const detail = await producerDetail(id);
     assert.equal(detail.request.status, 'awaiting_transporters');
+    assert.equal((await producerListItem(id)).actionRequired, false);
     assert.equal(detail.recipients.filter((r) => r.status === 'available').length, 2);
 
     assert.ok((await notificationTypes('prod', id)).includes('recipient_availability_received'));
@@ -263,6 +360,7 @@ describe('full flow: steps 1-6', () => {
 
     assert.equal((await propose('tra1', id, 0)).status, 400);
     assert.equal((await propose('tra1', id, 320)).status, 200);
+    assert.equal((await producerListItem(id)).actionRequired, true, 'can close transport collection early');
     assert.equal((await propose('tra1', id, 300)).status, 200, 'proposal can be updated');
     assert.equal((await propose('tra2', id, 250)).status, 200);
     assert.equal((await producerDetail(id)).request.status, 'awaiting_transporters');
@@ -272,10 +370,13 @@ describe('full flow: steps 1-6', () => {
   test('4. packages are generated, ranked by lowest price and shown to the producer', async () => {
     const detail = await producerDetail(id);
     assert.equal(detail.request.status, 'packages_ready');
+    assert.equal((await producerListItem(id)).actionRequired, true);
     assert.deepEqual(detail.packages.map((p) => p.totalPrice), [1050, 1100, 1250, 1300]);
     assert.deepEqual(detail.packages.map((p) => p.rank), [1, 2, 3, 4]);
-    assert.equal(detail.packages[0].recipient.companyName, 'rec2 srl');
-    assert.equal(detail.packages[0].transporter.companyName, 'tra2 srl');
+    assert.equal(detail.packages[0].recipient.companyName, undefined, 'available recipients stay anonymous before selection');
+    assert.equal(detail.packages[0].transporter.companyName, undefined, 'available transporters stay anonymous before selection');
+    assert.ok(detail.recipients.every((recipient) => recipient.companyName === undefined));
+    assert.ok(detail.proposals.every((proposal) => proposal.companyName === undefined));
     assert.equal(detail.packages[0].overBudget, false);
     assert.equal(detail.packages[3].overBudget, true);
     assert.ok((await notificationTypes('prod', id)).includes('packages_ready'));
@@ -291,6 +392,10 @@ describe('full flow: steps 1-6', () => {
     const detail = await expectOk(api('POST', `/api/producers/pickups/${id}/packages/${bestPackage.id}/select`, tok('prod')));
     assert.equal(detail.request.status, 'in_agreement');
     assert.equal(detail.currentPackage.id, bestPackage.id);
+    assert.equal(detail.currentPackage.recipient.companyName, 'rec2 srl');
+    assert.equal(detail.currentPackage.transporter.companyName, 'tra2 srl');
+    assert.deepEqual((await producerListItem(id)).pendingAgreementRoles, ['producer']);
+    assert.equal((await producerListItem(id)).actionRequired, true);
 
     assert.ok((await notificationTypes('rec2', id)).includes('package_selected'));
     assert.ok((await notificationTypes('tra2', id)).includes('package_selected'));
@@ -313,6 +418,8 @@ describe('full flow: steps 1-6', () => {
     const afterProposal = await expectOk(api('POST', `/api/pickups/${id}/slots`, tok('prod'), { scheduledAt: first }), 201);
     const slotA = afterProposal.agreement.activeSlot;
     assert.deepEqual(slotA.accepted, { producer: true, recipient: false, transporter: false });
+    assert.equal((await producerListItem(id)).actionRequired, false, 'producer already accepted own proposal');
+    assert.deepEqual((await producerListItem(id)).pendingAgreementRoles, ['recipient', 'transporter']);
     for (const key of ['rec2', 'tra2']) assert.ok((await notificationTypes(key, id)).includes('slot_proposed'));
     assert.equal((await notificationTypes('rec1', id)).includes('slot_proposed'), false);
 
@@ -326,6 +433,7 @@ describe('full flow: steps 1-6', () => {
     const slotB = counter.agreement.activeSlot;
     assert.notEqual(slotB.id, slotA.id);
     assert.deepEqual(slotB.accepted, { producer: false, recipient: false, transporter: true });
+    assert.equal((await producerListItem(id)).actionRequired, true, 'producer must accept the counterproposal');
     assert.equal((await api('POST', `/api/pickups/${id}/slots/${slotA.id}/accept`, tok('prod'))).status, 409, 'old slot is no longer valid');
 
     await expectOk(api('POST', `/api/pickups/${id}/slots/${slotB.id}/accept`, tok('prod')));
@@ -338,6 +446,8 @@ describe('full flow: steps 1-6', () => {
 
     const detail = await producerDetail(id);
     assert.equal(detail.request.status, 'confirmed');
+    assert.equal((await producerListItem(id)).actionRequired, false);
+    assert.deepEqual((await producerListItem(id)).pendingAgreementRoles, []);
     assert.equal(new Date(detail.request.confirmedSlotAt).toISOString(), second);
 
     for (const key of ['prod', 'rec2', 'tra2']) assert.ok((await notificationTypes(key, id)).includes('pickup_confirmed'));
@@ -408,8 +518,9 @@ describe('step 7: refusal and no answer go back to the list', () => {
     const slotDate = future(7);
     const proposed = await expectOk(api('POST', `/api/pickups/${id}/slots`, tok('prod'), { scheduledAt: slotDate }), 201);
     const slotId = proposed.agreement.activeSlot.id;
-    const recKey = second.recipient.companyName === 'rec1 srl' ? 'rec1' : 'rec2';
-    const traKey = second.transporter.companyName === 'tra1 srl' ? 'tra1' : 'tra2';
+    const secondRecord = await PickupPackage.findByPk(second.id);
+    const recKey = secondRecord.recipientId === people.rec1.id ? 'rec1' : 'rec2';
+    const traKey = secondRecord.transporterId === people.tra1.id ? 'tra1' : 'tra2';
     await expectOk(api('POST', `/api/pickups/${id}/slots/${slotId}/accept`, tok(recKey)));
     await expectOk(api('POST', `/api/pickups/${id}/slots/${slotId}/accept`, tok(traKey)));
     assert.equal((await producerDetail(id)).request.status, 'confirmed');
@@ -559,7 +670,7 @@ describe('features of the onboarding branch inside the new flow', () => {
     await CerCode.create({ code: '15 01 10*', description: 'Imballaggi', category: '15', hazardous: true }).catch(() => {});
     const draft = await expectOk(
       api('POST', '/api/producers/pickups', tok('prod'), {
-        cerKnown: false, cerCode: 'x', quantityTon: 3, pickupAddress: 'Via CER 1', deadline: future(9), maxPrice: 0,
+        cerKnown: false, cerCode: '', quantityTon: 3, pickupAddress: 'Via CER 1', deadline: future(9), maxPrice: 0,
         wasteDescription: 'Residui da classificare', photoFileName: 'foto.jpg',
       }),
       201
@@ -584,6 +695,12 @@ describe('features of the onboarding branch inside the new flow', () => {
 
   test('pricing units and per-km transport are converted into comparable package prices', async () => {
     const id = await newPublishedRequest('prod', { maxPrice: 0 });
+    const liters = await api('POST', `/api/recipients/pickups/${id}/availability`, tok('rec1'), {
+      available: true, pricingUnit: 'per_liter', unitPrice: 0.1, destinationAddress: 'Impianto litri',
+    });
+    assert.equal(liters.status, 400);
+    assert.match(liters.body.message, /densità/);
+    assert.equal((await RecipientAvailability.findOne({ where: { pickupRequestId: id, recipientId: people.rec1.id } })).status, 'pending');
     assert.equal((await api('POST', `/api/recipients/pickups/${id}/availability`, tok('rec1'), {
       available: true, pricingUnit: 'per_kg', unitPrice: 0.09, destinationAddress: 'Impianto kg', quantityTolerancePercent: 2, availabilityWindow: 'Lun-Ven',
     })).status, 200);
@@ -606,6 +723,17 @@ describe('features of the onboarding branch inside the new flow', () => {
     assert.equal(detail.packages[0].totalPrice, 1150);
     assert.equal(detail.packages[0].overBudget, false, 'max price 0 means no limit');
     assert.equal(detail.recipients.find((r) => r.status === 'available').availabilityWindow, 'Lun-Ven');
+  });
+
+  describe('unavailable general capacity settings', () => {
+    test('never reports a successful save for unimplemented settings', async () => {
+      for (const route of ['/api/recipients/pricing', '/api/recipients/capacity']) {
+        const response = await api('POST', route, tok('rec1'), { cerCode: '15 01 10*', pricePerTon: 100, availableSlots: 10 });
+        assert.equal(response.status, 501);
+        assert.match(response.body.message, /non.*disponibil/);
+        assert.equal((await api('POST', route, tok('tra1'), {})).status, 403);
+      }
+    });
   });
 
   test('recurring orders can be repeated as a new published request', async () => {
@@ -660,6 +788,77 @@ describe('notifications', () => {
 
     await expectOk(api('POST', '/api/notifications/read-all', tok('rec1')));
     assert.equal((await expectOk(api('GET', '/api/notifications', tok('rec1')))).unread, 0);
+  });
+
+  describe('temporary automatic operator approval', () => {
+    test('approves existing and new operators, permits missing documents and restores manual checks', async () => {
+      const { approveExistingOperators } = require('../src/services/automaticApproval');
+      const { findEligibleRecipients, findEligibleTransporters } = require('../src/services/matchingEngine');
+      const pendingDocument = await Document.create({
+        userId: people.recUnverified.id, documentType: 'facility_registration',
+        fileName: 'existing.pdf', mimeType: 'application/pdf', fileSize: 100,
+        status: 'pending_review',
+      });
+      await approveExistingOperators();
+      assert.equal((await User.findByPk(people.recUnverified.id)).verified, false);
+      assert.equal((await pendingDocument.reload()).status, 'pending_review');
+
+      process.env.AUTO_APPROVE_OPERATORS = 'true';
+      try {
+        await approveExistingOperators();
+        await approveExistingOperators();
+        assert.equal((await User.findByPk(people.recUnverified.id)).verified, true);
+        assert.equal((await pendingDocument.reload()).status, 'approved');
+        assert.equal(pendingDocument.reviewedBy, null);
+        assert.ok((await findEligibleRecipients()).some((user) => user.id === people.recNoDocs.id));
+        assert.ok((await findEligibleTransporters()).some((user) => user.id === people.traNoDocs.id));
+
+        for (const role of ['recipient', 'transporter']) {
+          const result = await expectOk(api('POST', '/api/auth/register', null, {
+            role, companyName: `Auto ${role}`, piva: `AUTO-${role}-${stamp}`,
+            email: `auto-${role}-${stamp}@test.local`, password: 'secret1',
+          }), 201);
+          assert.equal(result.user.verified, true);
+          people[`auto${role}`] = { id: result.user.id, token: result.token, role };
+        }
+        const registration = await expectOk(api('POST', '/api/auth/register', null, {
+          role: 'recipient', companyName: 'Auto documents', piva: `AUTODOC-${stamp}`,
+          email: `auto-doc-${stamp}@test.local`, password: 'secret1',
+          documents: [{ documentType: 'facility_registration', fileName: 'registration.pdf', mimeType: 'application/pdf', fileSize: 100 }],
+        }), 201);
+        assert.equal((await Document.findOne({ where: { userId: registration.user.id } })).status, 'approved');
+
+        const requirements = await expectOk(api('GET', '/api/documents/requirements', tok('autorecipient')));
+        assert.equal(requirements.automaticApprovalEnabled, true);
+        assert.equal(requirements.missingDocuments.length, 3);
+        const upload = { documentType: 'facility_registration', fileName: 'upload.pdf', mimeType: 'application/pdf', fileSize: 100 };
+        const document = await expectOk(api('POST', '/api/documents', tok('autorecipient'), upload), 201);
+        assert.equal(document.status, 'approved');
+        const replaced = await expectOk(api('POST', '/api/documents', tok('autorecipient'), { ...upload, fileName: 'replacement.pdf' }), 201);
+        assert.equal(replaced.id, document.id);
+        assert.equal(replaced.status, 'approved');
+
+        const id = await newPublishedRequest();
+        assert.ok((await notificationTypes('autorecipient', id)).includes('recipient_invited'));
+        await expectOk(available('autorecipient', id, 20));
+        await expectOk(api('POST', `/api/producers/pickups/${id}/close-recipients`, tok('prod')));
+        assert.ok((await notificationTypes('autotransporter', id)).includes('transporters_invited'));
+        await expectOk(propose('autotransporter', id, 100));
+
+        process.env.AUTO_APPROVE_OPERATORS = 'false';
+        assert.equal((await findEligibleRecipients()).some((user) => user.id === people.autorecipient.id), false);
+        assert.equal((await findEligibleTransporters()).some((user) => user.id === people.autotransporter.id), false);
+        const manualUpload = await expectOk(api('POST', '/api/documents', tok('autorecipient'), upload), 201);
+        assert.equal(manualUpload.status, 'pending_review');
+        const manualUser = await expectOk(api('POST', '/api/auth/register', null, {
+          role: 'recipient', companyName: 'Manual', piva: `MANUAL-${stamp}`,
+          email: `manual-${stamp}@test.local`, password: 'secret1',
+        }), 201);
+        assert.equal(manualUser.user.verified, false);
+      } finally {
+        process.env.AUTO_APPROVE_OPERATORS = 'false';
+      }
+    });
   });
 
   test('socket delivery is limited to the addressed user', async () => {

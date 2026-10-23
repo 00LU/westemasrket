@@ -26,7 +26,7 @@ function fail(message, status = 400) {
 }
 
 // Conversion of the unit entered by the recipient into EUR per ton (1 liter is assumed to weigh 1 kg).
-const PRICING_UNIT_TO_TON = { per_ton: 1, per_kg: 1000, per_liter: 1000 };
+const PRICING_UNIT_TO_TON = { per_ton: 1, per_kg: 1000 };
 
 // Every mutation runs inside a transaction holding a row lock on the request,
 // so concurrent responses can never trigger the same phase change twice.
@@ -205,6 +205,7 @@ async function recipientRespond(user, requestId, body) {
 
     if (body.available === true) {
       const pricingUnit = body.pricingUnit || 'per_ton';
+      if (pricingUnit === 'per_liter') fail('La tariffa a litro non è disponibile: manca la densità per convertirla in tonnellate. Usa EUR/ton o EUR/kg.');
       if (!(pricingUnit in PRICING_UNIT_TO_TON)) fail('Unità di prezzo non valida');
       const unitPrice = toNumber(body.unitPrice ?? body.pricePerTon);
       if (!(unitPrice >= 0)) fail('Prezzo non valido');

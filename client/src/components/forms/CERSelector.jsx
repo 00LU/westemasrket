@@ -18,11 +18,13 @@ export default function CERSelector({ value, onChange }) {
     <div className="space-y-2">
       <label className="text-sm font-medium text-slate-700">Codice CER / EER</label>
       <input
+        aria-label="Cerca codice CER o descrizione"
         value={query}
         onChange={(event) => setQuery(event.target.value)}
         placeholder="Cerca codice o descrizione"
         className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
       />
+      {value && <p className="text-sm font-semibold text-brand-900">Codice selezionato: {value}</p>}
       <div className="max-h-44 overflow-auto rounded-xl border border-slate-200 bg-white">
         {isLoading && <p className="px-3 py-2 text-sm text-slate-500">Caricamento catalogo...</p>}
         {isError && <p className="px-3 py-2 text-sm text-red-600">Impossibile caricare il catalogo CER.</p>}

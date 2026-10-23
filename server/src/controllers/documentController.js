@@ -1,5 +1,6 @@
 const { Document, User } = require('../models');
 const { getRequiredDocumentsForRole, getMissingDocumentTypes } = require('../services/documentRequirements');
+const { isAutomaticApprovalEnabled } = require('../services/automaticApproval');
 
 async function listUserDocuments(req, res, next) {
   try {
@@ -28,6 +29,7 @@ async function getUserDocumentRequirements(req, res, next) {
       requiredDocuments: getRequiredDocumentsForRole(role),
       uploadedDocuments: uploadedTypes,
       missingDocuments: getMissingDocumentTypes(role, uploadedTypes),
+      automaticApprovalEnabled: isAutomaticApprovalEnabled(),
     });
   } catch (error) {
     return next(error);
@@ -55,7 +57,8 @@ async function uploadDocument(req, res, next) {
           fileSize,
           fileUrl,
           fileData,
-          status: 'pending_review',
+          status: isAutomaticApprovalEnabled() ? 'approved' : 'pending_review',
+          reviewedBy: null,
           notes,
         })
       : await Document.create({
@@ -66,7 +69,7 @@ async function uploadDocument(req, res, next) {
           fileSize,
           fileUrl,
           fileData,
-          status: 'pending_review',
+          status: isAutomaticApprovalEnabled() ? 'approved' : 'pending_review',
           notes,
         });
 

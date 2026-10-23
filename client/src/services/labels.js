@@ -14,7 +14,7 @@ export const STAGE_LABELS = {
   waiting: 'In attesa del produttore',
   in_agreement: 'Accordo su data e ora',
   confirmed: 'Ritiro confermato',
-  closed: 'Assegnata ad altri',
+  closed: 'Partecipazione conclusa',
   cancelled: 'Annullata',
 };
 
@@ -55,5 +55,6 @@ export function formatEuro(value) {
 
 export function errorMessage(error, fallback = 'Operazione non riuscita.') {
   if (error?.response?.status === 401) return 'Sessione scaduta: effettua di nuovo il login.';
+  if (error?.response?.status === 403) return 'Il tuo account non è autorizzato a eseguire questa azione. Verifica di aver effettuato l’accesso con il ruolo corretto.';
   return error?.response?.data?.message || fallback;
 }

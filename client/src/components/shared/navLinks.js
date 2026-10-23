@@ -1,28 +1,22 @@
 export const producerLinks = [
-  { to: '/profile', label: 'Profilo' },
-  { to: '/producer', label: 'Dashboard' },
-  { to: '/producer/new-request', label: 'New Request' },
+  { to: '/profile', label: 'Profilo utente' },
+  { to: '/producer/requests', label: 'Richieste' },
+  { to: '/producer/agenda', label: 'Agenda' },
+  { to: '/producer/earnings', label: 'Corrispettivi' },
+  { to: '/producer/new-request', label: 'Nuova richiesta' },
   { to: '/producer/recurring-orders', label: 'Ordini ricorrenti' },
 ];
 
 export const recipientLinks = [
-  { to: '/recipient', label: 'Dashboard' },
-  { to: '/recipient/opportunities', label: 'Ordini compatibili' },
-  { to: '/recipient/calendar', label: 'Calendario conferimenti' },
-  { to: '/recipient/incoming', label: 'Arrivi e conferimenti' },
-  { to: '/recipient/capacity', label: 'Disponibilita e capacita' },
-  { to: '/recipient/facilities', label: 'Impianti e autorizzazioni' },
+  { to: '/profile', label: 'Profilo utente' },
+  { to: '/recipient/requests', label: 'Richieste' },
+  { to: '/recipient/agenda', label: 'Agenda' },
   { to: '/recipient/earnings', label: 'Corrispettivi' },
-  { to: '/profile', label: 'Profilo' },
 ];
 
 export const transporterLinks = [
-  { to: '/transporter', label: 'Dashboard' },
-  { to: '/transporter/opportunities', label: 'Opportunita e aste' },
-  { to: '/transporter/planning', label: 'Pianificazione viaggi' },
-  { to: '/transporter/jobs', label: 'Lavori assegnati' },
-  { to: '/transporter/fleet', label: 'Mezzi e conducenti' },
-  { to: '/transporter/authorizations', label: 'Autorizzazioni' },
+  { to: '/profile', label: 'Profilo utente' },
+  { to: '/transporter/requests', label: 'Richieste' },
+  { to: '/transporter/agenda', label: 'Agenda' },
   { to: '/transporter/earnings', label: 'Corrispettivi' },
-  { to: '/profile', label: 'Profilo' },
 ];

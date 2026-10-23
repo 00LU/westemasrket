@@ -15,7 +15,7 @@ const MESSAGES = {
   pickup_confirmed: 'Ritiro confermato: tutte le parti sono d\'accordo su giorno e orario.',
   pickup_closed: 'La richiesta di ritiro è stata assegnata ad altri operatori.',
   package_failed: 'Il pacchetto scelto non è andato a buon fine: scegline un altro.',
-  package_released: 'Il ritiro non è più in corso con te: il produttore ha scelto un\'altra soluzione.',
+  package_released: 'Il pacchetto non è più in accordo: il produttore può valutare altre soluzioni.',
   pickup_cancelled: 'La richiesta di ritiro è stata annullata.',
   cer_proposed_by_admin: 'L\'amministratore ha proposto un codice CER per la tua richiesta: verificalo e pubblica.',
 };

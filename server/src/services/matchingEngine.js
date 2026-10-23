@@ -1,5 +1,6 @@
 const { User, Certification, Document } = require('../models');
 const { getRequiredDocumentsForRole } = require('./documentRequirements');
+const { isAutomaticApprovalEnabled } = require('./automaticApproval');
 
 async function hasApprovedRequiredDocuments(user, { transaction } = {}) {
   const requiredTypes = getRequiredDocumentsForRole(user.role);
@@ -16,6 +17,7 @@ async function hasApprovedRequiredDocuments(user, { transaction } = {}) {
 // Eligible = approved by the admin and with every required onboarding document approved.
 // CER / zone / capacity filtering plugs in here without touching the workflow.
 async function getEligibleUsers(role, { transaction } = {}) {
+  if (isAutomaticApprovalEnabled()) return User.findAll({ where: { role }, transaction });
   const users = await User.findAll({ where: { role, verified: true }, transaction });
   const checks = await Promise.all(
     users.map(async (user) => ({ user, eligible: await hasApprovedRequiredDocuments(user, { transaction }) }))
