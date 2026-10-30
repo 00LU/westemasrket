@@ -4,6 +4,7 @@ dist/
 .env.*
 !.env.example
 coverage/
+server/uploads/
 .DS_Store
 npm-debug.log*
 yarn-debug.log*

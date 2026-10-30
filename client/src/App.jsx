@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
+import StatusAlert from './components/ui/StatusAlert';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
@@ -27,7 +28,7 @@ function ProtectedRoute({ roles, children }) {
 export default function App() {
   const { loading, sessionError } = useAuth();
   if (loading) return <p role="status" className="p-6">Verifica sessione...</p>;
-  if (sessionError) return <p role="alert" className="p-6 text-red-700">{sessionError}</p>;
+  if (sessionError) return <div className="p-6"><StatusAlert variant="error">{sessionError}</StatusAlert></div>;
 
   return (
     <Routes>

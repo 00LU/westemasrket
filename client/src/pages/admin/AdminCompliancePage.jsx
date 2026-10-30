@@ -1,15 +1,18 @@
 import RoleLayout from '../../components/shared/RoleLayout';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
+import StatusAlert from '../../components/ui/StatusAlert';
 import CERSelector from '../../components/forms/CERSelector';
+import LazyPickupPhoto from '../../components/shared/LazyPickupPhoto';
+import { formatQuantity } from '../../services/labels';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { approveDocument, fetchAdminCompliance, fetchCerRecognitionRequests, fetchPendingDocuments, proposeCerCode, rejectDocument } from '../../services/adminApi';
 
 const links = [
-  { to: '/admin/users', label: 'User Verification' },
-  { to: '/admin/analytics', label: 'Analytics' },
-  { to: '/admin/compliance', label: 'Compliance' },
+  { to: '/admin/users', label: 'Verifica utenti' },
+  { to: '/admin/analytics', label: 'Statistiche' },
+  { to: '/admin/compliance', label: 'Conformità' },
 ];
 
 export default function AdminCompliancePage() {
@@ -48,24 +51,24 @@ export default function AdminCompliancePage() {
   });
 
   return (
-    <RoleLayout title="Admin - Compliance & Disputes" links={links}>
-      {isLoading && <p className="text-sm text-slate-600">Loading compliance status...</p>}
+    <RoleLayout title="Admin - Conformità e controversie" links={links}>
+      {isLoading && <p className="text-sm text-slate-600">Caricamento stato di conformità...</p>}
       {isError && (
-        <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          {error?.response?.status === 401 ? 'Unauthorized: please login again as admin.' : 'Unable to load compliance status.'}
-        </p>
+        <StatusAlert variant="error">
+          {error?.response?.status === 401 ? 'Non autorizzato: accedi di nuovo come amministratore.' : 'Impossibile caricare lo stato di conformità.'}
+        </StatusAlert>
       )}
       <Card title="RENTri Monitor">
         <div className="grid gap-3 text-sm sm:grid-cols-3">
-          <div className="rounded-xl border border-slate-200 p-3">RENTRI Enabled: {data?.rentriEnabled ? 'Yes' : 'No'}</div>
-          <div className="rounded-xl border border-slate-200 p-3">RENTRI Sync: {data?.rentriSync || '-'}</div>
-          <div className="rounded-xl border border-slate-200 p-3">Open Disputes: {Number(data?.disputesOpen || 0)}</div>
+          <div className="rounded-xl border border-slate-200 p-3">RENTRI abilitato: {data?.rentriEnabled ? 'Sì' : 'No'}</div>
+          <div className="rounded-xl border border-slate-200 p-3">Sincronizzazione RENTRI: {data?.rentriSync || '-'}</div>
+          <div className="rounded-xl border border-slate-200 p-3">Controversie aperte: {Number(data?.disputesOpen || 0)}</div>
         </div>
       </Card>
 
-      <Card title="Pending Documents Review">
-        {documentsLoading && <p className="text-sm text-slate-600">Loading documents...</p>}
-        {!documentsLoading && pendingDocuments.length === 0 && <p className="text-sm text-slate-600">No documents pending review.</p>}
+      <Card title="Documenti in attesa di revisione">
+        {documentsLoading && <p className="text-sm text-slate-600">Caricamento documenti...</p>}
+        {!documentsLoading && pendingDocuments.length === 0 && <p className="text-sm text-slate-600">Nessun documento in attesa di revisione.</p>}
         {!documentsLoading && pendingDocuments.length > 0 && (
           <div className="space-y-3 text-sm">
             {pendingDocuments.map((doc) => (
@@ -73,7 +76,7 @@ export default function AdminCompliancePage() {
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <p className="font-semibold text-slate-800">{doc.documentType}</p>
-                    <p className="text-slate-600">{doc.User?.companyName || 'Company'} · {doc.User?.role || 'role'}</p>
+                    <p className="text-slate-600">{doc.User?.companyName || 'Azienda'} · {doc.User?.role || 'ruolo'}</p>
                     <p className="text-slate-500">{doc.fileName}</p>
                     {doc.fileData && (doc.mimeType?.startsWith('image/') ? <img className="mt-2 max-h-40 rounded-lg object-contain" src={doc.fileData} alt={doc.fileName} /> : <a className="mt-2 inline-flex text-sm font-semibold text-brand-900" href={doc.fileData} target="_blank" rel="noreferrer">Apri documento</a>)}
                     {!doc.fileData && doc.fileUrl && <a className="mt-2 inline-flex text-sm font-semibold text-brand-900" href={doc.fileUrl} target="_blank" rel="noreferrer">Apri documento</a>}
@@ -82,15 +85,15 @@ export default function AdminCompliancePage() {
                     <Button
                       variant="secondary"
                       disabled={rejectMutation.isPending || approveMutation.isPending}
-                      onClick={() => rejectMutation.mutate({ id: doc.id, notes: 'Rejected by admin' })}
+                      onClick={() => rejectMutation.mutate({ id: doc.id, notes: 'Rifiutato dall’amministratore' })}
                     >
-                      Reject
+                      Rifiuta
                     </Button>
                     <Button
                       disabled={rejectMutation.isPending || approveMutation.isPending}
-                      onClick={() => approveMutation.mutate({ id: doc.id, notes: 'Approved by admin' })}
+                      onClick={() => approveMutation.mutate({ id: doc.id, notes: 'Approvato dall’amministratore' })}
                     >
-                      Approve
+                      Approva
                     </Button>
                   </div>
                 </div>
@@ -113,9 +116,17 @@ export default function AdminCompliancePage() {
                   <p className="font-semibold text-slate-800">{request.requestCode || '—'}</p>
                   <p>Produttore: {request.producer?.companyName || '-'}</p>
                   <p>Descrizione: {request.wasteDescription || '-'}</p>
-                  <p>Quantita: {request.quantityTon} ton</p>
+                  <p>Quantità: {formatQuantity(request.quantity, request.quantityUnit)}</p>
                   <p>Documenti tecnici: {request.technicalDocuments || '-'}</p>
-                  {request.photoData ? <img className="mt-3 max-h-48 rounded-lg object-contain" src={request.photoData} alt={`Foto ordine ${request.id}`} /> : <p className="mt-3 text-slate-500">Nessuna foto disponibile.</p>}
+                  {(request.photos || []).length > 0
+                    ? request.photos.map((photo) => (
+                      <LazyPickupPhoto
+                        key={photo.id}
+                        photo={{ ...photo, url: `/pickups/${request.id}/photos/${photo.id}` }}
+                        alt={photo.fileName || `Foto ordine ${request.id}`}
+                      />
+                    ))
+                    : <p className="mt-3 text-slate-500">Nessuna foto disponibile.</p>}
                 </div>
                 <div className="space-y-3">
                   <CERSelector value={selectedCode} onChange={(code) => setCerSelections((current) => ({ ...current, [request.id]: code }))} />

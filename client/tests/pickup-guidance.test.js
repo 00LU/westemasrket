@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { agreementNextStep, filterPickups, notificationPickupPath, producerNextStep } from '../src/services/pickupGuidance.js';
+import { agreementNextStep, filterPickups, notificationPickupPath, operatorNextStep, producerNextStep } from '../src/services/pickupGuidance.js';
 
 test('notifications target the exact pickup using only supported role routes', () => {
   for (const role of ['producer', 'recipient', 'transporter']) {
@@ -39,6 +39,19 @@ test('producer guidance covers every state, including unknown CER and optional e
   assert.match(producerNextStep({ status: 'in_agreement', pendingAgreementRoles: ['recipient'] }), /attesa di: Destinatario/);
   assert.match(producerNextStep({ status: 'confirmed', confirmedSlotAt: '2026-12-01T10:00:00Z' }), /Tutti hanno accettato/);
   assert.match(producerNextStep({ status: 'cancelled' }), /Non sono richieste/);
+});
+
+test('operator guidance explains the next step for every request stage', () => {
+  assert.match(operatorNextStep('to_respond', 'recipient'), /disponibilità/);
+  assert.match(operatorNextStep('to_respond', 'transporter'), /tariffe/);
+  assert.match(operatorNextStep('responded', 'recipient'), /Disponibilità inviata.*produttore/);
+  assert.match(operatorNextStep('responded', 'transporter'), /Proposta inviata.*produttore/);
+  assert.match(operatorNextStep('in_agreement', 'recipient'), /giorno e orario/);
+  assert.match(operatorNextStep('confirmed', 'transporter'), /terminato il tuo lavoro/);
+  assert.match(operatorNextStep('completed', 'recipient'), /tutte le parti/);
+  assert.match(operatorNextStep('closed', 'transporter'), /Non sono richieste/);
+  assert.match(operatorNextStep('cancelled', 'recipient'), /annullata/);
+  assert.match(operatorNextStep('waiting', 'recipient'), /Nessuna azione richiesta/);
 });
 
 test('opportunity filters preserve all states and combine search with status', () => {

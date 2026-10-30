@@ -3,10 +3,11 @@ import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import RoleLayout from '../../components/shared/RoleLayout';
 import Card from '../../components/ui/Card';
+import StatusAlert from '../../components/ui/StatusAlert';
 import StatusBadge from '../../components/shared/StatusBadge';
 import { producerLinks } from '../../components/shared/navLinks';
 import { fetchProducerPickups } from '../../services/producerApi';
-import { errorMessage } from '../../services/labels';
+import { errorMessage, formatQuantity } from '../../services/labels';
 import { producerNextStep } from '../../services/pickupGuidance';
 
 const FILTERS = [
@@ -14,6 +15,7 @@ const FILTERS = [
   { key: 'action', label: 'Puoi agire', match: (r) => r.actionRequired },
   { key: 'waiting', label: 'In attesa di risposte', match: (r) => ['awaiting_recipients', 'awaiting_transporters'].includes(r.status) },
   { key: 'confirmed', label: 'Confermate', match: (r) => r.status === 'confirmed' },
+  { key: 'completed', label: 'Completate', match: (r) => r.status === 'completed' },
 ];
 
 export default function ProducerDashboard() {
@@ -25,7 +27,7 @@ export default function ProducerDashboard() {
 
   const metrics = useMemo(
     () => ({
-      open: data.filter((r) => !['confirmed', 'cancelled'].includes(r.status)).length,
+      open: data.filter((r) => !['completed', 'cancelled'].includes(r.status)).length,
       actions: data.filter((r) => r.actionRequired).length,
       confirmed: data.filter((r) => r.status === 'confirmed').length,
     }),
@@ -61,7 +63,7 @@ export default function ProducerDashboard() {
         </div>
 
         {isLoading && <p className="text-sm text-slate-600">Caricamento...</p>}
-        {isError && <p className="text-sm text-red-600">{errorMessage(error, 'Impossibile caricare le richieste.')}</p>}
+        {isError && <StatusAlert variant="error">{errorMessage(error, 'Impossibile caricare le richieste.')}</StatusAlert>}
         {!isLoading && !isError && (
           <div className="space-y-2 text-sm">
             {visible.length === 0 && <p className="text-slate-600">Nessuna richiesta.</p>}
@@ -72,7 +74,7 @@ export default function ProducerDashboard() {
                 className="block rounded-xl border border-slate-200 px-3 py-3 hover:bg-slate-50"
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="font-semibold text-slate-800">{request.requestCode || '—'} · CER {request.cerCode} | {request.quantityTon} ton</span>
+                  <span className="font-semibold text-slate-800">{request.requestCode || '—'} · CER {request.cerCode} | {formatQuantity(request.quantity, request.quantityUnit)}</span>
                   <StatusBadge status={request.status} />
                 </div>
                 <p className="text-slate-600">{request.pickupAddress}</p>

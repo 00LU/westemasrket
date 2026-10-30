@@ -12,6 +12,8 @@ const cerRoutes = require('./routes/cer');
 
 const app = express();
 
+app.set('etag', false);
+
 const allowedOrigins = [
   process.env.CLIENT_URL,
   'http://localhost:5173',
@@ -38,10 +40,14 @@ app.use(
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Idempotency-Key', 'X-File-Name'],
   })
 );
 app.use(express.json({ limit: '2mb' }));
+app.use('/api', (_req, res, next) => {
+  res.set('Cache-Control', 'private, no-store');
+  next();
+});
 
 app.get('/api/health', (_req, res) => {
   res.json({ ok: true, service: 'WasteMarket API' });

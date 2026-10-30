@@ -10,11 +10,16 @@ export default function NewRequestPage() {
   const { id } = useParams();
   const query = useQuery({ queryKey: ['producer', 'pickup', id], queryFn: () => fetchProducerPickup(id), enabled: Boolean(id) });
   return (
-    <RoleLayout title={id ? 'Modifica bozza' : 'Nuova richiesta di ritiro'} links={producerLinks}>
+    <RoleLayout title={id ? 'Modifica richiesta' : 'Nuova richiesta di ritiro'} links={producerLinks}>
       {id && query.isLoading && <p role="status">Caricamento bozza...</p>}
       {id && query.isError && <p role="alert">{errorMessage(query.error, 'Impossibile caricare la bozza.')}</p>}
-      {id && query.data && query.data.request.status !== 'draft' && <p role="alert">Solo le bozze possono essere modificate.</p>}
-      {(!id || query.data?.request.status === 'draft') && <WasteRequestForm key={id || 'new'} initialPickup={query.data?.request} />}
+      {(!id || query.data) && (
+        <WasteRequestForm
+          key={id || 'new'}
+          initialPickup={query.data?.request}
+          initialPhotos={query.data?.photos || []}
+        />
+      )}
     </RoleLayout>
   );
 }

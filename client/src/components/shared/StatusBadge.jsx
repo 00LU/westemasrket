@@ -8,6 +8,7 @@ const TONES = {
   packages_ready: 'success',
   in_agreement: 'warning',
   confirmed: 'success',
+  completed: 'success',
   cancelled: 'danger',
   to_respond: 'warning',
   responded: 'neutral',

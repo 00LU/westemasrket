@@ -1,13 +1,14 @@
 import RoleLayout from '../../components/shared/RoleLayout';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
+import StatusAlert from '../../components/ui/StatusAlert';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { approveUser, fetchAllUsers, fetchPendingUsers } from '../../services/adminApi';
 
 const links = [
-  { to: '/admin/users', label: 'User Verification' },
-  { to: '/admin/analytics', label: 'Analytics' },
-  { to: '/admin/compliance', label: 'Compliance' },
+  { to: '/admin/users', label: 'Verifica utenti' },
+  { to: '/admin/analytics', label: 'Statistiche' },
+  { to: '/admin/compliance', label: 'Conformità' },
 ];
 
 export default function AdminUsersPage() {
@@ -39,13 +40,13 @@ export default function AdminUsersPage() {
   }
 
   return (
-    <RoleLayout title="Admin - User Approval" links={links}>
-      <Card title="Pending Verifications">
-        {isLoading && <p className="text-sm text-slate-600">Loading pending users...</p>}
-        {isError && <p className="text-sm text-red-600">Unable to load pending users.</p>}
+    <RoleLayout title="Admin - Approvazione utenti" links={links}>
+      <Card title="Verifiche in sospeso">
+        {isLoading && <p className="text-sm text-slate-600">Caricamento utenti in sospeso...</p>}
+        {isError && <StatusAlert variant="error">Impossibile caricare gli utenti in sospeso.</StatusAlert>}
         {!isLoading && !isError && (
           <div className="space-y-2 text-sm">
-            {pendingUsers.length === 0 && <p className="text-slate-600">No pending users to verify.</p>}
+            {pendingUsers.length === 0 && <p className="text-slate-600">Nessun utente in attesa di verifica.</p>}
             {pendingUsers.map((user) => (
               <div key={user.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 p-3">
                 <span>
@@ -56,7 +57,7 @@ export default function AdminUsersPage() {
                     onClick={() => approveMutation.mutate(user.id)}
                     disabled={approveMutation.isPending}
                   >
-                    {approveMutation.isPending ? 'Approving...' : 'Approve'}
+                    {approveMutation.isPending ? 'Approvazione...' : 'Approva'}
                   </Button>
                 </div>
               </div>
@@ -65,27 +66,27 @@ export default function AdminUsersPage() {
         )}
       </Card>
 
-      <Card title="Registered Users">
-        {isAllUsersLoading && <p className="text-sm text-slate-600">Loading users table...</p>}
-        {isAllUsersError && <p className="text-sm text-red-600">Unable to load users table.</p>}
+      <Card title="Utenti registrati">
+        {isAllUsersLoading && <p className="text-sm text-slate-600">Caricamento tabella utenti...</p>}
+        {isAllUsersError && <StatusAlert variant="error">Impossibile caricare la tabella utenti.</StatusAlert>}
         {!isAllUsersLoading && !isAllUsersError && (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-slate-200 text-sm">
               <thead className="bg-slate-50">
                 <tr>
-                  <th className="px-3 py-2 text-left font-semibold text-slate-700">Company</th>
+                  <th className="px-3 py-2 text-left font-semibold text-slate-700">Azienda</th>
                   <th className="px-3 py-2 text-left font-semibold text-slate-700">Email</th>
-                  <th className="px-3 py-2 text-left font-semibold text-slate-700">Role</th>
-                  <th className="px-3 py-2 text-left font-semibold text-slate-700">Verified</th>
-                  <th className="px-3 py-2 text-left font-semibold text-slate-700">Plan</th>
-                  <th className="px-3 py-2 text-left font-semibold text-slate-700">Created</th>
+                  <th className="px-3 py-2 text-left font-semibold text-slate-700">Ruolo</th>
+                  <th className="px-3 py-2 text-left font-semibold text-slate-700">Verificato</th>
+                  <th className="px-3 py-2 text-left font-semibold text-slate-700">Piano</th>
+                  <th className="px-3 py-2 text-left font-semibold text-slate-700">Creato il</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 bg-white">
                 {allUsers.length === 0 && (
                   <tr>
                     <td className="px-3 py-3 text-slate-600" colSpan={6}>
-                      No users found.
+                      Nessun utente trovato.
                     </td>
                   </tr>
                 )}
@@ -94,7 +95,7 @@ export default function AdminUsersPage() {
                     <td className="px-3 py-2 text-slate-800">{user.companyName}</td>
                     <td className="px-3 py-2 text-slate-700">{user.email}</td>
                     <td className="px-3 py-2 uppercase text-slate-700">{user.role}</td>
-                    <td className="px-3 py-2 text-slate-700">{user.verified ? 'Yes' : 'No'}</td>
+                    <td className="px-3 py-2 text-slate-700">{user.verified ? 'Sì' : 'No'}</td>
                     <td className="px-3 py-2 text-slate-700">{user.subscriptionPlan || '-'}</td>
                     <td className="px-3 py-2 text-slate-700">{formatDate(user.created_at)}</td>
                   </tr>

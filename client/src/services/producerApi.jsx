@@ -10,9 +10,36 @@ export async function fetchProducerPickup(id) {
   return data;
 }
 
-export async function createProducerPickup(payload) {
-  const { data } = await api.post('/producers/pickups', payload);
+export async function createProducerPickup(payload, idempotencyKey) {
+  const { data } = await api.post('/producers/pickups', payload, {
+    headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
+  });
   return data;
+}
+
+export async function uploadProducerPhoto({ id, photo }) {
+  const { data } = await api.post(`/producers/pickups/${id}/photos`, photo.blob, {
+    headers: {
+      'Content-Type': photo.blob.type,
+      'X-File-Name': encodeURIComponent(photo.fileName),
+      'Idempotency-Key': photo.idempotencyKey,
+    },
+  });
+  return data;
+}
+
+export async function fetchProducerSites() {
+  const { data } = await api.get('/producers/sites');
+  return data;
+}
+
+export async function createProducerSite(payload) {
+  const { data } = await api.post('/producers/sites', payload);
+  return data;
+}
+
+export async function deleteProducerSite(id) {
+  await api.delete(`/producers/sites/${id}`);
 }
 
 export async function publishProducerPickup(id) {
@@ -50,20 +77,20 @@ export async function fetchProducerRecurringOrders() {
   return data;
 }
 
-export async function repeatProducerOrder({ orderId, quantityTon, deadline, photoFileName, photoData, confirmStableData }) {
+export async function repeatProducerOrder({ orderId, quantity, deadline, confirmStableData, idempotencyKey }) {
   const { data } = await api.post(`/producers/pickups/${orderId}/repeat`, {
-    quantityTon,
+    quantity,
     // Date-only input: due by the end of that day in the user's timezone.
     deadline: deadline ? new Date(`${deadline}T23:59:00`).toISOString() : deadline,
-    photoFileName,
-    photoData,
     confirmStableData,
-  });
+  }, { headers: { 'Idempotency-Key': idempotencyKey } });
   return data;
 }
 
-export async function updateProducerPickup({ id, ...payload }) {
-  const { data } = await api.patch(`/producers/pickups/${id}`, payload);
+export async function updateProducerPickup({ id, idempotencyKey, ...payload }) {
+  const { data } = await api.patch(`/producers/pickups/${id}`, payload, {
+    headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
+  });
   return data;
 }
 

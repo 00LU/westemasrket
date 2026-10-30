@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
+import StatusAlert from '../../components/ui/StatusAlert';
 import { useAuth } from '../../context/AuthContext';
 
 function resolveRouteByRole(role) {
@@ -24,7 +25,7 @@ export default function LoginPage() {
       const user = await login({ email, password });
       navigate(resolveRouteByRole(user.role));
     } catch (err) {
-      setError(err?.response?.data?.message || 'Login failed. Check your credentials.');
+      setError(err?.response?.data?.message || 'Accesso non riuscito. Controlla le credenziali inserite.');
     } finally {
       setLoading(false);
     }
@@ -33,13 +34,13 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <form className="w-full max-w-md space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-soft" onSubmit={handleSubmit}>
-        <h1 className="font-display text-2xl font-bold text-brand-900">WasteMarket Login</h1>
+        <h1 className="font-display text-2xl font-bold text-brand-900">Accedi a WasteMarket</h1>
         <Input label="Email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
         <Input label="Password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} required />
-        {error && <p className="text-sm text-red-600">{error}</p>}
-        <Button className="w-full" type="submit" disabled={loading}>{loading ? 'Signing in...' : 'Enter Platform'}</Button>
+        {error && <StatusAlert variant="error">{error}</StatusAlert>}
+        <Button className="w-full" type="submit" disabled={loading}>{loading ? 'Accesso in corso...' : 'Entra nella piattaforma'}</Button>
         <p className="text-sm text-slate-600">
-          No account? <Link className="font-semibold text-brand-900" to="/auth/register">Register company</Link>
+          Non hai un account? <Link className="font-semibold text-brand-900" to="/auth/register">Registra la tua azienda</Link>
         </p>
       </form>
     </div>

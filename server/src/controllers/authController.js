@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { UniqueConstraintError } = require('sequelize');
 const sequelize = require('../config/db');
-const { User, Document } = require('../models');
+const { User, Document, ProductionSite } = require('../models');
 const { getRequiredDocumentsForRole } = require('../services/documentRequirements');
 const { isAutomaticApprovalEnabled } = require('../services/automaticApproval');
 
@@ -23,10 +23,12 @@ async function register(req, res, next) {
       companyName,
       piva,
       registeredOffice,
+      registeredOfficeLat,
+      registeredOfficeLng,
+      registeredOfficePlaceId,
       contactPerson,
       phone,
-      productionSites,
-      intermediaryDocuments,
+      productionSites = [],
       transportAuthorizations,
       vehicleFleet,
       drivers,
@@ -42,6 +44,11 @@ async function register(req, res, next) {
       documents = [],
     } = req.body;
     const requiredDocumentTypes = getRequiredDocumentsForRole(role);
+
+    if (!Array.isArray(productionSites)) {
+      await transaction.rollback();
+      return res.status(400).json({ message: 'Le sedi di produzione devono essere fornite come elenco' });
+    }
 
     if (!Array.isArray(documents)) {
       await transaction.rollback();
@@ -68,10 +75,11 @@ async function register(req, res, next) {
       companyName,
       piva,
       registeredOffice,
+      registeredOfficeLat,
+      registeredOfficeLng,
+      registeredOfficePlaceId,
       contactPerson,
       phone,
-      productionSites,
-      intermediaryDocuments,
       transportAuthorizations,
       vehicleFleet,
       drivers,
@@ -86,6 +94,17 @@ async function register(req, res, next) {
       passwordHash,
       verified: role === 'producer' || (isAutomaticApprovalEnabled() && ['recipient', 'transporter'].includes(role)),
     }, { transaction });
+
+    const savedSites = productionSites.length
+      ? await ProductionSite.bulkCreate(productionSites.map((site) => ({
+          userId: user.id,
+          label: site.label || null,
+          addressFormatted: site.addressFormatted,
+          lat: site.lat ?? null,
+          lng: site.lng ?? null,
+          placeId: site.placeId || null,
+        })), { transaction })
+      : [];
 
     if (documents.length > 0) {
       await Document.bulkCreate(
@@ -114,8 +133,10 @@ async function register(req, res, next) {
         registeredOffice: user.registeredOffice,
         contactPerson: user.contactPerson,
         phone: user.phone,
-        productionSites: user.productionSites,
-        intermediaryDocuments: user.intermediaryDocuments,
+        registeredOfficeLat: user.registeredOfficeLat,
+        registeredOfficeLng: user.registeredOfficeLng,
+        registeredOfficePlaceId: user.registeredOfficePlaceId,
+        productionSites: savedSites.map((site) => site.toJSON()),
         transportAuthorizations: user.transportAuthorizations,
         vehicleFleet: user.vehicleFleet,
         drivers: user.drivers,
@@ -167,6 +188,10 @@ async function login(req, res, next) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
+    const productionSites = await ProductionSite.findAll({
+      where: { userId: user.id },
+      attributes: ['id', 'label', 'addressFormatted', 'lat', 'lng', 'placeId'],
+    });
     return res.json({
       token: signToken(user),
       user: {
@@ -177,8 +202,10 @@ async function login(req, res, next) {
         registeredOffice: user.registeredOffice,
         contactPerson: user.contactPerson,
         phone: user.phone,
-        productionSites: user.productionSites,
-        intermediaryDocuments: user.intermediaryDocuments,
+        registeredOfficeLat: user.registeredOfficeLat,
+        registeredOfficeLng: user.registeredOfficeLng,
+        registeredOfficePlaceId: user.registeredOfficePlaceId,
+        productionSites,
         transportAuthorizations: user.transportAuthorizations,
         vehicleFleet: user.vehicleFleet,
         drivers: user.drivers,
@@ -202,6 +229,7 @@ async function getCurrentUser(req, res, next) {
   try {
     const user = await User.findByPk(req.user.id, {
       attributes: { exclude: ['passwordHash'] },
+      include: [{ model: ProductionSite, as: 'productionSites', attributes: ['id', 'label', 'addressFormatted', 'lat', 'lng', 'placeId'] }],
     });
 
     if (!user) {

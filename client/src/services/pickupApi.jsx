@@ -11,8 +11,13 @@ export async function acceptSlot({ id, slotId }) {
   return data;
 }
 
-export async function rejectPackage(id) {
-  const { data } = await api.post(`/pickups/${id}/reject`);
+export async function cancelOffer(id) {
+  const { data } = await api.post(`/pickups/${id}/cancel-offer`);
+  return data;
+}
+
+export async function confirmCompletion(id) {
+  const { data } = await api.post(`/pickups/${id}/completion-confirmations`);
   return data;
 }
 

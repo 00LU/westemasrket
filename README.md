@@ -55,20 +55,25 @@ server/src/config
 
 ## Core Features Implemented
 
+Request details group waste description, quantity, CER/EER, pickup location and
+date into labelled blocks, followed by operational details and photos. The shared
+request list retains its tabular layout with status, next-step guidance and
+links to the full details.
+
 Sessions are validated against `/api/auth/me` before protected pages render, including
 after a page reload. Invalid sessions return to login; temporary verification failures
 are shown explicitly. Logout and account changes clear the previous account's query cache.
 
 - Multi-role authentication scaffold (producer, transporter, recipient, admin)
 - Producer workflows:
-  - Create / publish pickup requests (draft -> published)
+  - Create / publish pickup requests with kg or liter quantities, structured addresses and photo attachments
   - CER searchable selector and price estimate preview
   - Follow recipients' availability and transporters' proposals, pick one of the best packages, agree day/time
 - Transporter workflows:
   - Invitations only for requests with at least one available recipient
   - Transport proposal (acts as an auction), agreement on day/time, earnings
 - Recipient workflows:
-  - Pickup invitations and availability confirmation (price per ton, destination)
+  - Pickup invitations and availability confirmation (price in the producer's selected unit, destination)
   - Agreement on day/time, CER pricing and capacity placeholders
 - Admin workflows:
   - User verification endpoints
@@ -87,50 +92,70 @@ are shown explicitly. Logout and account changes clear the previous account's qu
 Roles: Producer, Recipient (Destinatario), Transporter (Trasportatore).
 
 1. The producer creates a request (`draft`) and publishes it -> `awaiting_recipients`; verified recipients are notified.
-2. Recipients confirm (price/ton + destination) or decline. When all have answered (or the producer closes the phase, with at least one available recipient) -> `awaiting_transporters`. If nobody is available the request is `cancelled` and transporters are never notified.
+2. Recipients confirm (unit price in the producer's selected kg/liter unit + destination) or decline. When all have answered (or the producer closes the phase, with at least one available recipient) -> `awaiting_transporters`. If nobody is available the request is `cancelled` and transporters are never notified.
 3. Transporters are notified only now and submit a price (or decline). When all have answered (or the producer closes the auction) -> `packages_ready`.
 4. The platform builds packages (available recipient x transport proposal) and ranks them in [`packageOptimizer.js`](server/src/services/packageOptimizer.js). Today the criterion is the lowest total price; add a strategy to `STRATEGIES` (and set `PACKAGE_OPTIMIZATION_STRATEGY`) to move to a mixed price/distance/time score. The producer sees the best `PACKAGES_TOP_N` (default 5).
 5. The producer selects a package -> `in_agreement`.
 6. The producer proposes day/time; recipient and transporter accept or counter-propose (a new proposal supersedes the previous one and resets acceptances). Only when all three accepted the same slot -> `confirmed`.
-7. If the recipient or transporter refuses, or does not answer within `AGREEMENT_RESPONSE_HOURS` (default 48), the package is discarded and the request goes back to `packages_ready` with the remaining packages (`cancelled` if none is left). The producer can also withdraw its choice.
+7. Recipients and transporters can cancel their offer while it remains active. All packages containing that offer are excluded; the remaining packages are re-ranked and the request returns to `packages_ready` (`cancelled` only if no alternatives remain). A response timeout withdraws the non-responding party's offer under the same request lock. When the producer selects another package, competing recipients and transporters are notified that the producer is negotiating with someone else. The producer can also withdraw its selection without removing either offer.
 
 Request states: `draft`, `awaiting_recipients`, `awaiting_transporters`, `packages_ready`, `in_agreement`, `confirmed`, `cancelled` (publication opens the recipient phase immediately, so "published" and "awaiting recipients" are the same state). Allowed transitions live in [`pickupFlow.js`](server/src/config/pickupFlow.js) and are enforced by [`pickupStateMachine.js`](server/src/services/pickupStateMachine.js); every change is stored in `pickup_status_history`.
 
-Each role only receives its own data (see [`pickupViews.js`](server/src/services/pickupViews.js)): max price and all offers are visible to the producer only; recipients never see transport prices and transporters never see treatment prices.
+Each role only receives its own data (see [`pickupViews.js`](server/src/services/pickupViews.js)): recipients never see transport prices and transporters never see treatment prices.
 
 ### Pickup user experience
 
-- Creation has four sections: waste, pickup, attachments/options, review. No CER, quantity,
-  distance or estimated price is prefilled. Required fields are validated before advancing.
+- Creation has four sections: waste, pickup, attachments/options, review. Quantity is entered by the producer and its unit is kg or liters. Required fields are validated before advancing.
 - A server-side draft can be saved once CER (or assistance), positive quantity, address and
-  deadline are provided. Draft details offer editing; saving updates the same request.
+  deadline are provided. Draft details offer editing; editing a published or completed request
+  creates a new draft version, retains the old request and its status history, and restarts matching.
+  Create, repeat and edit operations use idempotency keys to prevent duplicate requests.
   Leaving an edited form or reloading warns about unsaved changes. There is no automatic saving.
 - Details explain the next actor and action. The producer's "requests you can act on" count
   includes publishable drafts, selectable packages, unanswered date proposals and optional
   early collection closure; it excludes agreements already accepted by the producer.
-- Early phase closure, date counterproposals, withdrawal, rejection and over-budget package
-  selection explain their consequences before confirmation.
+- Early phase closure, date counterproposals and offer cancellation explain their consequences
+  before confirmation.
 - Notifications distinguish loading, failure/retry and empty results. "Open request" goes to
   `/producer/pickups/:id`, `/recipient/pickups/:id` or `/transporter/pickups/:id`.
   These pages use the existing server-side ownership/invitation checks, including for closed requests.
 - Recipient/transporter opportunities have status and text filters, with forms in pickup details.
   Mobile navigation is collapsed and keyboard operable; notifications and logout have accessible names.
-- Budgets are indicative, not hard caps. Package ranking still uses only total price.
-  Treatment and per-km transport totals are shown before submission. VAT/extras are not
+- Transporter proposals are entered separately for each available recipient location. Each location
+  supports a fixed trip price or a €/km rate calculated against a cached road distance.
+- When the transporter phase opens, the server calculates road distances in batches from the
+  producer and recipient coordinates already stored on the request. Distances are saved on
+  `recipient_availabilities` and are not recalculated while viewing lists or details. The map shows
+  only the producer and available recipient locations; it does not geocode addresses.
+- Package ranking uses only total price. Treatment and per-km transport totals are shown before submission. VAT/extras are not
   separately calculated; agreed amounts are not presented as invoices or received payments.
-- New per-liter treatment offers are rejected until density conversion is implemented.
-  Existing stored offers are not rewritten. General CER pricing/capacity settings remain
+- Liter pricing is recorded directly per liter; no density conversion is performed. The
+  optional estimate endpoint is kg-only because it cannot estimate liters without verified density.
+  General CER pricing/capacity settings remain
   unavailable: the page explains this and their endpoints return HTTP 501 rather than false success.
+- Google Places autocomplete is configured through `VITE_GOOGLE_MAPS_API_KEY`. Without a key,
+  the address field remains usable as text, but coordinates and `place_id` are not populated.
+  Existing plain-text addresses are retained as formatted addresses; they are not geocoded
+  automatically and need to be reselected from Places after configuring the key.
+- Configure `GOOGLE_MAPS_API_KEY` in `server/.env` with Routes API enabled to calculate road
+  distances, and `VITE_GOOGLE_MAPS_API_KEY` in `client/.env` with Maps JavaScript API enabled for
+  the transporter map. Restrict each key to its required API and environment. Without the server
+  key or saved coordinates, fixed-price offers remain available but €/km offers are disabled.
+- Request photos are resized/compressed in the browser, stored as files (not DB blobs), and served
+  through authenticated lazy-loaded references. Docker stores them in the persistent
+  `pickup_uploads` volume (`UPLOAD_DIR`).
 
 Manual verification:
 
 1. As producer, start a request with empty fields: continue must highlight the missing CER/quantity.
    Complete the waste and pickup sections, save a draft, reload, edit it and save again:
-   the request ID must stay unchanged.
+   a draft keeps its ID; editing a published/terminal request creates one new draft and keeps the
+   old request and history.
 2. Publish; follow recipient and transporter notification links using their respective accounts.
-   Submit availability and a transport offer. Check displayed totals and role-restricted pricing.
-3. As producer, compare packages. A package above the indicative budget must require confirmation.
-   After selecting and proposing a date, the next-step text must identify the other two parties,
+   Submit availability and a separate fixed or €/km offer for each recipient location. With both
+   Google keys configured and saved coordinates, check the map and road-distance totals. Without
+   the Routes API key, fixed offers should remain usable and €/km should explain why it is disabled.
+3. As producer, compare packages. After selecting and proposing a date, the next-step text must identify the other two parties,
    and the request must no longer appear in the producer's action filter.
 4. Counterpropose: the warning must explain acceptance reset. Accept the same date with all three
    accounts and check confirmation. On another request, reject and verify remaining packages or
@@ -146,12 +171,13 @@ npm test
 ```
 
 Runs the whole flow (including refusal and timeout) against PostgreSQL in a temporary schema that is dropped at the end.
-It also verifies upgrading populated pickup tables from the earlier schema and repeated migration runs.
+It also verifies the versioned schema migration and repeated migration runs.
 
-On API startup, missing pickup dossier, recurring-order and pricing columns are added in a transaction
-before the server accepts requests. Existing rows are preserved; earlier requests default to known CER
-and non-recurring, recipient prices to per-ton and transport prices to fixed-trip.
-Migration errors stop startup rather than serving requests against an incomplete schema.
+The API runs versioned migrations before accepting requests. To apply migrations manually, use
+`npm run migrate` from `server`; to roll back the latest migration use `npm run migrate -- down`.
+Legacy ton quantities and recipient prices are converted to kg and per-kg values. Rollback stops
+without changing the database if liter requests exist or a request has multiple photos, because the
+previous schema cannot represent those values without guessing.
 
 Frontend pure validation/guidance/filter tests (no extra test dependencies):
 
@@ -182,6 +208,8 @@ Copy examples and customize:
 
 - `client/.env.example` -> `client/.env`
 - `server/.env.example` -> `server/.env`
+
+Set `VITE_GOOGLE_MAPS_API_KEY` in `client/.env` and enable Places API for address suggestions.
 
 ## Local Setup (without Docker)
 
@@ -243,15 +271,18 @@ Services:
   - `POST /api/auth/register`
   - `POST /api/auth/login`
 - Producer (`/api/producers`)
-  - `POST /pricing/estimate`
-  - `GET|POST /pickups`, `GET|PATCH /pickups/:id` (PATCH only while draft)
+  - `POST /pricing/estimate` (`quantity`, `quantityUnit`, `distanceKm`; estimate supports kg only)
+  - `GET|POST /pickups`, `GET|PATCH /pickups/:id` (PATCH creates a new version after publication)
+  - `GET|POST /sites`, `DELETE /sites/:siteId`
+  - `POST /pickups/:id/repeat` (requires `Idempotency-Key`)
+  - `POST /pickups/:id/photos` and authenticated `GET /api/pickups/:id/photos/:photoId`
   - `POST /pickups/:id/publish`
   - `POST /pickups/:id/close-recipients`, `POST /pickups/:id/close-transporters`
   - `POST /pickups/:id/packages/:packageId/select`
   - `POST /pickups/:id/withdraw-selection`, `POST /pickups/:id/cancel`
 - Recipient (`/api/recipients`)
   - `GET /pickups`, `GET /pickups/:id`
-  - `POST /pickups/:id/availability` (`{ available, pricePerTon, destinationAddress, availableCapacityTon?, notes? }`)
+  - `POST /pickups/:id/availability` (`{ available, unitPrice, quantityUnit?, destinationAddress, notes? }`)
   - `POST /pricing`, `POST /capacity` (placeholders)
 - Transporter (`/api/transporters`)
   - `GET /pickups`, `GET /pickups/:id`
@@ -260,7 +291,8 @@ Services:
 - Agreement on day/time, all three roles (`/api/pickups`)
   - `POST /:id/slots` (`{ scheduledAt }`: proposal or counter-proposal)
   - `POST /:id/slots/:slotId/accept`
-  - `POST /:id/reject` (recipient / transporter refuse the selected package)
+  - `POST /:id/cancel-offer` (recipient / transporter withdraw their offer; remaining packages are re-ranked)
+  - `POST /:id/completion-confirmations` (each selected party confirms their work is finished; status becomes `completed` after all three confirm)
 - Notifications (`/api/notifications`)
   - `GET /`, `PATCH /:id/read`, `POST /read-all`
 - Admin

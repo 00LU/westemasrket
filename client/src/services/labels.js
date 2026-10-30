@@ -5,6 +5,7 @@ export const REQUEST_STATUS_LABELS = {
   packages_ready: 'Pacchetti pronti',
   in_agreement: 'In accordo',
   confirmed: 'Confermata',
+  completed: 'Completata',
   cancelled: 'Annullata',
 };
 
@@ -14,6 +15,7 @@ export const STAGE_LABELS = {
   waiting: 'In attesa del produttore',
   in_agreement: 'Accordo su data e ora',
   confirmed: 'Ritiro confermato',
+  completed: 'Ritiro completato',
   closed: 'Partecipazione conclusa',
   cancelled: 'Annullata',
 };
@@ -31,6 +33,8 @@ export const RESPONSE_LABELS = {
 export const FAILURE_LABELS = {
   recipient_rejected: 'Rifiutato dal destinatario',
   transporter_rejected: 'Rifiutato dal trasportatore',
+  recipient_cancelled: 'Offerta annullata dal destinatario',
+  transporter_cancelled: 'Offerta annullata dal trasportatore',
   recipient_no_response: 'Nessuna risposta dal destinatario',
   transporter_no_response: 'Nessuna risposta dal trasportatore',
 };
@@ -41,6 +45,7 @@ export const CANCEL_LABELS = {
   no_transport_proposals: 'Nessuna proposta di trasporto',
   no_packages_left: 'Nessun pacchetto rimasto',
   producer_cancelled: 'Annullata dal produttore',
+  request_edited: 'Sostituita da una nuova versione',
 };
 
 export const ROLE_LABELS = { producer: 'Produttore', recipient: 'Destinatario', transporter: 'Trasportatore' };
@@ -51,6 +56,11 @@ export function formatDateTime(value) {
 
 export function formatEuro(value) {
   return `EUR ${Number(value || 0).toLocaleString('it-IT', { maximumFractionDigits: 2 })}`;
+}
+
+export function formatQuantity(value, unit) {
+  const label = unit === 'liter' ? 'litri' : 'kg';
+  return `${Number(value || 0).toLocaleString('it-IT')} ${label}`;
 }
 
 export function errorMessage(error, fallback = 'Operazione non riuscita.') {

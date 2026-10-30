@@ -3,10 +3,11 @@ const BASE_RATE_BY_CATEGORY = {
   non_hazardous: 120,
 };
 
-function calculateSuggestedRange({ hazardous = false, quantityTon = 0, distanceKm = 0, urgency = 'normal' }) {
+function calculateSuggestedRange({ hazardous = false, quantity = 0, quantityUnit, distanceKm = 0, urgency = 'normal' }) {
+  if (quantityUnit !== 'kg') throw new RangeError('La stima tariffaria richiede una quantità espressa in kg');
   const baseRate = hazardous ? BASE_RATE_BY_CATEGORY.hazardous : BASE_RATE_BY_CATEGORY.non_hazardous;
   const urgencyMultiplier = urgency === 'urgent' ? 1.35 : 1;
-  const base = baseRate * quantityTon;
+  const base = baseRate * (quantity / 1000);
   const distance = distanceKm * 2.2;
   const estimate = (base + distance) * urgencyMultiplier;
 

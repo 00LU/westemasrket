@@ -26,9 +26,14 @@ const acceptSlot = handle(async (req, res) => {
   res.json(await detailFor(req.user, req.params.id));
 });
 
-const rejectPackage = handle(async (req, res) => {
-  await workflow.rejectPackage(req.user, req.params.id);
+const cancelOffer = handle(async (req, res) => {
+  await workflow.cancelOffer(req.user, req.params.id);
   res.json(await detailFor(req.user, req.params.id));
 });
 
-module.exports = { proposeSlot, acceptSlot, rejectPackage };
+const confirmCompletion = handle(async (req, res) => {
+  await workflow.confirmWorkCompletion(req.user, req.params.id);
+  res.json(await detailFor(req.user, req.params.id));
+});
+
+module.exports = { proposeSlot, acceptSlot, cancelOffer, confirmCompletion };

@@ -2,6 +2,7 @@ const User = require('./User');
 const PickupRequest = require('./PickupRequest');
 const RecipientAvailability = require('./RecipientAvailability');
 const TransportProposal = require('./TransportProposal');
+const TransportProposalOffer = require('./TransportProposalOffer');
 const PickupPackage = require('./PickupPackage');
 const SlotProposal = require('./SlotProposal');
 const PickupStatusHistory = require('./PickupStatusHistory');
@@ -10,10 +11,17 @@ const CerCode = require('./CerCode');
 const Transaction = require('./Transaction');
 const Notification = require('./Notification');
 const Document = require('./Document');
+const ProductionSite = require('./ProductionSite');
+const PickupPhoto = require('./PickupPhoto');
 
 function initModels() {
   User.hasMany(PickupRequest, { foreignKey: 'producerId', sourceKey: 'id' });
   PickupRequest.belongsTo(User, { as: 'producer', foreignKey: 'producerId', targetKey: 'id' });
+  User.hasMany(ProductionSite, { as: 'productionSites', foreignKey: 'userId', sourceKey: 'id' });
+  ProductionSite.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
+  PickupRequest.belongsTo(ProductionSite, { as: 'productionSite', foreignKey: 'productionSiteId' });
+  PickupRequest.hasMany(PickupPhoto, { as: 'photos', foreignKey: 'pickupRequestId' });
+  PickupPhoto.belongsTo(PickupRequest, { foreignKey: 'pickupRequestId' });
 
   PickupRequest.hasMany(RecipientAvailability, { as: 'availabilities', foreignKey: 'pickupRequestId' });
   RecipientAvailability.belongsTo(PickupRequest, { foreignKey: 'pickupRequestId' });
@@ -22,6 +30,10 @@ function initModels() {
   PickupRequest.hasMany(TransportProposal, { as: 'proposals', foreignKey: 'pickupRequestId' });
   TransportProposal.belongsTo(PickupRequest, { foreignKey: 'pickupRequestId' });
   TransportProposal.belongsTo(User, { as: 'transporter', foreignKey: 'transporterId' });
+  TransportProposal.hasMany(TransportProposalOffer, { as: 'offers', foreignKey: 'transportProposalId' });
+  TransportProposalOffer.belongsTo(TransportProposal, { foreignKey: 'transportProposalId' });
+  RecipientAvailability.hasMany(TransportProposalOffer, { as: 'transportOffers', foreignKey: 'recipientAvailabilityId' });
+  TransportProposalOffer.belongsTo(RecipientAvailability, { foreignKey: 'recipientAvailabilityId' });
 
   PickupRequest.hasMany(PickupPackage, { as: 'packages', foreignKey: 'pickupRequestId' });
   PickupPackage.belongsTo(PickupRequest, { foreignKey: 'pickupRequestId' });
@@ -55,6 +67,7 @@ module.exports = {
   PickupRequest,
   RecipientAvailability,
   TransportProposal,
+  TransportProposalOffer,
   PickupPackage,
   SlotProposal,
   PickupStatusHistory,
@@ -63,4 +76,6 @@ module.exports = {
   Transaction,
   Notification,
   Document,
+  ProductionSite,
+  PickupPhoto,
 };

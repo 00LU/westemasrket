@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Card from '../ui/Card';
+import StatusAlert from '../ui/StatusAlert';
 import StatusBadge from './StatusBadge';
 import PickupSummary from './PickupSummary';
 import AgreementPanel from './AgreementPanel';
@@ -15,16 +16,21 @@ function AgreementItem({ scope, role, item, fetchOne }) {
   return (
     <div className="space-y-3">
       <Card title={item.requestCode || '—'} action={<StatusBadge status={item.stage} kind="stage" />}>
-        <PickupSummary pickup={item} />
+        <PickupSummary pickup={item} showCode={false} />
       </Card>
       {isLoading && <p className="text-sm text-slate-600">Caricamento...</p>}
-      {isError && <div role="alert" className="text-sm text-red-700"><p>{errorMessage(error, 'Impossibile caricare l’accordo.')}</p><button type="button" className="underline" onClick={() => refetch()}>Riprova</button></div>}
+      {isError && (
+        <StatusAlert variant="error" action={<button type="button" className="text-sm font-semibold underline" onClick={() => refetch()}>Riprova</button>}>
+          {errorMessage(error, 'Impossibile caricare l’accordo.')}
+        </StatusAlert>
+      )}
       {data && (
         <AgreementPanel
           pickupId={item.id}
           agreement={data.agreement}
           role={role}
-          confirmed={item.stage === 'confirmed'}
+          confirmed={['confirmed', 'completed'].includes(item.stage)}
+          completed={item.stage === 'completed'}
           onChanged={() => queryClient.invalidateQueries({ queryKey: [scope] })}
         />
       )}
@@ -32,17 +38,17 @@ function AgreementItem({ scope, role, item, fetchOne }) {
   );
 }
 
-// Pickups where the user was chosen: negotiation of day/time and confirmed pickups.
+// Pickups where the user was chosen: negotiation, confirmed pickups and completion.
 export default function AgreementList({ scope, role, fetchList, fetchOne }) {
   const { data = [], isLoading, isError, error } = useQuery({ queryKey: [scope, 'pickups'], queryFn: fetchList });
-  const items = data.filter((item) => ['in_agreement', 'confirmed'].includes(item.stage));
+  const items = data.filter((item) => ['in_agreement', 'confirmed', 'completed'].includes(item.stage));
 
   return (
     <>
       {isLoading && <p className="text-sm text-slate-600">Caricamento...</p>}
-      {isError && <p className="text-sm text-red-600">{errorMessage(error, 'Impossibile caricare i ritiri.')}</p>}
+      {isError && <StatusAlert variant="error">{errorMessage(error, 'Impossibile caricare i ritiri.')}</StatusAlert>}
       {!isLoading && !isError && items.length === 0 && (
-        <Card><p className="text-sm text-slate-600">Nessun ritiro in corso o confermato.</p></Card>
+        <Card><p className="text-sm text-slate-600">Nessun ritiro in corso, confermato o completato.</p></Card>
       )}
       {items.map((item) => (
         <AgreementItem key={item.id} scope={scope} role={role} item={item} fetchOne={fetchOne} />

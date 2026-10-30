@@ -15,17 +15,26 @@ const listRecurring = handle(async (req, res) => {
 });
 
 const repeatRecurring = handle(async (req, res) => {
-  const request = await workflow.repeatRecurring(req.user, req.params.id, req.body);
+  const request = await workflow.repeatRecurring(req.user, req.params.id, {
+    ...req.body,
+    idempotencyKey: req.get('Idempotency-Key'),
+  });
   res.status(201).json(request);
 });
 
 const createPickup = handle(async (req, res) => {
-  const request = await workflow.createDraft(req.user, req.body);
+  const request = await workflow.createDraft(req.user, {
+    ...req.body,
+    idempotencyKey: req.get('Idempotency-Key'),
+  });
   res.status(201).json(request);
 });
 
 const updatePickup = handle(async (req, res) => {
-  res.json(await workflow.updateDraft(req.user, req.params.id, req.body));
+  res.json(await workflow.updateDraft(req.user, req.params.id, {
+    ...req.body,
+    idempotencyKey: req.get('Idempotency-Key'),
+  }));
 });
 
 const publishPickup = handle(async (req, res) => {
@@ -66,8 +75,14 @@ const cancelPickup = handle(async (req, res) => {
 });
 
 const estimatePrice = handle(async (req, res) => {
-  const { hazardous, quantityTon, distanceKm, urgency } = req.body;
-  res.json(calculateSuggestedRange({ hazardous, quantityTon, distanceKm, urgency }));
+  const { hazardous, quantity, quantityUnit, distanceKm, urgency } = req.body;
+  if (!['kg', 'liter'].includes(quantityUnit) || !(Number(quantity) > 0) || !(Number(distanceKm) >= 0)) {
+    return res.status(400).json({ message: 'Quantità, unità di misura o distanza non validi.' });
+  }
+  if (quantityUnit === 'liter') {
+    return res.status(422).json({ message: 'La stima per litri non è disponibile senza una densità del rifiuto verificata.' });
+  }
+  res.json(calculateSuggestedRange({ hazardous, quantity, quantityUnit, distanceKm, urgency }));
 });
 
 module.exports = {

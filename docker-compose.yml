@@ -30,8 +30,11 @@ services:
     environment:
       DB_HOST: postgres
       DB_PORT: 5432
+      UPLOAD_DIR: /app/uploads
     ports:
       - '5000:5000'
+    volumes:
+      - pickup_uploads:/app/uploads
     depends_on:
       postgres:
         condition: service_healthy
@@ -56,6 +59,8 @@ services:
     restart: unless-stopped
     env_file:
       - ./client/.env
+    environment:
+      VITE_API_PROXY_TARGET: http://server:5000
     ports:
       - '5173:5173'
     depends_on:
@@ -63,3 +68,4 @@ services:
 
 volumes:
   postgres_data:
+  pickup_uploads:

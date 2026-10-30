@@ -1,5 +1,6 @@
 import RoleLayout from '../../components/shared/RoleLayout';
 import Card from '../../components/ui/Card';
+import StatusAlert from '../../components/ui/StatusAlert';
 import { useQuery } from '@tanstack/react-query';
 import { fetchTransporterEarnings } from '../../services/transporterApi';
 import { errorMessage, formatEuro } from '../../services/labels';
@@ -19,9 +20,9 @@ export default function EarningsPage() {
         <p className="mb-3 text-sm text-slate-600">Importi delle proposte di trasporto per i ritiri confermati. Non rappresentano fatture emesse o pagamenti incassati; IVA ed extra non vengono calcolati separatamente.</p>
         {isLoading && <p role="status" className="text-sm text-slate-600">Caricamento importi...</p>}
         {isError && (
-          <p role="alert" className="text-sm text-red-600">
+          <StatusAlert variant="error">
             {errorMessage(error, 'Impossibile caricare gli importi concordati.')}
-          </p>
+          </StatusAlert>
         )}
         {!isLoading && !isError && (
           <div className="grid gap-3 text-sm sm:grid-cols-3">

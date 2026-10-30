@@ -4,30 +4,31 @@ import { useQuery } from '@tanstack/react-query';
 import RoleLayout from '../../components/shared/RoleLayout';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
+import StatusAlert from '../../components/ui/StatusAlert';
 import StatusBadge from '../../components/shared/StatusBadge';
 import { producerLinks, recipientLinks, transporterLinks } from '../../components/shared/navLinks';
 import { fetchProducerPickup, fetchProducerPickups } from '../../services/producerApi';
 import { fetchRecipientPickup, fetchRecipientPickups } from '../../services/recipientApi';
 import { fetchTransporterPickup, fetchTransporterPickups } from '../../services/transporterApi';
-import { errorMessage, formatDateTime, formatEuro, ROLE_LABELS } from '../../services/labels';
+import { errorMessage, formatDateTime, formatEuro, formatQuantity, ROLE_LABELS } from '../../services/labels';
 
 const configs = {
   producer: {
-    title: 'Agenda · Ritiri confermati',
+    title: 'Agenda · Ritiri e completamenti',
     links: producerLinks,
     fetchList: fetchProducerPickups,
     fetchOne: fetchProducerPickup,
     detailPath: (id) => `/producer/pickups/${id}`,
   },
   recipient: {
-    title: 'Agenda · Conferimenti confermati',
+    title: 'Agenda · Conferimenti e completamenti',
     links: recipientLinks,
     fetchList: fetchRecipientPickups,
     fetchOne: fetchRecipientPickup,
     detailPath: (id) => `/recipient/pickups/${id}`,
   },
   transporter: {
-    title: 'Agenda · Viaggi confermati',
+    title: 'Agenda · Viaggi e completamenti',
     links: transporterLinks,
     fetchList: fetchTransporterPickups,
     fetchOne: fetchTransporterPickup,
@@ -54,10 +55,12 @@ function normalizeEvent(role, item, detail) {
     const transporters = pkg?.transporter?.companyName || agreement?.parties?.transporter?.companyName;
     return {
       id: item.id,
+      status: item.status,
       requestCode: request.requestCode,
       scheduledAt: request.confirmedSlotAt,
       cerCode: request.cerCode,
-      quantityTon: request.quantityTon,
+      quantity: request.quantity,
+      quantityUnit: request.quantityUnit,
       pickupAddress: request.pickupAddress,
       destinationAddress: pkg?.recipient?.destinationAddress || agreement?.parties?.recipient?.destinationAddress,
       partners: [
@@ -82,10 +85,12 @@ function normalizeEvent(role, item, detail) {
 
   return {
     id: item.id,
+    status: item.stage,
     requestCode: item.requestCode,
     scheduledAt: item.scheduledAt,
     cerCode: item.cerCode,
-    quantityTon: item.quantityTon,
+    quantity: item.quantity,
+    quantityUnit: item.quantityUnit,
     pickupAddress: item.pickupAddress,
     destinationAddress: role === 'recipient'
       ? item.myResponse?.destinationAddress || agreement?.pricing?.destinationAddress
@@ -99,7 +104,9 @@ function normalizeEvent(role, item, detail) {
 
 async function loadAgenda(config, role) {
   const items = await config.fetchList();
-  const confirmed = items.filter((item) => role === 'producer' ? item.status === 'confirmed' : item.stage === 'confirmed');
+  const confirmed = items.filter((item) => role === 'producer'
+    ? ['confirmed', 'completed'].includes(item.status)
+    : ['confirmed', 'completed'].includes(item.stage));
   return Promise.all(confirmed.map(async (item) => {
     const detail = await config.fetchOne(item.id);
     return normalizeEvent(role, item, detail);
@@ -133,9 +140,9 @@ function AgendaEvent({ event, role, detailPath }) {
         <div>
           <p className="font-semibold text-brand-900">{event.requestCode || '—'}</p>
           <p className="font-semibold text-slate-900">{formatDateTime(event.scheduledAt)}</p>
-          <p className="mt-1 text-sm text-slate-600">CER {event.cerCode} · {event.quantityTon} ton</p>
+          <p className="mt-1 text-sm text-slate-600">CER {event.cerCode} · {formatQuantity(event.quantity, event.quantityUnit)}</p>
         </div>
-        <StatusBadge status="confirmed" />
+        <StatusBadge status={event.status} kind={role === 'producer' ? 'request' : 'stage'} />
       </div>
       <div className="mt-3 space-y-1 text-sm">
         {event.partners.map((partner) => <p key={partner} className="text-slate-700">{partner}</p>)}
@@ -190,7 +197,7 @@ export default function AgendaPage({ role }) {
             <button type="button" onClick={() => setSelectedDate('')} className="mb-3 text-sm font-semibold text-brand-900 underline">Mostra tutti i ritiri</button>
           )}
           {isLoading && <p role="status" className="text-sm text-slate-600">Caricamento agenda...</p>}
-          {isError && <p role="alert" className="text-sm text-red-700">{errorMessage(error, 'Impossibile caricare l’agenda.')}</p>}
+          {isError && <StatusAlert variant="error">{errorMessage(error, 'Impossibile caricare l’agenda.')}</StatusAlert>}
           {!isLoading && !isError && visibleEvents.length === 0 && (
             <p className="rounded-xl border border-dashed border-slate-300 p-6 text-center text-sm text-slate-600">
               {selectedDate ? 'Nessun ritiro confermato in questa data.' : 'Non ci sono ritiri confermati.'}

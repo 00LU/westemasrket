@@ -1,20 +1,24 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import RoleLayout from '../../components/shared/RoleLayout';
 import Card from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
+import StatusAlert from '../../components/ui/StatusAlert';
 import { producerLinks, recipientLinks, transporterLinks } from '../../components/shared/navLinks';
-import { fetchCurrentUser, fetchProfileDocuments, fetchProfileRequirements, uploadProfileDocument } from '../../services/profileApi';
+import { createProfileProductionSite, deleteProfileProductionSite, fetchCurrentUser, fetchProfileDocuments, fetchProfileRequirements, uploadProfileDocument } from '../../services/profileApi';
+import AddressAutocomplete from '../../components/forms/AddressAutocomplete';
+import Input from '../../components/ui/Input';
 
 const profileLinksByRole = {
   producer: producerLinks,
   recipient: recipientLinks,
   transporter: transporterLinks,
   admin: [
-    { to: '/admin/users', label: 'User Verification' },
-    { to: '/admin/analytics', label: 'Analytics' },
-    { to: '/admin/compliance', label: 'Compliance' },
+    { to: '/admin/users', label: 'Verifica utenti' },
+    { to: '/admin/analytics', label: 'Statistiche' },
+    { to: '/admin/compliance', label: 'Conformità' },
     { to: '/profile', label: 'Profilo utente' },
   ],
 };
@@ -42,8 +46,6 @@ const optionalProfileFields = {
     ['phone', 'Telefono'],
   ],
   producer: [
-    ['productionSites', 'Sedi di produzione / ritiro'],
-    ['intermediaryDocuments', 'Documentazione da intermediario'],
   ],
   transporter: [
     ['transportAuthorizations', 'Iscrizioni / autorizzazioni'],
@@ -63,6 +65,7 @@ const optionalProfileFields = {
 
 export default function UserProfilePage() {
   const queryClient = useQueryClient();
+  const [newSite, setNewSite] = useState({ label: '', addressFormatted: '', lat: null, lng: null, placeId: '' });
   const userQuery = useQuery({ queryKey: ['profile', 'user'], queryFn: fetchCurrentUser });
   const requirementsQuery = useQuery({ queryKey: ['profile', 'requirements'], queryFn: fetchProfileRequirements });
   const documentsQuery = useQuery({ queryKey: ['profile', 'documents'], queryFn: fetchProfileDocuments });
@@ -73,6 +76,17 @@ export default function UserProfilePage() {
       queryClient.invalidateQueries({ queryKey: ['profile', 'requirements'] });
       queryClient.invalidateQueries({ queryKey: ['profile', 'documents'] });
     },
+  });
+  const siteMutation = useMutation({
+    mutationFn: createProfileProductionSite,
+    onSuccess: () => {
+      setNewSite({ label: '', addressFormatted: '', lat: null, lng: null, placeId: '' });
+      queryClient.invalidateQueries({ queryKey: ['profile', 'user'] });
+    },
+  });
+  const removeSiteMutation = useMutation({
+    mutationFn: deleteProfileProductionSite,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['profile', 'user'] }),
   });
 
   const user = userQuery.data;
@@ -118,7 +132,7 @@ export default function UserProfilePage() {
           ))}
         </nav>
         {isLoading && <p className="text-sm text-slate-600">Caricamento profilo...</p>}
-        {hasError && <p role="alert" className="text-sm text-red-600">Impossibile caricare il profilo. Prova ad aggiornare la pagina.</p>}
+        {hasError && <StatusAlert variant="error">Impossibile caricare il profilo. Prova ad aggiornare la pagina.</StatusAlert>}
         {!isLoading && !hasError && (
           <>
             <section id="company" className="scroll-mt-24">
@@ -153,9 +167,46 @@ export default function UserProfilePage() {
                   </p>
                 )}
                 {user.role === 'producer' && (
-                  <p className="mt-4 rounded-xl bg-slate-50 p-3 text-sm text-slate-600">
-                    Orari, prescrizioni e volumi di produzione non sono attualmente registrati come dati separati nel profilo.
-                  </p>
+                  <div className="mt-4 space-y-3">
+                    <h3 className="font-semibold text-slate-800">Sedi di produzione</h3>
+                    {(user.productionSites || []).map((site) => (
+                      <div key={site.id} className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 p-3 text-sm">
+                        <div>
+                          <p className="font-semibold">{site.label || 'Sede produttiva'}</p>
+                          <p className="text-slate-600">{site.addressFormatted}</p>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="danger"
+                          disabled={removeSiteMutation.isPending}
+                          onClick={() => removeSiteMutation.mutate(site.id)}
+                        >
+                          Rimuovi
+                        </Button>
+                      </div>
+                    ))}
+                    <form
+                      className="grid gap-3 rounded-xl border border-slate-200 p-3 sm:grid-cols-2"
+                      onSubmit={(event) => {
+                        event.preventDefault();
+                        siteMutation.mutate(newSite);
+                      }}
+                    >
+                      <Input
+                        label="Nome sede (opzionale)"
+                        value={newSite.label}
+                        onChange={(event) => setNewSite((current) => ({ ...current, label: event.target.value }))}
+                      />
+                      <AddressAutocomplete
+                        label="Indirizzo nuova sede"
+                        value={newSite.addressFormatted}
+                        onChange={(place) => setNewSite((current) => ({ ...current, ...place }))}
+                        required
+                      />
+                      {siteMutation.isError && <StatusAlert variant="error">Impossibile salvare la sede.</StatusAlert>}
+                      <Button type="submit" disabled={siteMutation.isPending || !newSite.addressFormatted.trim()}>Aggiungi sede</Button>
+                    </form>
+                  </div>
                 )}
                 {user.role === 'transporter' && (
                   <p className="mt-4 rounded-xl bg-slate-50 p-3 text-sm text-slate-600">

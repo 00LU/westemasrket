@@ -11,8 +11,8 @@ const dateKey = (value) => { if (!value) return ''; const date = new Date(value)
 export default function RecipientCalendarPage() {
   const [month, setMonth] = useState(() => new Date());
   const { data: pickups = [], isLoading } = useQuery({ queryKey: ['recipient', 'pickups'], queryFn: fetchRecipientPickups });
-  // Only pickups whose day/time was confirmed by all three parties are on the calendar.
-  const data = useMemo(() => pickups.filter((item) => item.stage === 'confirmed').map((item) => ({ ...item, deadline: item.scheduledAt })), [pickups]);
+  // Completed pickups retain their agreed date for calendar history.
+  const data = useMemo(() => pickups.filter((item) => ['confirmed', 'completed'].includes(item.stage)).map((item) => ({ ...item, deadline: item.scheduledAt })), [pickups]);
   const byDate = useMemo(() => data.reduce((map, item) => ({ ...map, [dateKey(item.deadline)]: [...(map[dateKey(item.deadline)] || []), item] }), {}), [data]);
   const first = new Date(month.getFullYear(), month.getMonth(), 1);
   const offset = (first.getDay() + 6) % 7;

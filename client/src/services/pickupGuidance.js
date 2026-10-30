@@ -34,12 +34,33 @@ export function producerNextStep(request) {
         ? 'Ora tocca a te: proponi o accetta giorno e orario.'
         : `In attesa di: ${request.pendingAgreementRoles.map((role) => ROLE_LABELS[role]).join(', ')}.`;
     case 'confirmed':
-      return `Tutti hanno accettato. Ritiro confermato per ${formatDateTime(request.confirmedSlotAt)}.`;
+      return `Tutti hanno accettato. Ritiro confermato per ${formatDateTime(request.confirmedSlotAt)}. Dopo aver terminato il tuo lavoro, confermalo dal dettaglio.`;
+    case 'completed':
+      return 'Produttore, destinatario e trasportatore hanno confermato il termine del ritiro.';
     case 'cancelled':
       return 'Richiesta annullata. Non sono richieste altre risposte.';
     default:
       return '';
   }
+}
+
+export function operatorNextStep(stage, role) {
+  if (stage === 'to_respond') {
+    return role === 'recipient'
+      ? 'Rispondi alla richiesta indicando disponibilità e condizioni, oppure comunica che non sei disponibile.'
+      : 'Invia le tue tariffe per i destinatari disponibili, oppure comunica che non partecipi.';
+  }
+  if (stage === 'responded') {
+    return role === 'recipient'
+      ? 'Disponibilità inviata. Attendi la chiusura della raccolta e la scelta del produttore.'
+      : 'Proposta inviata. Attendi la chiusura dell’asta e la scelta del produttore.';
+  }
+  if (stage === 'in_agreement') return 'Concorda giorno e orario del ritiro con le altre parti.';
+  if (stage === 'confirmed') return 'Ritiro confermato. Dopo aver terminato il tuo lavoro, confermalo dal dettaglio.';
+  if (stage === 'completed') return 'Ritiro completato: tutte le parti hanno confermato la fine del lavoro.';
+  if (stage === 'closed') return 'La tua partecipazione è conclusa. Non sono richieste altre azioni.';
+  if (stage === 'cancelled') return 'Richiesta annullata. Non sono richieste altre azioni.';
+  return 'Nessuna azione richiesta. Attendi gli aggiornamenti del produttore.';
 }
 
 export function notificationPickupPath(role, pickupId) {
@@ -54,7 +75,7 @@ export function filterPickups(items, status, search) {
       || (status === 'action' && item.stage === 'to_respond')
       || (status === 'waiting' && ['responded', 'waiting'].includes(item.stage))
       || (status === 'agreement' && ['in_agreement', 'confirmed'].includes(item.stage))
-      || (status === 'closed' && ['closed', 'cancelled'].includes(item.stage));
+      || (status === 'closed' && ['closed', 'cancelled', 'completed'].includes(item.stage));
     return matchesStatus && (!needle || `${item.requestCode || ''} ${item.cerCode} ${item.pickupAddress} ${item.wasteDescription || ''}`.toLocaleLowerCase('it-IT').includes(needle));
   });
 }

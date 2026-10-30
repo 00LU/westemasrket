@@ -1,4 +1,4 @@
-const { User, PickupRequest, Transaction, CerCode } = require('../models');
+const { User, PickupRequest, Transaction, CerCode, PickupPhoto } = require('../models');
 const { notifyUsers } = require('../services/notificationService');
 
 async function listPendingUsers(_req, res, next) {
@@ -69,7 +69,10 @@ async function listCerRecognitionRequests(_req, res, next) {
   try {
     const requests = await PickupRequest.findAll({
       where: { cerKnown: false },
-      include: [{ model: User, as: 'producer', attributes: ['id', 'companyName', 'email'] }],
+      include: [
+        { model: User, as: 'producer', attributes: ['id', 'companyName', 'email'] },
+        { model: PickupPhoto, as: 'photos', attributes: ['id', 'fileName', 'mimeType', 'pickupRequestId'] },
+      ],
       order: [['created_at', 'DESC']],
     });
     return res.json(requests);

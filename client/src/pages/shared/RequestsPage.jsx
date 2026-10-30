@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import RoleLayout from '../../components/shared/RoleLayout';
@@ -8,8 +8,11 @@ import { producerLinks, recipientLinks, transporterLinks } from '../../component
 import { fetchProducerPickups } from '../../services/producerApi';
 import { fetchRecipientPickups } from '../../services/recipientApi';
 import { fetchTransporterPickups } from '../../services/transporterApi';
-import { errorMessage, formatDateTime, REQUEST_STATUS_LABELS, STAGE_LABELS } from '../../services/labels';
-import { producerNextStep } from '../../services/pickupGuidance';
+import { errorMessage, formatDateTime, formatQuantity, REQUEST_STATUS_LABELS, STAGE_LABELS } from '../../services/labels';
+import { operatorNextStep, producerNextStep } from '../../services/pickupGuidance';
+import EmptyState from '../../components/ui/EmptyState';
+import Button from '../../components/ui/Button';
+import StatusAlert from '../../components/ui/StatusAlert';
 
 const configs = {
   producer: {
@@ -37,6 +40,7 @@ const configs = {
     statusField: 'stage',
   },
 };
+const PAGE_SIZE = 20;
 
 function eventDate(item) {
   return item.scheduledAt || item.confirmedSlotAt || item.deadline;
@@ -57,7 +61,7 @@ function matchesStatus(item, filter, role) {
 
   if (filter === 'action') return item.stage === 'to_respond';
   if (filter === 'agreement') return ['in_agreement', 'confirmed'].includes(item.stage);
-  if (filter === 'closed') return ['closed', 'cancelled'].includes(item.stage);
+  if (filter === 'closed') return ['closed', 'cancelled', 'completed'].includes(item.stage);
   if (filter === 'waiting') return ['responded', 'waiting'].includes(item.stage);
   return item.stage === filter;
 }
@@ -97,6 +101,7 @@ export default function RequestsPage({ role }) {
   const [cer, setCer] = useState('');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
+  const [page, setPage] = useState(1);
   const { data = [], isLoading, isError, error } = useQuery({
     queryKey: [role, 'pickups'],
     queryFn: config.fetch,
@@ -108,8 +113,24 @@ export default function RequestsPage({ role }) {
     .filter((item) => {
       const date = dateKey(eventDate(item));
       return (!dateFrom || (date && date >= dateFrom)) && (!dateTo || (date && date <= dateTo));
-    })
-    .sort((a, b) => new Date(b.created_at || b.createdAt || 0) - new Date(a.created_at || a.createdAt || 0)), [cer, data, dateFrom, dateTo, role, status]);
+    }), [cer, data, dateFrom, dateTo, role, status]);
+  const pageCount = Math.max(1, Math.ceil(visibleItems.length / PAGE_SIZE));
+  const pageItems = visibleItems.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const hasFilters = status !== 'all' || Boolean(cer.trim() || dateFrom || dateTo);
+  const clearFilters = () => {
+    setStatus('all');
+    setCer('');
+    setDateFrom('');
+    setDateTo('');
+  };
+
+  useEffect(() => {
+    setPage(1);
+  }, [cer, dateFrom, dateTo, status]);
+
+  useEffect(() => {
+    if (page > pageCount) setPage(pageCount);
+  }, [page, pageCount]);
 
   return (
     <RoleLayout title={config.title} links={config.links}>
@@ -149,11 +170,24 @@ export default function RequestsPage({ role }) {
         </div>
         <p className="mb-3 text-xs text-slate-500">Il filtro data usa la data del ritiro confermato, se disponibile, altrimenti la scadenza indicata nella richiesta.</p>
         {isLoading && <p role="status" className="text-sm text-slate-600">Caricamento richieste...</p>}
-        {isError && <p role="alert" className="text-sm text-red-700">{errorMessage(error, 'Impossibile caricare le richieste.')}</p>}
+        {isError && <StatusAlert variant="error">{errorMessage(error, 'Impossibile caricare le richieste.')}</StatusAlert>}
         {!isLoading && !isError && visibleItems.length === 0 && (
-          <p className="rounded-xl border border-dashed border-slate-300 p-6 text-center text-sm text-slate-600">Nessuna richiesta corrisponde ai filtri selezionati.</p>
+          <EmptyState
+            title={data.length === 0 ? 'Non ci sono richieste da mostrare' : 'Nessuna richiesta corrisponde ai filtri'}
+            action={hasFilters && (
+              <Button type="button" variant="secondary" onClick={clearFilters}>
+                Rimuovi filtri
+              </Button>
+            )}
+          >
+            {data.length === 0
+              ? role === 'producer'
+                ? 'Quando crei una richiesta, la trovi qui insieme al suo stato e ai prossimi passaggi.'
+                : 'Le richieste inviate al tuo ruolo compariranno qui.'
+              : 'Modifica i filtri o rimuovili per vedere tutte le richieste.'}
+          </EmptyState>
         )}
-        {!isLoading && !isError && visibleItems.length > 0 && (
+        {!isLoading && !isError && pageItems.length > 0 && (
           <div className="-mx-2 overflow-x-auto px-2">
             <table className="w-full min-w-[760px] border-collapse text-left text-sm">
               <thead>
@@ -166,21 +200,11 @@ export default function RequestsPage({ role }) {
                 </tr>
               </thead>
               <tbody>
-                {visibleItems.map((item) => {
+                {pageItems.map((item) => {
                   const itemStatus = item[config.statusField];
                   const nextStep = role === 'producer'
                     ? producerNextStep(item)
-                    : item.stage === 'to_respond'
-                      ? role === 'recipient' ? 'Indica la disponibilità o non partecipare.' : 'Invia una proposta o indica che non partecipi.'
-                      : item.stage === 'in_agreement'
-                        ? 'Gestisci il giorno e l’orario concordati.'
-                        : item.stage === 'confirmed'
-                          ? 'Ritiro confermato: consulta l’agenda.'
-                          : item.stage === 'cancelled'
-                            ? 'Richiesta annullata.'
-                            : item.stage === 'closed'
-                              ? 'Partecipazione conclusa.'
-                              : 'In attesa dell’esito della richiesta.';
+                    : operatorNextStep(item.stage, role);
                   const detailPath = config.detailsPath(item.id);
                   return (
                     <tr
@@ -188,7 +212,7 @@ export default function RequestsPage({ role }) {
                       tabIndex={0}
                       onClick={() => navigate(detailPath)}
                       onKeyDown={(event) => {
-                        if (event.key === 'Enter' || event.key === ' ') {
+                        if (event.target === event.currentTarget && (event.key === 'Enter' || event.key === ' ')) {
                           event.preventDefault();
                           navigate(detailPath);
                         }
@@ -199,7 +223,8 @@ export default function RequestsPage({ role }) {
                         <Link to={detailPath} onClick={(event) => event.stopPropagation()} className="font-semibold text-brand-900 hover:underline">
                           {item.requestCode || '—'}
                         </Link>
-                        <p className="mt-1 text-xs text-slate-500">CER {item.cerCode === 'UNKNOWN' ? 'da proporre' : item.cerCode} · {item.quantityTon} ton · {item.wasteDescription || 'Descrizione non indicata'}</p>
+                        <p className="mt-1 text-xs text-slate-500">CER {item.cerCode === 'UNKNOWN' ? 'da proporre' : item.cerCode} · {formatQuantity(item.quantity, item.quantityUnit)} · {item.wasteDescription || 'Descrizione non indicata'}</p>
+                        {item.rejectedByMe && <p className="mt-1 text-xs font-semibold text-red-700">Rifiutata da te</p>}
                       </td>
                       <td className="whitespace-nowrap px-3 py-3 text-slate-600">{formatDateTime(eventDate(item))}</td>
                       <td className="max-w-56 px-3 py-3 text-slate-600">{item.pickupAddress}</td>
@@ -212,7 +237,29 @@ export default function RequestsPage({ role }) {
             </table>
           </div>
         )}
-        {!isLoading && !isError && <p className="mt-3 text-xs text-slate-500">{visibleItems.length} richieste</p>}
+        {!isLoading && !isError && visibleItems.length > 0 && (
+          <div className="mt-3 flex items-center justify-between gap-3 text-xs text-slate-600">
+            <p>{visibleItems.length} richieste · pagina {page} di {pageCount}</p>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                className="rounded-lg border border-slate-300 px-3 py-2 disabled:opacity-50"
+                onClick={() => setPage((current) => Math.max(1, current - 1))}
+                disabled={page === 1}
+              >
+                Precedente
+              </button>
+              <button
+                type="button"
+                className="rounded-lg border border-slate-300 px-3 py-2 disabled:opacity-50"
+                onClick={() => setPage((current) => Math.min(pageCount, current + 1))}
+                disabled={page === pageCount}
+              >
+                Successiva
+              </button>
+            </div>
+          </div>
+        )}
       </Card>
     </RoleLayout>
   );

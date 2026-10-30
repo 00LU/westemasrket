@@ -1,12 +1,13 @@
 import RoleLayout from '../../components/shared/RoleLayout';
 import Card from '../../components/ui/Card';
+import StatusAlert from '../../components/ui/StatusAlert';
 import { useQuery } from '@tanstack/react-query';
 import { fetchAdminAnalytics } from '../../services/adminApi';
 
 const links = [
-  { to: '/admin/users', label: 'User Verification' },
-  { to: '/admin/analytics', label: 'Analytics' },
-  { to: '/admin/compliance', label: 'Compliance' },
+  { to: '/admin/users', label: 'Verifica utenti' },
+  { to: '/admin/analytics', label: 'Statistiche' },
+  { to: '/admin/compliance', label: 'Conformità' },
 ];
 
 export default function AdminAnalyticsPage() {
@@ -21,19 +22,19 @@ export default function AdminAnalyticsPage() {
   const premiumFeatureUsers = Number(data?.premiumFeatureUsers || 0);
 
   return (
-    <RoleLayout title="Admin - Platform Analytics" links={links}>
-      {isLoading && <p className="text-sm text-slate-600">Loading analytics...</p>}
+    <RoleLayout title="Admin - Statistiche piattaforma" links={links}>
+      {isLoading && <p className="text-sm text-slate-600">Caricamento statistiche...</p>}
       {isError && (
-        <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          {error?.response?.status === 401 ? 'Unauthorized: please login again as admin.' : 'Unable to load analytics.'}
-        </p>
+        <StatusAlert variant="error">
+          {error?.response?.status === 401 ? 'Non autorizzato: accedi di nuovo come amministratore.' : 'Impossibile caricare le statistiche.'}
+        </StatusAlert>
       )}
       <div className="grid gap-4 sm:grid-cols-3">
-        <Card title="Total Orders"><p className="text-3xl font-bold">{totalOrders.toLocaleString()}</p></Card>
-        <Card title="Platform Revenue"><p className="text-3xl font-bold">EUR {platformRevenue.toLocaleString()}</p></Card>
-        <Card title="Active Users"><p className="text-3xl font-bold">{activeUsers.toLocaleString()}</p></Card>
+        <Card title="Ordini totali"><p className="text-3xl font-bold">{totalOrders.toLocaleString()}</p></Card>
+        <Card title="Ricavi piattaforma"><p className="text-3xl font-bold">EUR {platformRevenue.toLocaleString()}</p></Card>
+        <Card title="Utenti attivi"><p className="text-3xl font-bold">{activeUsers.toLocaleString()}</p></Card>
       </div>
-      <Card title="Premium Feature Users">
+      <Card title="Utenti funzioni premium">
         <p className="text-3xl font-bold">{premiumFeatureUsers.toLocaleString()}</p>
       </Card>
     </RoleLayout>

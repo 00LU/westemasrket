@@ -1,4 +1,6 @@
 require('dotenv').config();
+const fs = require('fs/promises');
+const path = require('path');
 const bcrypt = require('bcrypt');
 const sequelize = require('../src/config/db');
 const {
@@ -13,8 +15,10 @@ const {
   Document,
   Notification,
   Transaction,
+  PickupPhoto,
 } = require('../src/models');
-const { ensurePickupColumns } = require('../src/services/pickupSchema');
+const { runMigrations } = require('../src/services/migrationRunner');
+const { getPhotoDirectory } = require('../src/services/photoStorage');
 
 const DEMO_EMAILS = [
   'demo.producer@wastemarket.local',
@@ -24,6 +28,7 @@ const DEMO_EMAILS = [
 ];
 
 const password = 'Demo1234!';
+const demoPhotoKey = 'demo-waste.png';
 const requiredDocuments = {
   producer: ['company_registration', 'operational_photo', 'cer_certificate'],
   transporter: ['vehicle_registration', 'driver_license', 'operational_authorization'],
@@ -57,6 +62,7 @@ async function deleteDemoData(transaction) {
     await PickupPackage.destroy({ where, transaction });
     await TransportProposal.destroy({ where, transaction });
     await RecipientAvailability.destroy({ where, transaction });
+    await PickupPhoto.destroy({ where, transaction });
     await PickupStatusHistory.destroy({ where, transaction });
   }
   await PickupRequest.destroy({ where: { producerId: userIds }, transaction });
@@ -95,7 +101,12 @@ async function main() {
   initModels();
   await sequelize.authenticate();
   await sequelize.sync();
-  await ensurePickupColumns();
+  await runMigrations();
+  await fs.mkdir(getPhotoDirectory(), { recursive: true });
+  await fs.writeFile(
+    path.join(getPhotoDirectory(), demoPhotoKey),
+    Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', 'base64')
+  );
   const transaction = await sequelize.transaction();
 
   try {
@@ -144,25 +155,30 @@ async function main() {
     const at = (days) => new Date(Date.now() + days * 86400000);
     for (let index = 0; index < orderStatuses.length; index += 1) {
       const status = orderStatuses[index];
-      const quantityTon = 2 + index;
+      const quantity = (2 + index) * 1000;
       const order = await PickupRequest.create({
         producerId: producer.id,
         cerCode: index % 2 === 0 ? '15 01 10*' : '16 01 03',
         cerKnown: true,
         wasteDescription: `Ordine demo stato ${status}`,
-        photoFileName: 'demo-waste.jpg',
         containment: 'Big bag',
         specialInfo: 'Dati demo per verifica workflow',
-        quantityTon,
+        quantity,
+        quantityUnit: 'kg',
         pickupAddress: `Via Demo ${index + 10}, Milano`,
         pickupLat: 45.4642,
         pickupLng: 9.19,
         deadline: at(index + 10),
-        maxPrice: 1500 + index * 25,
         status,
         recurring: index === 1,
         recurrenceFrequency: index === 1 ? 'monthly' : null,
         cancelReason: status === 'cancelled' ? 'producer_cancelled' : null,
+      }, { transaction });
+      await PickupPhoto.create({
+        pickupRequestId: order.id,
+        storageKey: demoPhotoKey,
+        fileName: 'demo-waste.png',
+        mimeType: 'image/png',
       }, { transaction });
       await PickupStatusHistory.create({ pickupRequestId: order.id, toStatus: status, actorId: producer.id, note: 'demo seed' }, { transaction });
 
@@ -172,15 +188,12 @@ async function main() {
         continue;
       }
 
-      const pricePerTon = 120 + index;
+      const ratePerTon = 120 + index;
       const availability = await RecipientAvailability.create({
         pickupRequestId: order.id,
         recipientId: recipient.id,
         status: status === 'awaiting_recipients' ? 'pending' : 'available',
-        pricingUnit: 'per_ton',
-        unitPrice: pricePerTon,
-        pricePerTon,
-        availableCapacityTon: 20,
+        unitPrice: ratePerTon / 1000,
         quantityTolerancePercent: 1,
         availabilityWindow: 'Lun-Ven 08:00-17:00',
         destinationAddress: 'Demo Recipient Impianto, Via Demo 3, Monza',
@@ -208,7 +221,7 @@ async function main() {
       }, { transaction });
 
       if (status !== 'awaiting_transporters') {
-        const treatmentPrice = pricePerTon * quantityTon;
+        const treatmentPrice = availability.unitPrice * quantity;
         const pkg = await PickupPackage.create({
           pickupRequestId: order.id,
           recipientAvailabilityId: availability.id,

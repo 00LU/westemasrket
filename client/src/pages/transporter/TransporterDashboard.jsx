@@ -1,7 +1,9 @@
 import RoleLayout from '../../components/shared/RoleLayout';
 import Card from '../../components/ui/Card';
+import StatusAlert from '../../components/ui/StatusAlert';
 import { useQuery } from '@tanstack/react-query';
 import { fetchTransporterEarnings, fetchTransporterPickups } from '../../services/transporterApi';
+import { formatQuantity } from '../../services/labels';
 
 const links = [
   { to: '/transporter', label: 'Dashboard' },
@@ -40,13 +42,13 @@ export default function TransporterDashboard() {
     <RoleLayout title="Dashboard Trasportatore" links={links}>
       {pickupsQuery.isLoading && <p role="status">Caricamento richieste...</p>}
       {hasError && (
-        <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <StatusAlert variant="error">
           {pickupsQuery.error?.response?.status === 401 || earningsQuery.error?.response?.status === 401
             ? 'Sessione non valida. Accedi di nuovo come Trasportatore.'
             : pickupsQuery.error?.response?.status === 403 || earningsQuery.error?.response?.status === 403
               ? 'Il tuo account non ha il ruolo Trasportatore. Accedi con un account Trasportatore.'
               : 'Impossibile caricare i dati del trasportatore. Riprova tra poco.'}
-        </p>
+        </StatusAlert>
       )}
       <div className="grid gap-4 sm:grid-cols-3">
         <Card title="Nuove richieste"><p className="text-3xl font-bold">{pickupsReady ? notifications.length : '—'}</p><p className="mt-1 text-sm text-slate-500">Richieste su cui fare una proposta</p></Card>
@@ -58,7 +60,7 @@ export default function TransporterDashboard() {
         <Card title="Nuovi ordini e aste attive" action={<a className="text-sm font-semibold text-brand-900" href="/transporter/opportunities">Vedi tutti</a>}>
           {pickupsReady && notifications.length === 0 && <p className="text-sm text-slate-600">Nessuna nuova richiesta al momento.</p>}
           <div className="space-y-2 text-sm">
-            {notifications.slice(0, 4).map((item) => <div key={item.id} className="flex items-center justify-between rounded-xl border border-slate-200 px-3 py-2"><span>{item.requestCode || '—'} · CER {item.cerCode} · {item.quantityTon} ton</span><span className="text-slate-500">{item.deadline ? new Date(item.deadline).toLocaleDateString('it-IT') : '-'}</span></div>)}
+            {notifications.slice(0, 4).map((item) => <div key={item.id} className="flex items-center justify-between rounded-xl border border-slate-200 px-3 py-2"><span>{item.requestCode || '—'} · CER {item.cerCode} · {formatQuantity(item.quantity, item.quantityUnit)}</span><span className="text-slate-500">{item.deadline ? new Date(item.deadline).toLocaleDateString('it-IT') : '-'}</span></div>)}
           </div>
         </Card>
         <Card title="Pianificazione e calendario viaggi" action={<a className="text-sm font-semibold text-brand-900" href="/transporter/planning">Apri calendario</a>}>

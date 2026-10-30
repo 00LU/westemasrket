@@ -2,7 +2,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useRef, useState } from 'react';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
+import StatusAlert from '../../components/ui/StatusAlert';
 import { useAuth } from '../../context/AuthContext';
+import AddressAutocomplete from '../../components/forms/AddressAutocomplete';
 
 const requiredDocumentsByRole = {
   producer: ['company_registration', 'operational_photo', 'cer_certificate'],
@@ -23,10 +25,12 @@ export default function RegisterPage() {
     companyName: '',
     piva: '',
     registeredOffice: '',
+    registeredOfficeLat: null,
+    registeredOfficeLng: null,
+    registeredOfficePlaceId: '',
     contactPerson: '',
     phone: '',
-    productionSites: '',
-    intermediaryDocuments: '',
+    productionSites: [{ label: '', addressFormatted: '', lat: null, lng: null, placeId: '' }],
     transportAuthorizations: '',
     vehicleFleet: '',
     drivers: '',
@@ -56,11 +60,30 @@ export default function RegisterPage() {
     setForm((curr) => ({ ...curr, [field]: event.target.value }));
   };
 
+  const updateProductionSite = (index, values) => {
+    setForm((curr) => ({
+      ...curr,
+      productionSites: curr.productionSites.map((site, siteIndex) => (
+        siteIndex === index ? { ...site, ...values } : site
+      )),
+    }));
+  };
+
+  const addProductionSite = () => {
+    setForm((curr) => ({
+      ...curr,
+      productionSites: [...curr.productionSites, { label: '', addressFormatted: '', lat: null, lng: null, placeId: '' }],
+    }));
+  };
+
   const updateRole = (event) => {
     const role = event.target.value;
     setForm((curr) => ({
       ...curr,
       role,
+      productionSites: role === 'producer' && curr.productionSites.length === 0
+        ? [{ label: '', addressFormatted: '', lat: null, lng: null, placeId: '' }]
+        : curr.productionSites,
       documents: requiredDocumentsByRole[role].map((documentType) => ({
         documentType,
         fileName: '',
@@ -96,10 +119,14 @@ export default function RegisterPage() {
         companyName: form.companyName,
         piva: form.piva,
         registeredOffice: form.registeredOffice,
+        registeredOfficeLat: form.registeredOfficeLat,
+        registeredOfficeLng: form.registeredOfficeLng,
+        registeredOfficePlaceId: form.registeredOfficePlaceId,
         contactPerson: form.contactPerson,
         phone: form.phone,
-        productionSites: form.productionSites,
-        intermediaryDocuments: form.intermediaryDocuments,
+        productionSites: form.role === 'producer'
+          ? form.productionSites.filter((site) => site.addressFormatted.trim())
+          : [],
         transportAuthorizations: form.transportAuthorizations,
         vehicleFleet: form.vehicleFleet,
         drivers: form.drivers,
@@ -169,7 +196,17 @@ export default function RegisterPage() {
             <div className="grid gap-3 sm:grid-cols-2">
               <Input label="Nome azienda / ragione sociale" value={form.companyName} onChange={updateField('companyName')} required />
               <Input label="P.IVA / CF" value={form.piva} onChange={updateField('piva')} required />
-              <Input label="Sede legale" value={form.registeredOffice} onChange={updateField('registeredOffice')} />
+              <AddressAutocomplete
+                label="Sede legale"
+                value={form.registeredOffice}
+                onChange={(place) => setForm((curr) => ({
+                  ...curr,
+                  registeredOffice: place.addressFormatted,
+                  registeredOfficeLat: place.lat,
+                  registeredOfficeLng: place.lng,
+                  registeredOfficePlaceId: place.placeId,
+                }))}
+              />
               <Input label="Persona di contatto" value={form.contactPerson} onChange={updateField('contactPerson')} />
               <Input label="Telefono (opzionale)" value={form.phone} onChange={updateField('phone')} />
               <Input label="Email (PEC o operativa)" type="email" value={form.email} onChange={updateField('email')} required />
@@ -193,9 +230,36 @@ export default function RegisterPage() {
               </select>
             </label>
             {form.role === 'producer' && (
-              <div className="grid gap-3 sm:grid-cols-2">
-                <Input label="Sedi di produzione / ritiro (opzionale)" value={form.productionSites} onChange={updateField('productionSites')} />
-                <Input label="Documentazione da intermediario (opzionale)" value={form.intermediaryDocuments} onChange={updateField('intermediaryDocuments')} />
+              <div className="space-y-3">
+                <p className="text-sm font-semibold text-slate-700">Sedi di produzione / ritiro</p>
+                {form.productionSites.map((site, index) => (
+                  <div key={index} className="grid gap-3 rounded-xl border border-slate-200 p-3 sm:grid-cols-2">
+                    <Input
+                      label="Nome sede (opzionale)"
+                      value={site.label}
+                      onChange={(event) => updateProductionSite(index, { label: event.target.value })}
+                    />
+                    <AddressAutocomplete
+                      label={`Indirizzo sede ${index + 1}`}
+                      value={site.addressFormatted}
+                      onChange={(place) => updateProductionSite(index, place)}
+                      required
+                    />
+                    {form.productionSites.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        onClick={() => setForm((curr) => ({
+                          ...curr,
+                          productionSites: curr.productionSites.filter((_, siteIndex) => siteIndex !== index),
+                        }))}
+                      >
+                        Rimuovi sede
+                      </Button>
+                    )}
+                  </div>
+                ))}
+                <Button type="button" variant="secondary" onClick={addProductionSite}>Aggiungi sede</Button>
               </div>
             )}
             {form.role === 'transporter' && (
@@ -252,7 +316,7 @@ export default function RegisterPage() {
           </section>
         )}
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <StatusAlert variant="error">{error}</StatusAlert>}
         <div className="flex flex-wrap justify-between gap-3">
           <Button type="button" variant="secondary" onClick={goToPreviousStep} disabled={step === 0 || loading}>Indietro</Button>
           {step === 2 && (

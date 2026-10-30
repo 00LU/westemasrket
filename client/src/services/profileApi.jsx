@@ -19,3 +19,12 @@ export async function uploadProfileDocument(payload) {
   const { data } = await api.post('/documents', payload);
   return data;
 }
+
+export async function createProfileProductionSite(payload) {
+  const { data } = await api.post('/producers/sites', payload);
+  return data;
+}
+
+export async function deleteProfileProductionSite(id) {
+  await api.delete(`/producers/sites/${id}`);
+}
