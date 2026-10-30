@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const fs = require('node:fs');
+const path = require('node:path');
 const authRoutes = require('./routes/auth');
 const producerRoutes = require('./routes/producers');
 const transporterRoutes = require('./routes/transporters');
@@ -62,6 +64,28 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/documents', documentsRoutes);
 app.use('/api/cer-codes', cerRoutes);
+
+if (process.env.NODE_ENV === 'production') {
+  const clientDist = path.resolve(__dirname, '..', '..', 'client', 'dist');
+  const clientIndex = path.join(clientDist, 'index.html');
+  if (!fs.existsSync(clientIndex)) {
+    throw new Error('Frontend build missing. Run npm run build from the repository root before starting in production.');
+  }
+
+  app.use('/api', (_req, res) => {
+    res.status(404).json({ message: 'API endpoint not found' });
+  });
+  app.use(express.static(clientDist, { index: false }));
+  app.get('*', (req, res, next) => {
+    if (req.path === '/socket.io' || req.path.startsWith('/socket.io/') ||
+        req.path.startsWith('/assets/') || path.extname(req.path) || !req.accepts('html')) {
+      next();
+      return;
+    }
+    res.set('Cache-Control', 'no-cache');
+    res.sendFile(clientIndex);
+  });
+}
 
 app.use((err, _req, res, _next) => {
   if (!err.status) console.error(err);

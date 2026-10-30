@@ -265,6 +265,50 @@ Services:
 - Server: http://localhost:5000
 - Postgres: localhost:5432
 
+## SiteGround / single-service production deployment
+
+The repository root contains the deployment `package.json`. Connect the repository
+and select the branch containing it; do not upload only `client/dist`.
+
+- Runtime: Node.js 22.3+ (a supported LTS release is recommended).
+- Package manager: npm. The root install hook installs the locked backend
+  dependencies and the frontend build dependencies.
+- Build command: `npm run build`.
+- Start command: `npm start`.
+- Run the Node.js application, not a static-only deployment of `client/dist`:
+  Express serves the API, compiled frontend and React Router deep links on the
+  same port. Leave the platform-provided `PORT` unchanged.
+- Set `NODE_ENV=production` and `CLIENT_URL` to the exact public HTTPS origin
+  (without a trailing slash).
+- Create a PostgreSQL database and configure `DB_HOST`, `DB_PORT`, `DB_NAME`,
+  `DB_USER`, and `DB_PASSWORD` using the hosting provider's connection details.
+  Startup applies schema changes; back up an existing database before deploying.
+- Configure a strong `JWT_SECRET`, `GOOGLE_MAPS_API_KEY` (server Routes API key),
+  and `VITE_GOOGLE_MAPS_API_KEY` (browser key restricted to the public domain).
+  `VITE_*` values are public and are embedded during the build; never use them
+  for server secrets.
+- Leave `VITE_API_URL` and `VITE_SOCKET_URL` unset for same-origin requests.
+  Do not copy their localhost values from local development.
+- Keep `AUTO_APPROVE_OPERATORS=false` in production.
+- Set `UPLOAD_DIR` to an absolute, persistent, writable directory outside
+  replaceable deployment builds. Back it up along with the database and verify
+  persistence across redeployments before accepting real uploads.
+
+Configure environment variables in Site Tools, not in committed `.env` files.
+Check the deployment logs and `/api/health`, then test login, a direct detail URL,
+photo uploads and real-time notifications. WebSocket forwarding and persistent
+storage must be verified on the chosen hosting plan.
+
+Local deployment smoke test (builds the frontend and tests HTTP serving without
+starting the database):
+
+```bash
+npm run test:deployment
+```
+
+Local development remains unchanged: run the client and server dev commands in
+their respective directories.
+
 ## API Overview
 
 - Auth
