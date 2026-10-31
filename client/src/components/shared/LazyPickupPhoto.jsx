@@ -43,9 +43,10 @@ export default function LazyPickupPhoto({ photo, alt }) {
   }, [visible, photo.url]);
 
   return (
-    <div ref={containerRef} className="mt-2">
-      {src && <img src={src} alt={alt} loading="lazy" className="max-h-40 rounded-xl border border-slate-200 object-contain" />}
-      {error && <p className="text-xs text-slate-500">Foto non disponibile.</p>}
+    <div ref={containerRef}>
+      {src && <img src={src} alt={alt} loading="lazy" className="h-40 w-full rounded-2xl bg-slate-100 object-contain" />}
+      {!src && !error && <div className="h-40 w-full animate-pulse rounded-2xl bg-slate-100" aria-hidden="true" />}
+      {error && <p className="flex h-40 items-center justify-center rounded-2xl bg-slate-100 text-xs text-slate-500">Foto non disponibile.</p>}
     </div>
   );
 }

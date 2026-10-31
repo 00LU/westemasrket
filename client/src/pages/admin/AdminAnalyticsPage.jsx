@@ -1,5 +1,6 @@
 import RoleLayout from '../../components/shared/RoleLayout';
-import Card from '../../components/ui/Card';
+import { Banknote, ClipboardList, Sparkles, Users } from 'lucide-react';
+import StatCard from '../../components/ui/StatCard';
 import StatusAlert from '../../components/ui/StatusAlert';
 import { useQuery } from '@tanstack/react-query';
 import { fetchAdminAnalytics } from '../../services/adminApi';
@@ -29,14 +30,12 @@ export default function AdminAnalyticsPage() {
           {error?.response?.status === 401 ? 'Non autorizzato: accedi di nuovo come amministratore.' : 'Impossibile caricare le statistiche.'}
         </StatusAlert>
       )}
-      <div className="grid gap-4 sm:grid-cols-3">
-        <Card title="Ordini totali"><p className="text-3xl font-bold">{totalOrders.toLocaleString()}</p></Card>
-        <Card title="Ricavi piattaforma"><p className="text-3xl font-bold">EUR {platformRevenue.toLocaleString()}</p></Card>
-        <Card title="Utenti attivi"><p className="text-3xl font-bold">{activeUsers.toLocaleString()}</p></Card>
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard tone="dark" icon={ClipboardList} label="Ordini totali" value={totalOrders.toLocaleString()} />
+        <StatCard tone="accent" icon={Banknote} label="Ricavi piattaforma" value={`EUR ${platformRevenue.toLocaleString()}`} />
+        <StatCard icon={Users} label="Utenti attivi" value={activeUsers.toLocaleString()} />
+        <StatCard icon={Sparkles} label="Utenti funzioni premium" value={premiumFeatureUsers.toLocaleString()} />
       </div>
-      <Card title="Utenti funzioni premium">
-        <p className="text-3xl font-bold">{premiumFeatureUsers.toLocaleString()}</p>
-      </Card>
     </RoleLayout>
   );
 }

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { createServer } from 'vite';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -113,6 +113,124 @@ test('all role lists retain the table, next step and a real detail link', async 
       assert.ok(!html.includes('Dettagli operativi'));
     } finally {
       client.clear();
+    }
+  }
+});
+
+test('the compact description is separate from operational details and photos', () => {
+  const headline = render({ part: 'headline' });
+  const details = render({ part: 'details' });
+  assert.ok(headline.includes(pickup.wasteDescription));
+  assert.ok(!headline.includes(pickup.specialInfo));
+  assert.ok(!headline.includes(pickup.pickupAddress));
+  assert.ok(details.includes(pickup.specialInfo));
+  assert.ok(details.includes(pickup.pickupAddress));
+  assert.ok(!details.includes(pickup.wasteDescription));
+});
+
+test('every role keeps the current phase first and the selected package in a responsive compact box', async () => {
+  const { default: ProducerPickupPage } = await server.ssrLoadModule('/src/pages/producer/ProducerPickupPage.jsx');
+  const { default: OperatorPickupPage } = await server.ssrLoadModule('/src/pages/shared/OperatorPickupPage.jsx');
+  const { AuthProvider } = await server.ssrLoadModule('/src/context/AuthContext.jsx');
+  const scenarios = [
+    { stage: 'in_agreement', activeSlot: null, section: 'accordo', actionable: false },
+    { stage: 'in_agreement', accepted: false, section: 'accordo', actionable: true },
+    { stage: 'in_agreement', accepted: true, section: 'accordo', actionable: false },
+    { stage: 'confirmed', section: 'accordo', actionable: true },
+    { stage: 'confirmed', finished: true, section: 'accordo', actionable: false },
+    { stage: 'completed', finished: true, section: 'accordo', actionable: false },
+  ];
+  for (const role of ['producer', 'recipient', 'transporter']) {
+    const roleScenarios = role === 'producer'
+      ? [
+          { stage: 'awaiting_recipients', section: 'destinatari' },
+          { stage: 'awaiting_transporters', section: 'proposte' },
+          { stage: 'packages_ready', section: 'pacchetti' },
+          ...scenarios,
+        ]
+      : [{ stage: 'to_respond', canRespond: true, section: 'risposta' }, ...scenarios];
+    for (const scenario of roleScenarios) {
+      const { stage, section } = scenario;
+      const inAgreement = ['in_agreement', 'confirmed', 'completed'].includes(stage);
+      const agreement = inAgreement ? {
+        activeSlot: scenario.activeSlot === null ? null : {
+          id: 'slot-1',
+          scheduledAt: '2026-11-10T09:00:00Z',
+          accepted: { producer: false, recipient: false, transporter: false, [role]: !!scenario.accepted },
+        },
+        actions: {
+          canProposeSlot: stage === 'in_agreement' && (role === 'producer' || scenario.activeSlot !== null),
+          canAccept: stage === 'in_agreement' && !scenario.accepted && scenario.activeSlot !== null,
+          canConfirmCompletion: stage === 'confirmed' && !scenario.finished,
+        },
+        parties: { producer: { companyName: 'Produttore test' }, recipient: { companyName: 'Destinatario test' }, transporter: { companyName: 'Trasportatore test' } },
+        pricing: { totalPrice: 100 },
+        completion: { producer: false, recipient: false, transporter: false, [role]: !!scenario.finished },
+        confirmedSlotAt: '2026-11-10T09:00:00Z',
+      } : null;
+      const item = {
+        ...pickup, id: 'request-1', status: stage, stage, agreement,
+        canRespond: !!scenario.canRespond, cerKnown: true,
+        myResponse: { status: 'pending' }, myProposal: { status: 'invited', offers: [] },
+        destinations: [{ id: 'destination-1', address: 'Sede test', roadDistanceMeters: 10000 }],
+      };
+      const client = new QueryClient();
+      client.setQueryData([role, 'pickup', item.id], role === 'producer' ? {
+        request: item, agreement,
+        currentPackage: inAgreement ? {
+          id: 'package-1', rank: 1, totalPrice: 100, treatmentPrice: 60, transportPrice: 40,
+          recipient: { companyName: 'Destinatario test', destinationAddress: 'Sede scelta', unitPrice: 0.05, quantityUnit: 'kg' },
+          transporter: { companyName: 'Trasportatore test', vehicleType: 'ADR Truck', availabilityNote: 'Entro 48 ore' },
+        } : null,
+        recipients: [{ id: 'recipient-1', status: 'pending' }],
+        proposals: [{ id: 'proposal-1', status: 'invited' }],
+        packages: [], failedPackages: [], history: [],
+      } : item);
+      const originalWindow = globalThis.window;
+      try {
+        for (const wide of [false, true]) {
+          globalThis.window = { matchMedia: () => ({ matches: wide }) };
+          const page = role === 'producer'
+            ? createElement(ProducerPickupPage)
+            : createElement(OperatorPickupPage, { role });
+          const html = renderToStaticMarkup(createElement(QueryClientProvider, { client },
+            createElement(MemoryRouter, { initialEntries: [`/${role}/pickups/${item.id}`] },
+              createElement(AuthProvider, null,
+                createElement(Routes, null,
+                  createElement(Route, { path: '/:role/pickups/:id', element: page }))))));
+          const ids = [...html.matchAll(/\bid="(riepilogo|dettagli|accordo|risposta|destinatari|proposte|pacchetti|pacchetto-scelto)"/g)].map((match) => match[1]);
+          const expected = inAgreement && !wide
+            ? ['riepilogo', section, 'pacchetto-scelto', 'dettagli']
+            : ['riepilogo', section, 'dettagli'];
+          assert.deepEqual(ids.slice(0, expected.length), expected, `${role}: ${stage}, accepted=${scenario.accepted}, finished=${scenario.finished}`);
+          assert.equal(ids.filter((id) => id === section).length, 1);
+          assert.equal(ids.filter((id) => id === 'pacchetto-scelto').length, inAgreement ? 1 : 0);
+          assert.ok(html.includes(pickup.specialInfo));
+          if (inAgreement) {
+            const selectedPackage = html.slice(html.indexOf('id="pacchetto-scelto"'));
+            assert.ok(selectedPackage.includes('Destinatario test'));
+            assert.ok(selectedPackage.includes('Trasportatore test'));
+            const sidebar = html.slice(html.indexOf('<aside aria-label="Riepilogo e avanzamento"'));
+            assert.equal(sidebar.includes('id="pacchetto-scelto"'), wide);
+            assert.ok(selectedPackage.includes('!p-4'));
+            if (wide) {
+              assert.ok(sidebar.indexOf('id="pacchetto-scelto"') < sidebar.indexOf('Avanzamento'));
+            }
+            if (role === 'producer') {
+              assert.ok(selectedPackage.includes('Sede scelta'));
+              assert.ok(selectedPackage.includes('Entro 48 ore'));
+            }
+            assert.equal(html.split('Destinatario test').length - 1, 1);
+            const actionable = scenario.activeSlot === null ? role === 'producer' : scenario.actionable;
+            assert.equal(html.includes('>Conferma fine del tuo lavoro</button>'), stage === 'confirmed' && !scenario.finished);
+            assert.equal(html.includes('Vai all’accordo<svg'), stage === 'in_agreement' && actionable);
+          }
+        }
+      } finally {
+        if (originalWindow === undefined) delete globalThis.window;
+        else globalThis.window = originalWindow;
+        client.clear();
+      }
     }
   }
 });

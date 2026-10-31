@@ -245,10 +245,10 @@ export default function AgendaPage({ role }) {
                   aria-label={`${day.toLocaleDateString('it-IT')}${count ? `, ${count} ritiri` : ''}`}
                   aria-pressed={isSelected}
                   onClick={() => setSelectedDate(isSelected ? '' : key)}
-                  className={`min-h-16 rounded-lg border p-1 text-left transition ${isSelected ? 'border-brand-900 bg-brand-900 text-white' : count ? 'border-brand-200 bg-brand-50 hover:border-brand-500' : 'border-slate-200 bg-white hover:bg-slate-50'}`}
+                  className={`min-h-16 rounded-lg border p-1 text-left transition ${isSelected ? 'border-brand-900 bg-brand-900 text-white' : count ? 'border-accent-200 bg-accent-50 hover:border-accent-500' : 'border-slate-200 bg-white hover:bg-slate-50'}`}
                 >
                   <span className="text-xs font-semibold">{day.getDate()}</span>
-                  {count > 0 && <span className={`mt-1 block truncate text-[10px] ${isSelected ? 'text-white' : 'text-brand-900'}`}>{count} ritir{count === 1 ? 'o' : 'i'}</span>}
+                  {count > 0 && <span className={`mt-1 block truncate text-[10px] font-semibold ${isSelected ? 'text-white' : 'text-accent-700'}`}>{count} ritir{count === 1 ? 'o' : 'i'}</span>}
                 </button>
               );
             })}

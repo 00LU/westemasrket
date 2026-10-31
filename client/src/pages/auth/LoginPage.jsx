@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
+import AuthLayout from '../../components/shared/AuthLayout';
 import StatusAlert from '../../components/ui/StatusAlert';
 import { useAuth } from '../../context/AuthContext';
 
@@ -32,9 +33,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
-      <form className="w-full max-w-md space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-soft" onSubmit={handleSubmit}>
-        <h1 className="font-display text-2xl font-bold text-brand-900">Accedi a WasteMarket</h1>
+    <AuthLayout>
+      <form className="w-full max-w-md space-y-4 rounded-2xl bg-white p-8 shadow-soft" onSubmit={handleSubmit}>
+        <h1 className="font-display text-3xl font-bold tracking-tight text-slate-900">Accedi a WasteMarket</h1>
         <Input label="Email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
         <Input label="Password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} required />
         {error && <StatusAlert variant="error">{error}</StatusAlert>}
@@ -43,6 +44,6 @@ export default function LoginPage() {
           Non hai un account? <Link className="font-semibold text-brand-900" to="/auth/register">Registra la tua azienda</Link>
         </p>
       </form>
-    </div>
+    </AuthLayout>
   );
 }

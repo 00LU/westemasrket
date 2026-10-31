@@ -1,5 +1,7 @@
 import RoleLayout from '../../components/shared/RoleLayout';
+import { BellRing, CalendarClock, Truck } from 'lucide-react';
 import Card from '../../components/ui/Card';
+import StatCard from '../../components/ui/StatCard';
 import StatusAlert from '../../components/ui/StatusAlert';
 import { useQuery } from '@tanstack/react-query';
 import { fetchRecipientPickups } from '../../services/recipientApi';
@@ -46,9 +48,9 @@ export default function RecipientDashboard() {
         </StatusAlert>
       )}
       <div className="grid gap-4 sm:grid-cols-3">
-        <Card title="Nuove richieste"><p className="text-3xl font-bold">{ready ? notifications.length : '—'}</p><p className="mt-1 text-sm text-slate-500">Richieste a cui rispondere</p></Card>
-        <Card title="Ritiri in accordo o confermati"><p className="text-3xl font-bold">{ready ? incoming.length : '—'}</p><p className="mt-1 text-sm text-slate-500">{ready ? incomingSummary || 'Nessuna quantità' : 'Caricamento dati'}</p></Card>
-        <Card title="Disponibilità da inviare"><p className="text-3xl font-bold">{ready ? notifications.length : '—'}</p><p className="mt-1 text-sm text-slate-500">Disponibilità ancora da inviare</p></Card>
+        <StatCard tone="dark" icon={BellRing} label="Nuove richieste" value={ready ? notifications.length : '—'} hint="Richieste a cui rispondere" />
+        <StatCard tone="accent" icon={Truck} label="Ritiri in accordo o confermati" value={ready ? incoming.length : '—'} hint={ready ? incomingSummary || 'Nessuna quantità' : 'Caricamento dati'} />
+        <StatCard icon={CalendarClock} label="Disponibilità da inviare" value={ready ? notifications.length : '—'} hint="Disponibilità ancora da inviare" />
       </div>
       <div className="grid gap-6 lg:grid-cols-2">
         <Card title="Nuovi ordini compatibili" action={<a className="text-sm font-semibold text-brand-900" href="/recipient/opportunities">Vedi tutti</a>}>

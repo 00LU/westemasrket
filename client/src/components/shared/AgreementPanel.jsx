@@ -6,20 +6,21 @@ import ConfirmDialog from '../ui/ConfirmDialog';
 import StatusAlert from '../ui/StatusAlert';
 import { acceptSlot, cancelOffer, confirmCompletion, proposeSlot } from '../../services/pickupApi';
 import { withdrawProducerSelection } from '../../services/producerApi';
-import { ROLE_LABELS, errorMessage, formatDateTime, formatEuro } from '../../services/labels';
+import { ROLE_LABELS, errorMessage, formatDateTime } from '../../services/labels';
 import { agreementNextStep } from '../../services/pickupGuidance';
+import AgreementSummary from './AgreementSummary';
 
 function AcceptanceRow({ label, accepted, acceptedLabel = 'Accettato' }) {
   return (
-    <li className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2">
-      <span>{label}</span>
-      <span className={accepted ? 'font-semibold text-emerald-700' : 'text-amber-700'}>{accepted ? acceptedLabel : 'In attesa'}</span>
+    <li className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
+      <span className="font-medium text-slate-800">{label}</span>
+      <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${accepted ? 'bg-emerald-100 text-emerald-700' : 'bg-accent-100 text-accent-700'}`}>{accepted ? acceptedLabel : 'In attesa'}</span>
     </li>
   );
 }
 
 // Step 6 of the flow, identical for the three roles: only the actions allowed to `role` are shown.
-export default function AgreementPanel({ pickupId, agreement, role, confirmed, completed = false, onChanged }) {
+export default function AgreementPanel({ id = 'accordo', pickupId, agreement, role, confirmed, completed = false, onChanged, showNextStep = true, showSummary = true }) {
   const [scheduledAt, setScheduledAt] = useState('');
   const [message, setMessage] = useState('');
   const [confirmation, setConfirmation] = useState(null);
@@ -79,7 +80,7 @@ export default function AgreementPanel({ pickupId, agreement, role, confirmed, c
   });
 
   if (!agreement) return null;
-  const { activeSlot, actions, parties, pricing } = agreement;
+  const { activeSlot, actions } = agreement;
   const completion = agreement.completion || { producer: false, recipient: false, transporter: false };
   const canConfirmCompletion = actions?.canConfirmCompletion
     ?? (confirmed && !completed && !completion[role]);
@@ -104,25 +105,9 @@ export default function AgreementPanel({ pickupId, agreement, role, confirmed, c
 
   return (
     <>
-      <Card title={completed ? 'Ritiro completato' : confirmed ? 'Ritiro confermato' : 'Accordo su giorno e orario'}>
+      <Card id={id} title={completed ? 'Ritiro completato' : confirmed ? 'Ritiro confermato' : 'Accordo su giorno e orario'}>
       <div className="space-y-4 text-sm">
-        <div className="grid gap-2 sm:grid-cols-3">
-          {Object.entries(parties).map(([key, party]) => (
-            <div key={key} className="rounded-xl border border-slate-200 p-3">
-              <p className="text-xs uppercase tracking-wide text-slate-500">{ROLE_LABELS[key]}</p>
-              <p className="font-semibold text-slate-800">{party.companyName}</p>
-              {party.destinationAddress && <p className="text-slate-600">{party.destinationAddress}</p>}
-              {party.vehicleType && <p className="text-slate-600">{party.vehicleType}</p>}
-            </div>
-          ))}
-        </div>
-
-        <div className="flex flex-wrap gap-4 text-slate-700">
-          {pricing.totalPrice !== undefined && <span>Totale: <strong>{formatEuro(pricing.totalPrice)}</strong></span>}
-          {pricing.treatmentPrice !== undefined && <span>Smaltimento: {formatEuro(pricing.treatmentPrice)}</span>}
-          {pricing.transportPrice !== undefined && <span>Trasporto: {formatEuro(pricing.transportPrice)}</span>}
-        </div>
-        <p className="text-xs text-slate-600">Importi delle proposte concordate. IVA ed eventuali extra non vengono calcolati separatamente dalla piattaforma.</p>
+        {showSummary && <AgreementSummary agreement={agreement} />}
 
         {confirmed ? (
           <>
@@ -162,9 +147,11 @@ export default function AgreementPanel({ pickupId, agreement, role, confirmed, c
           </>
         ) : (
           <>
-            <p role="status" className="rounded-xl bg-brand-50 p-3 font-semibold text-brand-900">
-              {agreementNextStep(agreement, role)}
-            </p>
+            {showNextStep && (
+              <p role="status" className="rounded-xl bg-brand-50 p-3 font-semibold text-brand-900">
+                {agreementNextStep(agreement, role)}
+              </p>
+            )}
             {activeSlot ? (
               <div className="space-y-2">
                 <p className="text-slate-700">

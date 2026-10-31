@@ -1,5 +1,7 @@
 import RoleLayout from '../../components/shared/RoleLayout';
+import { Banknote, BellRing, Truck } from 'lucide-react';
 import Card from '../../components/ui/Card';
+import StatCard from '../../components/ui/StatCard';
 import StatusAlert from '../../components/ui/StatusAlert';
 import { useQuery } from '@tanstack/react-query';
 import { fetchTransporterEarnings, fetchTransporterPickups } from '../../services/transporterApi';
@@ -51,9 +53,9 @@ export default function TransporterDashboard() {
         </StatusAlert>
       )}
       <div className="grid gap-4 sm:grid-cols-3">
-        <Card title="Nuove richieste"><p className="text-3xl font-bold">{pickupsReady ? notifications.length : '—'}</p><p className="mt-1 text-sm text-slate-500">Richieste su cui fare una proposta</p></Card>
-        <Card title="Lavori in accordo"><p className="text-3xl font-bold">{pickupsReady ? workingJobs.length : '—'}</p><p className="mt-1 text-sm text-slate-500">Data e ora da concordare</p></Card>
-        <Card title="Importi concordati"><p className="text-3xl font-bold">{earningsQuery.isLoading || earningsQuery.isError ? '—' : `${earnings.currency} ${Number(earnings.gross || 0).toLocaleString('it-IT')}`}</p><p className="mt-1 text-sm text-slate-500">Proposte sui ritiri confermati, non incassi</p></Card>
+        <StatCard tone="dark" icon={BellRing} label="Nuove richieste" value={pickupsReady ? notifications.length : '—'} hint="Richieste su cui fare una proposta" />
+        <StatCard tone="accent" icon={Truck} label="Lavori in accordo" value={pickupsReady ? workingJobs.length : '—'} hint="Data e ora da concordare" />
+        <StatCard icon={Banknote} label="Importi concordati" value={earningsQuery.isLoading || earningsQuery.isError ? '—' : `${earnings.currency} ${Number(earnings.gross || 0).toLocaleString('it-IT')}`} hint="Proposte sui ritiri confermati, non incassi" />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">

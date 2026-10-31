@@ -1,5 +1,7 @@
 import RoleLayout from '../../components/shared/RoleLayout';
+import { Banknote, Receipt, TrendingUp } from 'lucide-react';
 import Card from '../../components/ui/Card';
+import StatCard from '../../components/ui/StatCard';
 import StatusAlert from '../../components/ui/StatusAlert';
 import { useQuery } from '@tanstack/react-query';
 import { fetchTransporterEarnings } from '../../services/transporterApi';
@@ -25,10 +27,10 @@ export default function EarningsPage() {
           </StatusAlert>
         )}
         {!isLoading && !isError && (
-          <div className="grid gap-3 text-sm sm:grid-cols-3">
-            <div className="rounded-xl border border-slate-200 p-3">Totale concordato: {formatEuro(gross)}</div>
-            <div className="rounded-xl border border-slate-200 p-3">Ritiri confermati: {jobs}</div>
-            <div className="rounded-xl border border-slate-200 p-3">Media per ritiro: {formatEuro(jobs > 0 ? gross / jobs : 0)}</div>
+          <div className="grid gap-4 sm:grid-cols-3">
+            <StatCard tone="dark" icon={Banknote} label="Totale concordato" value={formatEuro(gross)} />
+            <StatCard tone="accent" icon={Receipt} label="Ritiri confermati" value={jobs} />
+            <StatCard icon={TrendingUp} label="Media per ritiro" value={formatEuro(jobs > 0 ? gross / jobs : 0)} />
           </div>
         )}
       </Card>

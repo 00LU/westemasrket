@@ -11,6 +11,14 @@ export function agreementNextStep(agreement, role) {
   return `Hai accettato. In attesa di: ${pending.map((key) => ROLE_LABELS[key]).join(', ')}.`;
 }
 
+// True when `role` still has something to do in the date agreement / completion step.
+export function agreementActionable(agreement, role, { confirmed = false, completed = false } = {}) {
+  if (!agreement || completed) return false;
+  if (confirmed) return agreement.actions?.canConfirmCompletion ?? !(agreement.completion || {})[role];
+  if (!agreement.activeSlot) return role === 'producer';
+  return !agreement.activeSlot.accepted[role];
+}
+
 export function producerNextStep(request) {
   switch (request.status) {
     case 'draft':

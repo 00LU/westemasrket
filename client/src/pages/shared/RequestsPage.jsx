@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { BellRing, CheckCircle2, ClipboardList } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import RoleLayout from '../../components/shared/RoleLayout';
 import StatusBadge from '../../components/shared/StatusBadge';
 import Card from '../../components/ui/Card';
+import StatCard from '../../components/ui/StatCard';
 import { producerLinks, recipientLinks, transporterLinks } from '../../components/shared/navLinks';
 import { fetchProducerPickups } from '../../services/producerApi';
 import { fetchRecipientPickups } from '../../services/recipientApi';
@@ -80,13 +82,13 @@ function SummaryCards({ items, role }) {
         ['In accordo o confermate', count((item) => ['in_agreement', 'confirmed'].includes(item.stage))],
       ];
 
+  const icons = [ClipboardList, BellRing, CheckCircle2];
+  const tones = ['dark', 'accent', 'light'];
+
   return (
-    <div className="grid gap-3 sm:grid-cols-3">
-      {cards.map(([label, value]) => (
-        <Card key={label}>
-          <p className="text-sm text-slate-500">{label}</p>
-          <p className="mt-1 text-3xl font-bold text-brand-900">{value}</p>
-        </Card>
+    <div className="grid gap-4 sm:grid-cols-3">
+      {cards.map(([label, value], index) => (
+        <StatCard key={label} label={label} value={value} icon={icons[index]} tone={tones[index]} />
       ))}
     </div>
   );
@@ -191,7 +193,7 @@ export default function RequestsPage({ role }) {
           <div className="-mx-2 overflow-x-auto px-2">
             <table className="w-full min-w-[760px] border-collapse text-left text-sm">
               <thead>
-                <tr className="border-b border-slate-200 text-xs uppercase tracking-wide text-slate-500">
+                <tr className="border-b border-slate-200 text-xs font-medium text-slate-400">
                   <th className="px-3 py-3">Richiesta</th>
                   <th className="px-3 py-3">Data</th>
                   <th className="px-3 py-3">Indirizzo di ritiro</th>
@@ -243,7 +245,7 @@ export default function RequestsPage({ role }) {
             <div className="flex gap-2">
               <button
                 type="button"
-                className="rounded-lg border border-slate-300 px-3 py-2 disabled:opacity-50"
+                className="rounded-full border border-slate-200 bg-white px-4 py-2 font-semibold hover:bg-slate-50 disabled:opacity-50"
                 onClick={() => setPage((current) => Math.max(1, current - 1))}
                 disabled={page === 1}
               >
@@ -251,7 +253,7 @@ export default function RequestsPage({ role }) {
               </button>
               <button
                 type="button"
-                className="rounded-lg border border-slate-300 px-3 py-2 disabled:opacity-50"
+                className="rounded-full border border-slate-200 bg-white px-4 py-2 font-semibold hover:bg-slate-50 disabled:opacity-50"
                 onClick={() => setPage((current) => Math.min(pageCount, current + 1))}
                 disabled={page === pageCount}
               >

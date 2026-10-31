@@ -6,6 +6,47 @@
 
 :root {
   color-scheme: light;
+
+  /* Public pages: original crimson brand + default slate */
+  --brand-50: 253 242 242; --brand-100: 253 232 232; --brand-200: 251 213 213; --brand-300: 248 180 180;
+  --brand-400: 249 128 128; --brand-500: 240 82 82; --brand-600: 224 36 36; --brand-700: 200 30 30;
+  --brand-800: 155 28 28; --brand-900: 139 0 0;
+  --slate-50: 248 250 252; --slate-100: 241 245 249; --slate-200: 226 232 240; --slate-300: 203 213 225;
+  --slate-400: 148 163 184; --slate-500: 100 116 139; --slate-600: 71 85 105; --slate-700: 51 65 85;
+  --slate-800: 30 41 59; --slate-900: 15 23 42; --slate-950: 2 6 23;
+  --r-lg: 0.5rem; --r-xl: 0.75rem; --r-2xl: 1rem; --r-btn: 0.75rem;
+  --shadow-soft: 0 10px 25px rgba(139, 0, 0, 0.08);
+}
+
+/* Authenticated dashboard: forest green + orange on warm neutrals, soft rounded cards */
+.theme-app {
+  --brand-50: 242 246 242; --brand-100: 226 235 227; --brand-200: 203 218 205; --brand-300: 170 196 175;
+  --brand-400: 140 171 146; --brand-500: 113 148 120; --brand-600: 100 130 106; --brand-700: 86 114 92;
+  --brand-800: 72 98 78; --brand-900: 59 83 64;
+  --slate-50: 247 245 240; --slate-100: 239 236 229; --slate-200: 227 223 214; --slate-300: 208 203 191;
+  --slate-400: 162 158 146; --slate-500: 119 120 110; --slate-600: 90 95 87; --slate-700: 66 73 65;
+  --slate-800: 44 52 45; --slate-900: 29 35 31; --slate-950: 18 22 18;
+  --r-lg: 0.875rem; --r-xl: 1.25rem; --r-2xl: 1.75rem; --r-btn: 9999px;
+  --shadow-soft: 0 1px 2px rgba(44, 52, 45, 0.04), 0 16px 36px -18px rgba(44, 52, 45, 0.22);
+  @apply text-slate-900;
+}
+
+.theme-app input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file']),
+.theme-app select,
+.theme-app textarea {
+  @apply border-slate-200 bg-slate-50;
+}
+
+.theme-app input:not([type='checkbox']):not([type='radio']):not([type='range']):focus,
+.theme-app select:focus,
+.theme-app textarea:focus {
+  @apply border-brand-700 bg-white outline-none ring-2 ring-brand-100;
+}
+
+.theme-app input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file']):disabled,
+.theme-app select:disabled,
+.theme-app textarea:disabled {
+  @apply bg-slate-100 text-slate-500;
 }
 
 body {
@@ -18,6 +59,25 @@ body {
 
 .panel {
   @apply rounded-2xl border border-slate-200 bg-white p-5 shadow-soft;
+}
+
+.theme-app .panel {
+  @apply border-transparent p-6;
+}
+
+@keyframes section-flash {
+  from { box-shadow: 0 0 0 4px rgb(255 106 46 / 0.55); }
+  to { box-shadow: 0 0 0 4px rgb(255 106 46 / 0); }
+}
+
+.section-flash {
+  animation: section-flash 1.8s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-flash {
+    animation: none;
+  }
 }
 
 .badge-status {

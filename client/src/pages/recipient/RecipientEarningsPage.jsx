@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import RoleLayout from '../../components/shared/RoleLayout';
+import { Banknote, Receipt } from 'lucide-react';
 import Card from '../../components/ui/Card';
+import StatCard from '../../components/ui/StatCard';
 import StatusAlert from '../../components/ui/StatusAlert';
 import { recipientLinks } from '../../components/shared/navLinks';
 import { fetchRecipientPickups } from '../../services/recipientApi';
@@ -17,9 +19,9 @@ export default function RecipientEarningsPage() {
         {query.isLoading && <p role="status">Caricamento importi...</p>}
         {query.isError && <StatusAlert variant="error">{errorMessage(query.error, 'Impossibile caricare gli importi concordati.')}</StatusAlert>}
         {!query.isLoading && !query.isError && (
-          <div className="grid gap-3 text-sm sm:grid-cols-2">
-            <div className="rounded-xl border border-slate-200 p-3">Ritiri confermati: {pickups.length}</div>
-            <div className="rounded-xl border border-slate-200 p-3">Totale concordato: {formatEuro(total)}</div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <StatCard tone="dark" icon={Banknote} label="Totale concordato" value={formatEuro(total)} />
+            <StatCard tone="accent" icon={Receipt} label="Ritiri confermati" value={pickups.length} />
           </div>
         )}
       </Card>

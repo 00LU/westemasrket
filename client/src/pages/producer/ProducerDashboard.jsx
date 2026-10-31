@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
+import { BellRing, CheckCircle2, ClipboardList } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import RoleLayout from '../../components/shared/RoleLayout';
 import Card from '../../components/ui/Card';
+import StatCard from '../../components/ui/StatCard';
 import StatusAlert from '../../components/ui/StatusAlert';
 import StatusBadge from '../../components/shared/StatusBadge';
 import { producerLinks } from '../../components/shared/navLinks';
@@ -41,9 +43,9 @@ export default function ProducerDashboard() {
   return (
     <RoleLayout title="Dashboard produttore" links={producerLinks}>
       <div className="grid gap-4 sm:grid-cols-3">
-        <Card title="Richieste aperte"><p className="text-3xl font-bold">{ready ? metrics.open : '—'}</p></Card>
-        <Card title="Richieste su cui puoi agire"><p className="text-3xl font-bold">{ready ? metrics.actions : '—'}</p></Card>
-        <Card title="Ritiri confermati"><p className="text-3xl font-bold">{ready ? metrics.confirmed : '—'}</p></Card>
+        <StatCard tone="dark" icon={ClipboardList} label="Richieste aperte" value={ready ? metrics.open : '—'} />
+        <StatCard tone="accent" icon={BellRing} label="Richieste su cui puoi agire" value={ready ? metrics.actions : '—'} />
+        <StatCard icon={CheckCircle2} label="Ritiri confermati" value={ready ? metrics.confirmed : '—'} />
       </div>
 
       <Card title="Le mie richieste" action={<Link to="/producer/new-request" className="text-sm font-semibold text-brand-900">+ Nuova</Link>}>
